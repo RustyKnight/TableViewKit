@@ -17,19 +17,19 @@ public protocol TableViewSegueController {
 
 public protocol TableViewRowDelegate {
 
-	func rowWasUpdated(_ row: TableViewRow)
-	func rowWasRemoved(_ row: TableViewRow)
+	func tableViewRowWasUpdated(_ row: TableViewRow)
+	func tableViewRowWasRemoved(_ row: TableViewRow)
 
 //	func remove(row: TableViewRow)
 
-	func row(_ row: TableViewRow, didFailWith error: Error)
+	func tableViewRow(_ row: TableViewRow, didFailWith error: Error)
 
-	func performSegue(withIdentifier: String, controller: TableViewSegueController)
+	func tableViewRow(_ row: TableViewRow, performSegueWithIdentifier identifier: String, controller: TableViewSegueController)
 
 	func setContext(`for` key: AnyHashable, to value: Any?)
 	func context(`for` key: AnyHashable) -> Any?
 
-	func presentActionSheet(`for`: TableViewRow, title: String?, message: String?, actions: [UIAlertAction])
+	func tableViewRow(_ row: TableViewRow, presentActionSheetWithTitle title: String?, message: String?, actions: [UIAlertAction])
 
 }
 
@@ -137,7 +137,7 @@ public class DefaultSeguableTableViewRow<SegueIdentifier: RawRepresentable, Cell
 
 	public override func didSelect(withContext context: TableViewSectionRowContext) {
 		let delegate = context.tableViewRowDelegate
-		delegate.performSegue(withIdentifier: segueIdentifier, controller: self)
+		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
 	}
 
 	public func shouldPerformSegue(withIdentifier: String) -> Bool {

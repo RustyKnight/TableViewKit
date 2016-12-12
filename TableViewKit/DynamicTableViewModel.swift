@@ -10,10 +10,6 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 
 	internal var hidableItemsManager: HidableItemsManager<AnyTableViewSection>!
 
-	public override init() {
-		super.init()
-	}
-
 	internal func prepareHidableItemsManagerWith(_ sections: [AnyTableViewSection], allSections: [AnyHashable: AnyTableViewSection], preferredOrder: [AnyHashable]) {
 		hidableItemsManager = HidableItemsManager(activeItems: sections, allItems: allSections, preferredOrder: preferredOrder)
 		updateContents()
@@ -84,7 +80,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		super.tableViewSection(section, rowsWereChangedAt: rows)
 	}
 
-	override func sectionDidChange(_ section: TableViewSection) {
+	public override func tableViewSectionDidChange(_ section: TableViewSection) {
 		guard isActive(section: section) else {
 			guard !section.isHidden else {
 				return
@@ -92,7 +88,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 			updateContents()
 			return
 		}
-		super.sectionDidChange(section)
+		super.tableViewSectionDidChange(section)
 	}
 
 	func isActive(section: TableViewSection) -> Bool {

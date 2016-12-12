@@ -5,13 +5,18 @@
 
 import Foundation
 
-public protocol TableViewModel {
+public protocol Contextual {
+	func setContext(`for` key: AnyHashable, to value: Any?)
+	func context(`for` key: AnyHashable) -> Any?
+}
+
+public protocol TableViewModel: Contextual {
 	var delegate: TableViewModelDelegate? {get set}
 	var sectionCount: Int {get}
 
 	// The shared context is meant to allow sections to share information
 	// between.  The actual value used is dependent on the implementation
-	var sharedContext: [AnyHashable: Any] {get set}
+//	var sharedContext: [AnyHashable: Any] {get set}
 
 	func section(at: Int) -> TableViewSection
 
@@ -23,19 +28,19 @@ public protocol TableViewModel {
 
 public protocol TableViewModelDelegate {
 
-	func tableViewModel(_ model: TableViewModel, sectionsWereRemovedAt: [Int])
-	func tableViewModel(_ model: TableViewModel, sectionsWereAddedAt: [Int])
+	func tableViewModel(_ model: TableViewModel, sectionsWereRemovedAt sections: [Int])
+	func tableViewModel(_ model: TableViewModel, sectionsWereAddedAt sections: [Int])
 	func tableViewModel(_ model: TableViewModel, sectionsWereChangedAt sections: [Int])
 
-	func tableViewModel(_ model: TableViewModel, rowsWereAddedAt: [IndexPath])
-	func tableViewModel(_ model: TableViewModel, rowsWereRemovedAt: [IndexPath])
-	func tableViewModel(_ model: TableViewModel, rowsWereChangedAt: [IndexPath])
+	func tableViewModel(_ model: TableViewModel, rowsWereAddedAt rows: [IndexPath])
+	func tableViewModel(_ model: TableViewModel, rowsWereRemovedAt rows: [IndexPath])
+	func tableViewModel(_ model: TableViewModel, rowsWereChangedAt rows: [IndexPath])
 
 	func tableViewModel(_ model: TableViewModel, section: TableViewSection, didFailWith: Error)
 
-	func performSegue(withIdentifier: String, controller: TableViewSegueController)
+	func tableViewModel(_ model: TableViewModel, performSegueWithIdentifier identifier: String, controller: TableViewSegueController)
 
-	func presentActionSheet(section: Int, row: Int, title: String?, message: String?, actions: [UIAlertAction])
+	func tableViewModel(_ model: TableViewModel, presentActionSheetAtSection section: Int, row: Int, title: String?, message: String?, actions: [UIAlertAction])
 
 	func tableViewModel(_ model: TableViewModel, sectionsDidStartLoading: [Int])
 	func tableViewModel(_ model: TableViewModel, sectionsDidCompleteLoading: [Int])
@@ -58,27 +63,15 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 		let section = self.section(at: path.section)
 		return section.didSelectRow(at: path)
 	}
-
-//	func add(section: TableViewSection) {
-//		section.delegate = self
-//		sections.append(section)
-//		guard let delegate = delegate else {
-//			return
-//		}
-//		guard let index = index(of: section) else {
-//			return
-//		}
-//		delegate.tableViewModel(self, didAddSections: [index])
-//	}
-
+	
 	public func setContext(`for` key: AnyHashable, to value: Any?) {
 		sharedContext[key] = value
-
+		
 		for section in sections {
 			section.sharedContext(for: key, didChangeTo: value)
 		}
 	}
-
+	
 	public func context(`for` key: AnyHashable) -> Any? {
 		return sharedContext[key]
 	}
@@ -92,8 +85,8 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 			section == entry
 		})
 	}
-
-	public func didStartLoading(section: TableViewSection) {
+	
+	public func tableViewSectionDidStartLoading(_ section: TableViewSection) {
 		guard let delegate = delegate else {
 			return
 		}
@@ -102,9 +95,8 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 		}
 		delegate.tableViewModel(self, sectionsDidStartLoading: [index])
 	}
-
-
-	public func didCompleteLoading(section: TableViewSection) {
+	
+	public func tableViewSectionDidCompleteLoading(_ section: TableViewSection) {
 		guard let delegate = delegate else {
 			return
 		}
@@ -128,8 +120,6 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 		}
 		return paths
 	}
-
-//	func tableViewModel(_ model: TableViewModel, rowsWereRemovedAt: [IndexPath]) {}
 
 	public func tableViewSection(_ section: TableViewSection, rowsWereRemovedAt rows: [Int]) {
 		guard !section.isHidden else {
@@ -169,8 +159,8 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 		}
 		delegate.tableViewModel(self, rowsWereChangedAt: paths)
 	}
-
-	public func sectionDidChange(_ section: TableViewSection) {
+	
+	public func tableViewSectionDidChange(_ section: TableViewSection) {
 		guard !section.isHidden else {
 			return
 		}
@@ -182,19 +172,24 @@ public class DefaultTableViewModel: TableViewModel, TableViewSectionDelegate {
 		}
 		delegate.tableViewModel(self, sectionsWereChangedAt: [index])
 	}
-
-	public func performSegue(withIdentifier identifier: String, controller: TableViewSegueController) {
-		delegate?.performSegue(withIdentifier: identifier, controller: controller)
+	
+	public func tableViewSection(_ section: TableViewSection, performSegueWithIdentifier identifier: String, controller: TableViewSegueController) {
+		delegate?.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
-
-	public func presentActionSheet(`for` tableViewSection: TableViewSection, row: Int, title: String?, message: String?, actions: [UIAlertAction]) {
+	
+	public func tableViewSection(_ tableViewSection: TableViewSection, presentActionSheetAtRow row: Int, title: String?, message: String?, actions: [UIAlertAction]) {
 		guard let sectionIndex = index(of: tableViewSection) else {
 			return
 		}
-		delegate?.presentActionSheet(section: sectionIndex, row: row, title: title, message: message, actions: actions)
+		delegate?.tableViewModel(self,
+						presentActionSheetAtSection: sectionIndex,
+						row: row,
+						title: title,
+						message: message,
+						actions: actions)
 	}
-
-	public func section(_ section: TableViewSection, didFailWith error: Error) {
+	
+	public func tableViewSection(_ section: TableViewSection, didFailWith error: Error) {
 		guard let delegate = delegate else {
 			return
 		}

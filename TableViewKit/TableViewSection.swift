@@ -5,7 +5,7 @@
 
 import Foundation
 
-public protocol TableViewSection: class, Hidable {
+public protocol TableViewSection: class, Hidable, Contextual {
 
 	var name: String? {get}
 	var rowCount: Int {get}
@@ -38,16 +38,20 @@ public protocol TableViewSectionDelegate {
 
 	// The change is so significant, that's just easier to reload the
 	// section
-	func sectionDidChange(_ section: TableViewSection)
+	func tableViewSectionDidChange(_ section: TableViewSection)
 
-	func section(_ section: TableViewSection, didFailWith: Error)
+	func tableViewSection(_ section: TableViewSection, didFailWith: Error)
 
-	func didStartLoading(section: TableViewSection)
-	func didCompleteLoading(section: TableViewSection)
+	func tableViewSectionDidStartLoading(_ section: TableViewSection)
+	func tableViewSectionDidCompleteLoading(_ section: TableViewSection)
 
-	func performSegue(withIdentifier: String, controller: TableViewSegueController)
+	func tableViewSection(_ tableViewSection: TableViewSection, performSegueWithIdentifier: String, controller: TableViewSegueController)
 
-	func presentActionSheet(`for` tableViewSection: TableViewSection, row: Int, title: String?, message: String?, actions: [UIAlertAction])
+	func tableViewSection(_ tableViewSection: TableViewSection,
+	                      presentActionSheetAtRow: Int,
+	                      title: String?,
+	                      message: String?,
+	                      actions: [UIAlertAction])
 
 	func setContext(`for`: AnyHashable, to: Any?)
 	func context(`for`: AnyHashable) -> Any?
@@ -70,27 +74,8 @@ public extension TableViewSection {
 
 }
 
-//public extension ReusableTableViewCellHandler where Self: TableViewSection, CellIdentifierType.RawValue == String {
-//
-//	func dequeueReusableCell(from tableView: UITableView, withIdentifier identifier: CellIdentifierType) -> UITableViewCell? {
-//		return tableView.dequeueReusableCell(withIdentifier: identifier.rawValue)
-//	}
-//
-//	func dequeueReusableCell(from tableView: UITableView, withIdentifier identifier: CellIdentifierType, for indexPath: IndexPath) -> UITableViewCell {
-//		return tableView.dequeueReusableCell(withIdentifier: identifier.rawValue, for: indexPath)
-//	}
-//
-//	func dequeueReusableCell(from controller: UITableViewController, withIdentifier identifier: CellIdentifierType) -> UITableViewCell? {
-//		return dequeueReusableCell(from: controller.tableView, withIdentifier: identifier)
-//	}
-//
-//	func dequeueReusableCell(from controller: UITableViewController, withIdentifier identifier: CellIdentifierType, for indexPath: IndexPath) -> UITableViewCell {
-//		return dequeueReusableCell(from: controller.tableView, withIdentifier: identifier, for: indexPath)
-//	}
-//}
-
 public class AnyTableViewSection: TableViewSection, TableViewRowDelegate {
-
+	
 	public var name: String? = nil
 	public var rowCount: Int = 0
 	public var isHidden: Bool = true
@@ -117,22 +102,6 @@ public class AnyTableViewSection: TableViewSection, TableViewRowDelegate {
 		fatalError("Not yet implemented")
 	}
 
-	public func rowWasUpdated(_ row: TableViewRow) {
-		fatalError("Not yet implemented")
-	}
-
-	public func rowWasRemoved(_ row: TableViewRow) {
-		fatalError("Not yet implemented")
-	}
-
-	public func row(_ row: TableViewRow, didFailWith error: Error) {
-		fatalError("Not yet implemented")
-	}
-
-	public func performSegue(withIdentifier: String, controller: TableViewSegueController) {
-		fatalError("Not yet implemented")
-	}
-
 	public func setContext(`for` key: AnyHashable, to value: Any?) {
 		fatalError("Not yet implemented")
 	}
@@ -141,7 +110,23 @@ public class AnyTableViewSection: TableViewSection, TableViewRowDelegate {
 		fatalError("Not yet implemented")
 	}
 
-	public func presentActionSheet(`for`: TableViewRow, title: String?, message: String?, actions: [UIAlertAction]) {
+	public func tableViewRowWasUpdated(_ row: TableViewRow) {
+		fatalError("Not yet implemented")
+	}
+	
+	public func tableViewRowWasRemoved(_ row: TableViewRow) {
+		fatalError("Not yet implemented")
+	}
+	
+	public func tableViewRow(_ row: TableViewRow, didFailWith error: Error) {
+		fatalError("Not yet implemented")
+	}
+	
+	public func tableViewRow(_ row: TableViewRow, performSegueWithIdentifier identifier: String, controller: TableViewSegueController) {
+		fatalError("Not yet implemented")
+	}
+	
+	public func tableViewRow(_ row: TableViewRow, presentActionSheetWithTitle title: String?, message: String?, actions: [UIAlertAction]) {
 		fatalError("Not yet implemented")
 	}
 
@@ -149,7 +134,6 @@ public class AnyTableViewSection: TableViewSection, TableViewRowDelegate {
 
 public class DefaultTableViewSection: AnyTableViewSection {
 
-	internal var hidableItemsManager: HidableItemsManager<AnyTableViewRow>!
 	internal var rows: [AnyTableViewRow] = []
 
 	override public var rowCount: Int {
@@ -179,44 +163,8 @@ public class DefaultTableViewSection: AnyTableViewSection {
 		}
 	}
 
-	internal func prepareHidableItemsManagerWith(_ rows: [AnyTableViewRow], allRows: [AnyHashable: AnyTableViewRow], preferredOrder: [AnyHashable]) {
-		hidableItemsManager = HidableItemsManager(activeItems: rows, allItems: allRows, preferredOrder: preferredOrder)
-		updateContents()
-	}
-
-	internal func updateContents() {
-		rows = updateContents(with: hidableItemsManager)
-	}
-
-	internal func updateContents(with manager: HidableItemsManager<AnyTableViewRow>) -> [AnyTableViewRow] {
-		let rows = manager.update(wereRemoved: { indices, result in
-			self.rowsWereRemoved(from: indices, withRowsAfter: result)
-		}, wereAdded: { indices, result in
-			self.rowsWereAdded(at: indices, withRowsAfter: result)
-		})
-		return rows
-	}
-
 	override public func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
 		return rows[indexPath.row].cellFor(tableView: tableView, at: indexPath)
-	}
-
-	override public func willBecomeActive() {
-		for row in rows {
-			guard !row.isHidden else {
-				continue
-			}
-			row.willBecomeActive(self)
-		}
-	}
-
-	override public func didBecomeInactive() {
-		for row in rows {
-			guard !row.isHidden else {
-				continue
-			}
-			row.didBecomeInactive(self)
-		}
 	}
 
 	override public func didSelectRow(at path: IndexPath) -> Bool {
@@ -235,83 +183,57 @@ public class DefaultTableViewSection: AnyTableViewSection {
 		return index(of: value, in: rows) { $0 == $1  }
 	}
 
-	internal func rowsWereRemoved(from indices: [Int], withRowsAfter result: [AnyTableViewRow]) {
-		// Want a reference to the rows which are going to be removed, so we can
-		// deactivate them, but only AFTER we notify the delegate, as the deactivation
-		// might cause updates to be triggered
-		var oldRows: [AnyTableViewRow] = rows.filter { row in indices.contains(index(of: row) ?? -1) }
-
-		self.rows = result
-		self.delegate?.tableViewSection(self, rowsWereRemovedAt: indices)
-
-		for row in oldRows {
-			row.didBecomeInactive(self)
-		}
-	}
-
-	internal func rowsWereAdded(at indices: [Int], withRowsAfter result: [AnyTableViewRow]) {
-		self.rows = result
-		self.delegate?.tableViewSection(self, rowsWereAddedAt: indices)
-		for index in indices {
-			self.rows[index].willBecomeActive(self)
-		}
-	}
-
 	// MARK: TableViewRowDelegate
-
-	override public func rowWasUpdated(_ row: TableViewRow) {
+	
+	public override func tableViewRowWasUpdated(_ row: TableViewRow) {
 		guard let delegate = delegate else {
 			return
 		}
 		guard let index = index(of: row) else {
 			return
 		}
-		self.delegate?.tableViewSection(self, rowsWereChangedAt: [index])
+		delegate.tableViewSection(self, rowsWereChangedAt: [index])
 	}
-
-	override public func rowWasRemoved(_ row: TableViewRow) {
+	
+	public override func tableViewRowWasRemoved(_ row: TableViewRow) {
 		guard let delegate = delegate else {
 			return
 		}
 		guard let index = index(of: row) else {
 			return
 		}
-		self.delegate?.tableViewSection(self, rowsWereRemovedAt: [index])
+		delegate.tableViewSection(self, rowsWereRemovedAt: [index])
 	}
-
-//	public func remove(row: TableViewRow) {
-//		guard let index = index(of: row, in: rows, where: { $0 == $1 }) else {
-//			log(warning: "Failed to find a matching index for \(row)")
-//			return
-//		}
-//
-//		rows.remove(at: index)
-//		guard let delegate = delegate else {
-//			return
-//		}
-//		delegate.rows(wereRemoved: [index], from: self)
-//	}
-
-	override public func row(_ row: TableViewRow, didFailWith error: Error) {
-		delegate?.section(self, didFailWith: error)
+	
+	public override func tableViewRow(_ row: TableViewRow, didFailWith error: Error) {
+		delegate?.tableViewSection(self, didFailWith: error)
 	}
-
-	override public func performSegue(withIdentifier identifier: String, controller: TableViewSegueController) {
-		delegate?.performSegue(withIdentifier: identifier, controller: controller)
+	
+	public override func tableViewRow(_ row: TableViewRow, performSegueWithIdentifier identifier: String, controller: TableViewSegueController) {
+		delegate?.tableViewSection(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
-
-	override public func presentActionSheet(`for` tableViewRow: TableViewRow, title: String?, message: String?, actions: [UIAlertAction]) {
-		guard let rowIndex = index(of: tableViewRow) else {
+	
+	public override func tableViewRow(_ row: TableViewRow, presentActionSheetWithTitle title: String?, message: String?, actions: [UIAlertAction]) {
+		guard let delegate = delegate else {
 			return
 		}
-		delegate?.presentActionSheet(for: self, row: rowIndex, title: title, message: message, actions: actions)
+		guard let rowIndex = index(of: row) else {
+			return
+		}
+		delegate.tableViewSection(self, presentActionSheetAtRow: rowIndex, title: title, message: message, actions: actions)
 	}
 
 	override public func setContext(`for` key: AnyHashable, to value: Any?) {
-		delegate?.setContext(for: key, to: value)
+		guard let delegate = delegate else {
+			return
+		}
+		delegate.setContext(for: key, to: value)
 	}
 
 	override public func context(`for` key: AnyHashable) -> Any? {
-		return delegate?.context(for: key)
+		guard let delegate = delegate else {
+			return nil
+		}
+		return delegate.context(for: key)
 	}
 }

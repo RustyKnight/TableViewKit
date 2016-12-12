@@ -14,6 +14,7 @@
 		3ED4A91175C513AE13B28E3F /* DynamicTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AB07285B81076C4225E5 /* DynamicTableViewModel.swift */; };
 		3ED4AD77B3772A0BB70CDF10 /* Hidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AF7D18EF6B73794DFCC1 /* Hidable.swift */; };
 		3ED4AEA7BC9256E7D29615BA /* Seguable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4ACB58E47EB22286449BE /* Seguable.swift */; };
+		5A682EBD8AE22FC70A4655A6 /* DynamicTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6824CA19E1256045D5B7E9 /* DynamicTableViewSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		3ED4ACB58E47EB22286449BE /* Seguable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seguable.swift; sourceTree = "<group>"; };
 		3ED4AD38207A104A1BADAC26 /* TableViewRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewRow.swift; sourceTree = "<group>"; };
 		3ED4AF7D18EF6B73794DFCC1 /* Hidable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hidable.swift; sourceTree = "<group>"; };
+		5A6824CA19E1256045D5B7E9 /* DynamicTableViewSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicTableViewSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				3ED4ACB58E47EB22286449BE /* Seguable.swift */,
 				3ED4A94B5007036AB6415867 /* TableViewSection.swift */,
 				3ED4AB07285B81076C4225E5 /* DynamicTableViewModel.swift */,
+				5A6824CA19E1256045D5B7E9 /* DynamicTableViewSection.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				3ED4AEA7BC9256E7D29615BA /* Seguable.swift in Sources */,
 				3ED4A6DA6889737312B9B02D /* TableViewSection.swift in Sources */,
 				3ED4A91175C513AE13B28E3F /* DynamicTableViewModel.swift in Sources */,
+				5A682EBD8AE22FC70A4655A6 /* DynamicTableViewSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
