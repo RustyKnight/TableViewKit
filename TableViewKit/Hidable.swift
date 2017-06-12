@@ -30,8 +30,6 @@ internal typealias Evaluator<T> = (T, T) -> Bool
 
 public class HidableItemsManager<ItemType: Hidable> {
 
-//	typealias AnyHashable = AnyHashable
-
 	public typealias WasChanged = ([Int], [ItemType]) -> Void
 	public typealias WereRemoved = WasChanged
 	public typealias WereAdded = WasChanged

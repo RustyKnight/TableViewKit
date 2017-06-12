@@ -5,20 +5,20 @@
 
 import Foundation
 
-public class DynamicTableViewSection: DefaultTableViewSection {
+public class DynamicTableViewSection: TVKDefaultSection {
 
-	internal var hidableItemsManager: HidableItemsManager<AnyTableViewRow>!
+	internal var hidableItemsManager: HidableItemsManager<TVKAnyRow>!
 
-	internal func prepareHidableItemsManagerWith(_ rows: [AnyTableViewRow], allRows: [AnyHashable: AnyTableViewRow], preferredOrder: [AnyHashable]) {
+	internal func prepareHidableItemsManagerWith(_ rows: [TVKAnyRow], allRows: [AnyHashable: TVKAnyRow], preferredOrder: [AnyHashable]) {
 		hidableItemsManager = HidableItemsManager(activeItems: rows, allItems: allRows, preferredOrder: preferredOrder)
 		updateContents()
 	}
-	
+
 	internal func updateContents() {
 		rows = updateContents(with: hidableItemsManager)
 	}
-	
-	internal func updateContents(with manager: HidableItemsManager<AnyTableViewRow>) -> [AnyTableViewRow] {
+
+	internal func updateContents(with manager: HidableItemsManager<TVKAnyRow>) -> [TVKAnyRow] {
 		let rows = manager.update(wereRemoved: { indices, result in
 			self.rowsWereRemoved(from: indices, withRowsAfter: result)
 		}, wereAdded: { indices, result in
@@ -26,29 +26,31 @@ public class DynamicTableViewSection: DefaultTableViewSection {
 		})
 		return rows
 	}
-	
-	internal func rowsWereRemoved(from indices: [Int], withRowsAfter result: [AnyTableViewRow]) {
+
+	internal func rowsWereRemoved(from indices: [Int], withRowsAfter result: [TVKAnyRow]) {
 		// Want a reference to the rows which are going to be removed, so we can
 		// deactivate them, but only AFTER we notify the delegate, as the deactivation
 		// might cause updates to be triggered
-		var oldRows: [AnyTableViewRow] = rows.filter { row in indices.contains(index(of: row) ?? -1) }
-		
+		let oldRows: [TVKAnyRow] = rows.filter { row in
+			indices.contains(index(of: row) ?? -1)
+		}
+
 		self.rows = result
 		self.delegate?.tableViewSection(self, rowsWereRemovedAt: indices)
-		
+
 		for row in oldRows {
 			row.didBecomeInactive(self)
 		}
 	}
-	
-	internal func rowsWereAdded(at indices: [Int], withRowsAfter result: [AnyTableViewRow]) {
+
+	internal func rowsWereAdded(at indices: [Int], withRowsAfter result: [TVKAnyRow]) {
 		self.rows = result
 		self.delegate?.tableViewSection(self, rowsWereAddedAt: indices)
 		for index in indices {
 			self.rows[index].willBecomeActive(self)
 		}
 	}
-	
+
 	override public func willBecomeActive() {
 		for row in rows {
 			guard !row.isHidden else {
@@ -57,7 +59,7 @@ public class DynamicTableViewSection: DefaultTableViewSection {
 			row.willBecomeActive(self)
 		}
 	}
-	
+
 	override public func didBecomeInactive() {
 		for row in rows {
 			guard !row.isHidden else {
@@ -66,6 +68,6 @@ public class DynamicTableViewSection: DefaultTableViewSection {
 			row.didBecomeInactive(self)
 		}
 	}
-	
-	
+
+
 }

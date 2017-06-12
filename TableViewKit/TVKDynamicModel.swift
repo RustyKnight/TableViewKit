@@ -6,11 +6,11 @@
 import Foundation
 
 /// Represents a TableViewModel whose sections are dynamic and can change in real time
-class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel {
+class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 
-	internal var hidableItemsManager: HidableItemsManager<AnyTableViewSection>!
+	internal var hidableItemsManager: HidableItemsManager<TVKAnySection>!
 
-	internal func prepareHidableItemsManagerWith(_ sections: [AnyTableViewSection], allSections: [AnyHashable: AnyTableViewSection], preferredOrder: [AnyHashable]) {
+	internal func prepareHidableItemsManagerWith(_ sections: [TVKAnySection], allSections: [AnyHashable: TVKAnySection], preferredOrder: [AnyHashable]) {
 		hidableItemsManager = HidableItemsManager(activeItems: sections, allItems: allSections, preferredOrder: preferredOrder)
 		updateContents()
 	}
@@ -19,7 +19,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		sections = updateContents(with: hidableItemsManager)
 	}
 
-	internal func updateContents(with manager: HidableItemsManager<AnyTableViewSection>) -> [AnyTableViewSection] {
+	internal func updateContents(with manager: HidableItemsManager<TVKAnySection>) -> [TVKAnySection] {
 		let sections = manager.update(wereRemoved: { indices, result in
 			self.sectionsWereRemoved(from: indices, withSectionsAfter: result)
 		}, wereAdded: { indices, result in
@@ -28,8 +28,8 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		return sections
 	}
 
-	internal func sectionsWereAdded(at indices: [Int], withSectionsAfter result: [AnyTableViewSection]) {
-		var oldSections: [TableViewSection] = sections.filter { section in indices.contains(index(of: section) ?? -1)}
+	internal func sectionsWereAdded(at indices: [Int], withSectionsAfter result: [TVKAnySection]) {
+		var oldSections: [TVKSection] = sections.filter { section in indices.contains(index(of: section) ?? -1)}
 
 		self.sections = result
 		self.delegate?.tableViewModel(self, sectionsWereRemovedAt: indices)
@@ -39,7 +39,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		}
 	}
 
-	internal func sectionsWereRemoved(from indices: [Int], withSectionsAfter result: [AnyTableViewSection]) {
+	internal func sectionsWereRemoved(from indices: [Int], withSectionsAfter result: [TVKAnySection]) {
 		self.sections = result
 		self.delegate?.tableViewModel(self, sectionsWereAddedAt: indices)
 		for index in indices {
@@ -47,7 +47,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		}
 	}
 
-	override public func tableViewSection(_ section: TableViewSection, rowsWereRemovedAt rows: [Int]) {
+	override public func tableViewSection(_ section: TVKSection, rowsWereRemovedAt rows: [Int]) {
 		guard isActive(section: section) else {
 			guard !section.isHidden else {
 				return
@@ -58,7 +58,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		super.tableViewSection(section, rowsWereRemovedAt: rows)
 	}
 
-	override public func tableViewSection(_ section: TableViewSection, rowsWereAddedAt rows: [Int]) {
+	override public func tableViewSection(_ section: TVKSection, rowsWereAddedAt rows: [Int]) {
 		guard isActive(section: section) else {
 			guard !section.isHidden else {
 				return
@@ -69,7 +69,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		super.tableViewSection(section, rowsWereAddedAt: rows)
 	}
 
-	override public func tableViewSection(_ section: TableViewSection, rowsWereChangedAt rows: [Int]) {
+	override public func tableViewSection(_ section: TVKSection, rowsWereChangedAt rows: [Int]) {
 		guard isActive(section: section) else {
 			guard !section.isHidden else {
 				return
@@ -80,7 +80,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		super.tableViewSection(section, rowsWereChangedAt: rows)
 	}
 
-	public override func tableViewSectionDidChange(_ section: TableViewSection) {
+	public override func tableViewSectionDidChange(_ section: TVKSection) {
 		guard isActive(section: section) else {
 			guard !section.isHidden else {
 				return
@@ -91,7 +91,7 @@ class DynamicTableViewModel<SectionIdentifier: Hashable>: DefaultTableViewModel 
 		super.tableViewSectionDidChange(section)
 	}
 
-	func isActive(section: TableViewSection) -> Bool {
+	func isActive(section: TVKSection) -> Bool {
 		return index(of: section, in: sections) != nil
 	}
 
