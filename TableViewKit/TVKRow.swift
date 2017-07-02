@@ -43,9 +43,9 @@ public protocol TVKRowDelegate {
 }
 
 public protocol TVKSectionRowContext {
-	var tableViewRowDelegate: TVKRowDelegate {get}
-	var tableViewController: UITableViewController {get}
-	var indexPath: IndexPath {get}
+	var tableViewRowDelegate: TVKRowDelegate { get }
+	var tableViewController: UITableViewController { get }
+	var indexPath: IndexPath { get }
 }
 
 public struct TVKDefaultSectionRowContext: TVKSectionRowContext {
@@ -55,7 +55,7 @@ public struct TVKDefaultSectionRowContext: TVKSectionRowContext {
 }
 
 public protocol TVKRow: Hidable {
-	var delegate: TVKRowDelegate? {get}
+	var delegate: TVKRowDelegate? { get }
 
 	func didSelect(withContext context: TVKSectionRowContext)
 	func shouldSelectRow() -> Bool
@@ -79,88 +79,88 @@ public func ==(lhs: TVKAnyRow, rhs: TVKAnyRow) -> Bool {
 	return lhsAddress == rhsAddress
 }
 
-public class TVKAnyRow: NSObject, TVKRow {
+open class TVKAnyRow: NSObject, TVKRow {
 
 	public var delegate: TVKRowDelegate?
 
-	public func didSelect(withContext context: TVKSectionRowContext) {
+	open func didSelect(withContext context: TVKSectionRowContext) {
 	}
 
-	public func shouldSelectRow() -> Bool {
+	open func shouldSelectRow() -> Bool {
 		return true
 	}
 
-	public func cellFor(tableView: UITableView, at: IndexPath) -> UITableViewCell {
+	open func cellFor(tableView: UITableView, at: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
 
-	public func willBecomeActive(_ delegate: TVKRowDelegate) {
+	open func willBecomeActive(_ delegate: TVKRowDelegate) {
 	}
 
-	public func didBecomeInactive(_ delegate: TVKRowDelegate) {
+	open func didBecomeInactive(_ delegate: TVKRowDelegate) {
 	}
 
-	public var isHidden: Bool = false
+	open var isHidden: Bool = false
 
-	public func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
+	open func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
 	}
 
 }
 
-public class TVKDefaultReusableRow<T: RawRepresentable>: TVKAnyRow where T.RawValue == String {
+open class TVKDefaultReusableRow<T:RawRepresentable>: TVKAnyRow where T.RawValue == String {
 
-	let cellIdentifier: T
+	public let cellIdentifier: T
 
-	init(cellIdentifier: T, delegate: TVKRowDelegate? = nil) {
+	public init(cellIdentifier: T, delegate: TVKRowDelegate? = nil) {
 		self.cellIdentifier = cellIdentifier
 		super.init()
 		self.delegate = delegate
 	}
 
-	public override func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+	open override func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier.rawValue, for: indexPath)
 		configure(cell)
 		return cell
 	}
 
-	func configure(_ cell: UITableViewCell) {
+	open func configure(_ cell: UITableViewCell) {
 		fatalError("Not yet implemented")
 	}
 
 }
 
-public class TVKDefaultSeguableRow<SegueIdentifier: RawRepresentable, CellIdentifier: RawRepresentable>: TVKDefaultReusableRow<CellIdentifier>,
+open class TVKDefaultSeguableRow<SegueIdentifier:RawRepresentable, CellIdentifier:RawRepresentable>: TVKDefaultReusableRow<CellIdentifier>,
 		Seguable,
 		TVKSegueController where SegueIdentifier.RawValue == String, CellIdentifier.RawValue == String {
 
 	public let segueIdentifier: String
 
-	init(segueIdentifier: SegueIdentifier,
-	     cellIdentifier: CellIdentifier,
-	     delegate: TVKRowDelegate? = nil) {
+	public init(segueIdentifier: SegueIdentifier,
+	          cellIdentifier: CellIdentifier,
+	          delegate: TVKRowDelegate? = nil) {
 		// I'd call self.init, but I want this initialise to be callable by child implementations,
 		// it's kind of the point of providing the generic support
 		self.segueIdentifier = segueIdentifier.rawValue
 		super.init(cellIdentifier: cellIdentifier, delegate: delegate)
 	}
 
-	override func configure(_ cell: UITableViewCell) {
+	override open func configure(_ cell: UITableViewCell) {
 		cell.accessoryType = .disclosureIndicator
 	}
 
-	public override func didSelect(withContext context: TVKSectionRowContext) {
+	override open func didSelect(withContext context: TVKSectionRowContext) {
 		let delegate = context.tableViewRowDelegate
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
 	}
 
-	public func shouldPerformSegue(withIdentifier: String) -> Bool {
+	open func shouldPerformSegue(withIdentifier: String) -> Bool {
 		return true
 	}
 
-	public func prepare(for segue: UIStoryboardSegue) {
+	open func prepare(for segue: UIStoryboardSegue) {
 	}
 
-	public func unwound(from segue: UIStoryboardSegue) {
+	open func unwound(from segue: UIStoryboardSegue) {
 	}
+
 }
-

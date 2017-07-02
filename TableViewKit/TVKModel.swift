@@ -14,10 +14,6 @@ public protocol TVKModel: Contextual {
 	var delegate: TVKModelDelegate? { get set }
 	var sectionCount: Int { get }
 
-	// The shared context is meant to allow sections to share information
-	// between.  The actual value used is dependent on the implementation
-//	var sharedContext: [AnyHashable: Any] {get set}
-
 	func section(at: Int) -> TVKSection
 
 	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
@@ -63,13 +59,14 @@ public protocol TVKModelDelegate {
 	func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int])
 }
 
-public class TVKDefaultModel: TVKModel, TVKSectionDelegate {
+open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 
 	public var sharedContext: [AnyHashable: Any] = [:]
 
 	internal var sections: [TVKSection] = []
 
 	public var delegate: TVKModelDelegate?
+
 	public var sectionCount: Int {
 		return sections.count
 	}
@@ -192,11 +189,19 @@ public class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		delegate.tableViewModel(self, sectionsWereChangedAt: [index])
 	}
 
-	public func tableViewSection(_ section: TVKSection, performSegueWithIdentifier identifier: String, controller: TVKSegueController) {
+	public func tableViewSection(
+			_ section: TVKSection,
+			performSegueWithIdentifier identifier: String,
+			controller: TVKSegueController) {
 		delegate?.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 
-	public func tableViewSection(_ tableViewSection: TVKSection, presentActionSheetAtRow row: Int, title: String?, message: String?, actions: [UIAlertAction]) {
+	public func tableViewSection(
+			_ tableViewSection: TVKSection,
+			presentActionSheetAtRow row: Int,
+			title: String?,
+			message: String?,
+			actions: [UIAlertAction]) {
 		guard let sectionIndex = index(of: tableViewSection) else {
 			return
 		}

@@ -5,28 +5,28 @@
 
 import Foundation
 
-class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
+open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
 
-	var model: TVKModel!
+	public var model: TVKModel!
 
-	var seguePreparer: TVKSegueController?
+	public var seguePreparer: TVKSegueController?
 
 	public var preferredAddAnimation: UITableViewRowAnimation = .automatic
 	public var preferredDeleteAnimation: UITableViewRowAnimation = .automatic
 	public var preferredRefreshAnimation: UITableViewRowAnimation = .automatic
 
-	override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		model.delegate = self
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		loadModel()
 	}
 
-	func loadModel(disableDelegate: Bool = true) {
+	open func loadModel(disableDelegate: Bool = true) {
 		if disableDelegate {
 			model.delegate = nil
 		}
@@ -35,52 +35,52 @@ class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
 		tableView.reloadData()
 	}
 
-	override func viewDidDisappear(_ animated: Bool) {
+	open override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		model.didBecomeInactive()
 	}
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	open override func numberOfSections(in tableView: UITableView) -> Int {
 		return model.sectionCount
 	}
 
 	// MARK: UITableViewDataSource
 
-	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).name
 		return title
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return model.section(at: section).rowCount
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return model.section(at: indexPath.section).cellFor(tableView: tableView, at: indexPath)
 	}
 
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	open override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return false
 	}
 
-	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	open override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return false
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if model.didSelectRow(at: indexPath, from: self) {
 			tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}
 
-	public override func tableView(
+	open override func tableView(
 			_ tableView: UITableView,
 			willDisplay cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
 		model.section(at: indexPath.section).willDisplay(cell, forRowAt: indexPath.row)
 	}
 
-	public override func tableView(
+	open override func tableView(
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
@@ -89,34 +89,34 @@ class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
 
 	// MARK: TVKModel
 
-	func tableViewModel(_ model: TVKModel, sectionsWereRemovedAt sections: [Int]) {
+	open func tableViewModel(_ model: TVKModel, sectionsWereRemovedAt sections: [Int]) {
 		tableView.deleteSections(IndexSet(sections), with: preferredDeleteAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, sectionsWereAddedAt sections: [Int]) {
+	open func tableViewModel(_ model: TVKModel, sectionsWereAddedAt sections: [Int]) {
 		tableView.insertSections(IndexSet(sections), with: preferredAddAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, sectionsWereChangedAt sections: [Int]) {
+	open func tableViewModel(_ model: TVKModel, sectionsWereChangedAt sections: [Int]) {
 		tableView.reloadSections(IndexSet(sections), with: preferredRefreshAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, rowsWereAddedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TVKModel, rowsWereAddedAt rows: [IndexPath]) {
 		tableView.insertRows(at: rows, with: preferredAddAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, rowsWereRemovedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TVKModel, rowsWereRemovedAt rows: [IndexPath]) {
 		tableView.reloadRows(at: rows, with: preferredRefreshAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, rowsWereChangedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TVKModel, rowsWereChangedAt rows: [IndexPath]) {
 		tableView.deleteRows(at: rows, with: preferredDeleteAnimation)
 	}
 
-	func tableViewModel(_ model: TVKModel, section: TVKSection, didFailWith: Error) {
+	open func tableViewModel(_ model: TVKModel, section: TVKSection, didFailWith: Error) {
 	}
 
-	func tableViewModel(
+	open func tableViewModel(
 			_ model: TVKModel,
 			showAlertAtSection section: Int,
 			row: Int,
@@ -139,20 +139,20 @@ class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
 				completion: nil)
 	}
 
-	func tableViewModel(_ model: TVKModel, sectionsDidStartLoading: [Int]) {
+	open func tableViewModel(_ model: TVKModel, sectionsDidStartLoading: [Int]) {
 	}
 
-	func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int]) {
+	open func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int]) {
 	}
 
-	func tableViewModel(
+	open func tableViewModel(
 			_ model: TVKModel,
 			performSegueWithIdentifier identifier: String,
 			controller: TVKSegueController) {
 		performSegue(withIdentifier: identifier, sender: controller)
 	}
 
-	func tableViewModel(
+	open func tableViewModel(
 			_ model: TVKModel,
 			presentActionSheetAtSection section: Int,
 			row: Int,
@@ -170,11 +170,8 @@ class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
 		controller.popoverPresentationController?.sourceRect = bounds
 		self.present(controller, animated: true)
 	}
-}
 
-extension TVKDefaultTableViewController {
-
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard segue.identifier != nil else {
 			return
 		}
@@ -185,7 +182,7 @@ extension TVKDefaultTableViewController {
 		}
 	}
 
-	func didUnwindFrom(_ segue: UIStoryboardSegue) {
+	open func didUnwindFrom(_ segue: UIStoryboardSegue) {
 		defer {
 			seguePreparer = nil
 		}

@@ -88,7 +88,7 @@ public extension TVKSection {
 
 }
 
-public class TVKAnySection: TVKSection, TVKRowDelegate {
+open class TVKAnySection: TVKSection, TVKRowDelegate {
 
 	public var name: String? = nil
 	public var rowCount: Int = 0
@@ -96,51 +96,51 @@ public class TVKAnySection: TVKSection, TVKRowDelegate {
 
 	public var delegate: TVKSectionDelegate? = nil
 
-	public func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+	open func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
 
-	public func willBecomeActive() {
+	open func willBecomeActive() {
 		fatalError("Not yet implemented")
 	}
 
-	public func didBecomeInactive() {
+	open func didBecomeInactive() {
 		fatalError("Not yet implemented")
 	}
 
-	public func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
+	open func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
 		fatalError("Not yet implemented")
 	}
 
-	public func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
+	open func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
 		fatalError("Not yet implemented")
 	}
 
-	public func shouldSelectRow(at path: IndexPath) -> Bool {
+	open func shouldSelectRow(at path: IndexPath) -> Bool {
 		fatalError("Not yet implemented")
 	}
 
-	public func setContext(`for` key: AnyHashable, to value: Any?) {
+	open func setContext(`for` key: AnyHashable, to value: Any?) {
 		fatalError("Not yet implemented")
 	}
 
-	public func context(`for` key: AnyHashable) -> Any? {
+	open func context(`for` key: AnyHashable) -> Any? {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRowWasUpdated(_ row: TVKRow) {
+	open func tableViewRowWasUpdated(_ row: TVKRow) {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRowWasRemoved(_ row: TVKRow) {
+	open func tableViewRowWasRemoved(_ row: TVKRow) {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRow(_ row: TVKRow, didFailWith error: Error) {
+	open func tableViewRow(_ row: TVKRow, didFailWith error: Error) {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRow(
+	open func tableViewRow(
 			_ row: TVKRow,
 			showAlertTitled title: String?,
 			message: String?,
@@ -149,14 +149,14 @@ public class TVKAnySection: TVKSection, TVKRowDelegate {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRow(
+	open func tableViewRow(
 			_ row: TVKRow,
 			performSegueWithIdentifier identifier: String,
 			controller: TVKSegueController) {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRow(
+	open func tableViewRow(
 			_ row: TVKRow,
 			presentActionSheetWithTitle title: String?,
 			message: String?,
@@ -164,15 +164,15 @@ public class TVKAnySection: TVKSection, TVKRowDelegate {
 		fatalError("Not yet implemented")
 	}
 
-	public func willDisplay(_ cell: UITableViewCell, forRowAt: Int) {
+	open func willDisplay(_ cell: UITableViewCell, forRowAt: Int) {
 		fatalError("Not yet implemented")
 	}
 
-	public func didEndDisplaying(_ cell: UITableViewCell, forRowAt: Int) {
+	open func didEndDisplaying(_ cell: UITableViewCell, forRowAt: Int) {
 		fatalError("Not yet implemented")
 	}
 
-	public func tableViewRow(
+	open func tableViewRow(
 			_ model: TVKModel,
 			showAlertAtRow: Int,
 			titled title: String?,
@@ -187,7 +187,7 @@ public class TVKDefaultSection: TVKAnySection {
 
 	internal var rows: [TVKAnyRow] = []
 
-	override public var rowCount: Int {
+	override open var rowCount: Int {
 		get {
 			return rows.count
 		}
@@ -209,17 +209,17 @@ public class TVKDefaultSection: TVKAnySection {
 	internal func setup() {
 	}
 
-	override public func sharedContext(for key: AnyHashable, didChangeTo to: Any?) {
+	override open func sharedContext(for key: AnyHashable, didChangeTo to: Any?) {
 		for row in rows {
 			row.sharedContext(for: key, didChangeTo: to)
 		}
 	}
 
-	override public func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+	override open func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
 		return rows[indexPath.row].cellFor(tableView: tableView, at: indexPath)
 	}
 
-	override public func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
+	override open func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
 		let context = TVKDefaultSectionRowContext(tableViewRowDelegate: self,
 				tableViewController: controller,
 				indexPath: path)
@@ -228,7 +228,7 @@ public class TVKDefaultSection: TVKAnySection {
 		return true
 	}
 
-	override public func shouldSelectRow(at path: IndexPath) -> Bool {
+	override open func shouldSelectRow(at path: IndexPath) -> Bool {
 		let rowValue = rows[path.row]
 		return rowValue.shouldSelectRow()
 	}
@@ -247,7 +247,7 @@ public class TVKDefaultSection: TVKAnySection {
 
 	// MARK: TableViewRowDelegate
 
-	public override func tableViewRowWasUpdated(_ row: TVKRow) {
+	open override func tableViewRowWasUpdated(_ row: TVKRow) {
 		guard let delegate = delegate else {
 			return
 		}
@@ -257,7 +257,7 @@ public class TVKDefaultSection: TVKAnySection {
 		delegate.tableViewSection(self, rowsWereChangedAt: [index])
 	}
 
-	public override func tableViewRowWasRemoved(_ row: TVKRow) {
+	open override func tableViewRowWasRemoved(_ row: TVKRow) {
 		guard let delegate = delegate else {
 			return
 		}
@@ -267,11 +267,11 @@ public class TVKDefaultSection: TVKAnySection {
 		delegate.tableViewSection(self, rowsWereRemovedAt: [index])
 	}
 
-	public override func tableViewRow(_ row: TVKRow, didFailWith error: Error) {
+	open override func tableViewRow(_ row: TVKRow, didFailWith error: Error) {
 		delegate?.tableViewSection(self, didFailWith: error)
 	}
 
-	override public func tableViewRow(
+	override open func tableViewRow(
 			_ row: TVKRow,
 			showAlertTitled title: String?,
 			message: String?,
@@ -289,14 +289,14 @@ public class TVKDefaultSection: TVKAnySection {
 				actions: actions)
 	}
 
-	public override func tableViewRow(
+	open override func tableViewRow(
 			_ row: TVKRow,
 			performSegueWithIdentifier identifier: String,
 			controller: TVKSegueController) {
 		delegate?.tableViewSection(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 
-	public override func tableViewRow(
+	open override func tableViewRow(
 			_ row: TVKRow,
 			presentActionSheetWithTitle title: String?,
 			message: String?,
@@ -310,14 +310,14 @@ public class TVKDefaultSection: TVKAnySection {
 		delegate.tableViewSection(self, presentActionSheetAtRow: rowIndex, title: title, message: message, actions: actions)
 	}
 
-	override public func setContext(`for` key: AnyHashable, to value: Any?) {
+	override open func setContext(`for` key: AnyHashable, to value: Any?) {
 		guard let delegate = delegate else {
 			return
 		}
 		delegate.setContext(for: key, to: value)
 	}
 
-	override public func context(`for` key: AnyHashable) -> Any? {
+	override open func context(`for` key: AnyHashable) -> Any? {
 		guard let delegate = delegate else {
 			return nil
 		}

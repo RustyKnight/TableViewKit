@@ -6,12 +6,21 @@
 import Foundation
 
 /// Represents a TableViewModel whose sections are dynamic and can change in real time
-public class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
+open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 
 	internal var hidableItemsManager: HidableItemsManager<TVKAnySection>!
 
-	internal func prepareHidableItemsManagerWith(_ sections: [TVKAnySection], allSections: [AnyHashable: TVKAnySection], preferredOrder: [AnyHashable]) {
-		hidableItemsManager = HidableItemsManager(activeItems: sections, allItems: allSections, preferredOrder: preferredOrder)
+	var allSections: [SectionIdentifier: TVKSection] = [:]
+	var preferredSectionOrder: [SectionIdentifier] = []
+
+	internal func prepareHidableItemsManagerWith(
+			_ sections: [TVKAnySection],
+			allSections: [AnyHashable: TVKAnySection],
+			preferredOrder: [AnyHashable]) {
+		hidableItemsManager = HidableItemsManager(
+				activeItems: sections,
+				allItems: allSections,
+				preferredOrder: preferredOrder)
 		updateContents()
 	}
 
@@ -29,21 +38,23 @@ public class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 	}
 
 	internal func sectionsWereAdded(at indices: [Int], withSectionsAfter result: [TVKAnySection]) {
-		var oldSections: [TVKSection] = sections.filter { section in indices.contains(index(of: section) ?? -1)}
-
-		self.sections = result
-		self.delegate?.tableViewModel(self, sectionsWereRemovedAt: indices)
+		var oldSections: [TVKSection] = sections.filter { section in
+			indices.contains(index(of: section) ?? -1)
+		}
 
 		for section in oldSections {
-			section.didBecomeInactive()
+			section.willBecomeActive()
 		}
+
+		self.sections = result
+		self.delegate?.tableViewModel(self, sectionsWereAddedAt: indices)
 	}
 
 	internal func sectionsWereRemoved(from indices: [Int], withSectionsAfter result: [TVKAnySection]) {
 		self.sections = result
-		self.delegate?.tableViewModel(self, sectionsWereAddedAt: indices)
+		self.delegate?.tableViewModel(self, sectionsWereRemovedAt: indices)
 		for index in indices {
-			self.sections[index].willBecomeActive()
+			self.sections[index].didBecomeInactive()
 		}
 	}
 
@@ -95,19 +106,4 @@ public class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 		return index(of: section, in: sections) != nil
 	}
 
-//	override internal func index(of section: TableViewSection) -> Int? {
-//		return index(of: section, in: activeSections)
-//	}
-//
-//	override internal func index(of section: TableViewSection, `in` sections: [TableViewSection]) -> Int? {
-//		return sections.index(where: { (entry: TableViewSection) -> Bool in
-//			section == entry
-//		})
-//	}
-//
-//	override internal func index<T>(of value: T, `in` values: [T], `where` evaluator: Evaluator<T>) -> Int? {
-//		return values.index(where: { (entry: T) -> Bool in
-//			evaluator(value, entry)
-//		})
-//	}
 }
