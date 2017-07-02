@@ -6,7 +6,7 @@
 import Foundation
 
 /// Represents a TableViewModel whose sections are dynamic and can change in real time
-class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
+public class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 
 	internal var hidableItemsManager: HidableItemsManager<TVKAnySection>!
 
