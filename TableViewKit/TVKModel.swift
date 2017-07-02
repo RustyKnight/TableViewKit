@@ -66,6 +66,10 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	internal var sections: [TVKSection] = []
 
 	public var delegate: TVKModelDelegate?
+	
+	public init() {
+		
+	}
 
 	public var sectionCount: Int {
 		return sections.count

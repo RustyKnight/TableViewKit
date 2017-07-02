@@ -26,7 +26,7 @@ public func ==(lhs: Hidable, rhs: Hidable) -> Bool {
 	return lhsAddress == rhsAddress
 }
 
-internal typealias Evaluator<T> = (T, T) -> Bool
+public typealias Evaluator<T> = (T, T) -> Bool
 
 public class HidableItemsManager<ItemType: Hidable> {
 

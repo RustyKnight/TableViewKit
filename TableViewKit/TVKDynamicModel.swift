@@ -12,6 +12,10 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 
 	var allSections: [SectionIdentifier: TVKSection] = [:]
 	var preferredSectionOrder: [SectionIdentifier] = []
+	
+	public override init() {
+		super.init()
+	}
 
 	internal func prepareHidableItemsManagerWith(
 			_ sections: [TVKAnySection],
@@ -38,7 +42,7 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 	}
 
 	internal func sectionsWereAdded(at indices: [Int], withSectionsAfter result: [TVKAnySection]) {
-		var oldSections: [TVKSection] = sections.filter { section in
+		let oldSections: [TVKSection] = sections.filter { section in
 			indices.contains(index(of: section) ?? -1)
 		}
 

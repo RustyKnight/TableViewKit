@@ -124,13 +124,14 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 			message: String?,
 			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction]) {
-		let indexPath = IndexPath(row: row, section: section)
-		let bounds = tableView.rectForRow(at: indexPath)
-
+//		let indexPath = IndexPath(row: row, section: section)
+//		let bounds = tableView.rectForRow(at: indexPath)
+		
 		let alertController = UIAlertController(
 				title: title,
 				message: message,
 				preferredStyle: .alert)
+		
 		for action in actions {
 			alertController.addAction(action)
 		}
