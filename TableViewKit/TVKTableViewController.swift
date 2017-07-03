@@ -30,11 +30,13 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 		if disableDelegate {
 			model.delegate = nil
 		}
+		// Promise here would make it easier to
+		// inject the loading process
 		model.willBecomeActive()
 		model.delegate = self
 		tableView.reloadData()
 	}
-
+	
 	open override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		model.didBecomeInactive()
