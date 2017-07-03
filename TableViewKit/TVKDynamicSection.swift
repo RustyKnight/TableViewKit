@@ -8,7 +8,7 @@ import Foundation
 open class DynamicTableViewSection: TVKDefaultSection {
 
 	internal var hidableItemsManager: HidableItemsManager<TVKAnyRow>!
-
+	
 	public func prepareHidableItemsManagerWith(_ rows: [TVKAnyRow], allRows: [AnyHashable: TVKAnyRow], preferredOrder: [AnyHashable]) {
 		hidableItemsManager = HidableItemsManager(activeItems: rows, allItems: allRows, preferredOrder: preferredOrder)
 		updateContents()
