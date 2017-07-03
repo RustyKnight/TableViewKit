@@ -27,7 +27,6 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 				activeItems: sections,
 				allItems: allSections,
 				preferredOrder: preferredSectionOrder)
-		updateContents()
 	}
 
 	public func updateContents() {
