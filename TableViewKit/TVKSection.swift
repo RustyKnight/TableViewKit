@@ -183,9 +183,9 @@ open class TVKAnySection: TVKSection, TVKRowDelegate {
 	}
 }
 
-public class TVKDefaultSection: TVKAnySection {
+open class TVKDefaultSection: TVKAnySection {
 
-	internal var rows: [TVKAnyRow] = []
+	public var rows: [TVKAnyRow] = []
 
 	override open var rowCount: Int {
 		get {
@@ -198,17 +198,18 @@ public class TVKDefaultSection: TVKAnySection {
 
 	override public init() {
 		super.init()
+		commonInit()
 	}
 
 	public init(delegate: TVKSectionDelegate) {
 		super.init()
 		self.delegate = delegate
-		setup()
+		commonInit()
 	}
-
-	internal func setup() {
+	
+	open func commonInit() {
 	}
-
+	
 	override open func sharedContext(for key: AnyHashable, didChangeTo to: Any?) {
 		for row in rows {
 			row.sharedContext(for: key, didChangeTo: to)

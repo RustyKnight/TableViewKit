@@ -5,16 +5,16 @@
 
 import Foundation
 
-public class DynamicTableViewSection: TVKDefaultSection {
+open class DynamicTableViewSection: TVKDefaultSection {
 
 	internal var hidableItemsManager: HidableItemsManager<TVKAnyRow>!
 
-	internal func prepareHidableItemsManagerWith(_ rows: [TVKAnyRow], allRows: [AnyHashable: TVKAnyRow], preferredOrder: [AnyHashable]) {
+	public func prepareHidableItemsManagerWith(_ rows: [TVKAnyRow], allRows: [AnyHashable: TVKAnyRow], preferredOrder: [AnyHashable]) {
 		hidableItemsManager = HidableItemsManager(activeItems: rows, allItems: allRows, preferredOrder: preferredOrder)
 		updateContents()
 	}
 
-	internal func updateContents() {
+	public func updateContents() {
 		rows = updateContents(with: hidableItemsManager)
 	}
 
@@ -51,7 +51,7 @@ public class DynamicTableViewSection: TVKDefaultSection {
 		}
 	}
 
-	override public func willBecomeActive() {
+	override open func willBecomeActive() {
 		for row in rows {
 			guard !row.isHidden else {
 				continue
@@ -60,7 +60,7 @@ public class DynamicTableViewSection: TVKDefaultSection {
 		}
 	}
 
-	override public func didBecomeInactive() {
+	override open func didBecomeInactive() {
 		for row in rows {
 			guard !row.isHidden else {
 				continue
