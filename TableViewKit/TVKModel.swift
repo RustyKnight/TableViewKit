@@ -63,7 +63,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 
 	public var sharedContext: [AnyHashable: Any] = [:]
 
-	internal var sections: [TVKSection] = []
+	internal var sections: [TVKAnySection] = []
 
 	public var delegate: TVKModelDelegate?
 	

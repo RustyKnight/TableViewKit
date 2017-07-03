@@ -10,21 +10,23 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 
 	internal var hidableItemsManager: HidableItemsManager<TVKAnySection>!
 
-	public var allSections: [SectionIdentifier: TVKSection] = [:]
+	public var allSections: [SectionIdentifier: TVKAnySection] = [:]
 	public var preferredSectionOrder: [SectionIdentifier] = []
 	
 	public override init() {
 		super.init()
+		commonInit()
+	}
+	
+	open func commonInit() {
+		prepareHidableItemsManager()
 	}
 
-	public func prepareHidableItemsManagerWith(
-			_ sections: [TVKAnySection],
-			allSections: [AnyHashable: TVKAnySection],
-			preferredOrder: [AnyHashable]) {
+	public func prepareHidableItemsManager() {
 		hidableItemsManager = HidableItemsManager(
 				activeItems: sections,
 				allItems: allSections,
-				preferredOrder: preferredOrder)
+				preferredOrder: preferredSectionOrder)
 		updateContents()
 	}
 

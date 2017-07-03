@@ -234,13 +234,13 @@ open class TVKDefaultSection: TVKAnySection {
 		return rowValue.shouldSelectRow()
 	}
 
-	internal func index(of value: TVKAnyRow) -> Int? {
+	public func index(of value: TVKAnyRow) -> Int? {
 		return index(of: value, in: rows) {
 			$0 == $1
 		}
 	}
 
-	internal func index(of value: TVKRow) -> Int? {
+	public func index(of value: TVKRow) -> Int? {
 		return index(of: value, in: rows) {
 			$0 == $1
 		}
