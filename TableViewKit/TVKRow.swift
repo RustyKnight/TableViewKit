@@ -10,7 +10,7 @@ public enum TableViewRowDelegateError: Error {
 }
 
 public protocol TVKSegueController {
-	func shouldPerformSegue(withIdentifier: String) -> Bool
+	func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool
 	func prepare(for segue: UIStoryboardSegue)
 	func unwound(from segue: UIStoryboardSegue)
 }
@@ -40,6 +40,11 @@ public protocol TVKRowDelegate {
 			presentActionSheetWithTitle title: String?,
 			message: String?,
 			actions: [UIAlertAction])
+
+	// This returns the cell with the specified identifier. Because it's possible for the UITableView
+	// to manage the cells in different ways, this provides a simply delegation of responsibility
+	// back up the call chain to all the UITableView implementation to decide how it should respond
+	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
 }
 
 public protocol TVKSectionRowContext {
@@ -55,12 +60,12 @@ public struct TVKDefaultSectionRowContext: TVKSectionRowContext {
 }
 
 public protocol TVKRow: Hidable {
-	var delegate: TVKRowDelegate? { get }
+	var delegate: TVKRowDelegate { get }
 
 	func didSelect(withContext context: TVKSectionRowContext)
 	func shouldSelectRow() -> Bool
 
-	func cellFor(tableView: UITableView, at: IndexPath) -> UITableViewCell
+	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	func willBecomeActive(_ delegate: TVKRowDelegate)
 	func didBecomeInactive(_ delegate: TVKRowDelegate)
 
@@ -81,7 +86,11 @@ public func ==(lhs: TVKAnyRow, rhs: TVKAnyRow) -> Bool {
 
 open class TVKAnyRow: NSObject, TVKRow {
 
-	public var delegate: TVKRowDelegate?
+	public var delegate: TVKRowDelegate
+	
+	public init(delegate: TVKRowDelegate) {
+		self.delegate = delegate
+	}
 
 	open func didSelect(withContext context: TVKSectionRowContext) {
 	}
@@ -90,7 +99,7 @@ open class TVKAnyRow: NSObject, TVKRow {
 		return true
 	}
 
-	open func cellFor(tableView: UITableView, at: IndexPath) -> UITableViewCell {
+	open func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
 
@@ -111,14 +120,13 @@ open class TVKDefaultReusableRow<T:RawRepresentable>: TVKAnyRow where T.RawValue
 
 	public let cellIdentifier: T
 
-	public init(cellIdentifier: T, delegate: TVKRowDelegate? = nil) {
+	public init(cellIdentifier: T, delegate: TVKRowDelegate) {
 		self.cellIdentifier = cellIdentifier
-		super.init()
-		self.delegate = delegate
+		super.init(delegate: delegate)
 	}
 
-	open override func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier.rawValue, for: indexPath)
+	open override func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = delegate.cell(withIdentifier: cellIdentifier.rawValue, at: indexPath)
 		configure(cell)
 		return cell
 	}
@@ -137,7 +145,7 @@ open class TVKDefaultSeguableRow<SegueIdentifier:RawRepresentable, CellIdentifie
 
 	public init(segueIdentifier: SegueIdentifier,
 	          cellIdentifier: CellIdentifier,
-	          delegate: TVKRowDelegate? = nil) {
+	          delegate: TVKRowDelegate) {
 		// I'd call self.init, but I want this initialise to be callable by child implementations,
 		// it's kind of the point of providing the generic support
 		self.segueIdentifier = segueIdentifier.rawValue
@@ -153,7 +161,7 @@ open class TVKDefaultSeguableRow<SegueIdentifier:RawRepresentable, CellIdentifie
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
 	}
 
-	open func shouldPerformSegue(withIdentifier: String) -> Bool {
+	open func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {
 		return true
 	}
 

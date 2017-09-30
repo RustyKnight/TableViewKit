@@ -36,7 +36,7 @@ open class DynamicTableViewSection: TVKDefaultSection {
 		}
 
 		self.rows = result
-		self.delegate?.tableViewSection(self, rowsWereRemovedAt: indices)
+		self.delegate.tableViewSection(self, rowsWereRemovedAt: indices)
 
 		for row in oldRows {
 			row.didBecomeInactive(self)
@@ -45,7 +45,7 @@ open class DynamicTableViewSection: TVKDefaultSection {
 
 	internal func rowsWereAdded(at indices: [Int], withRowsAfter result: [TVKAnyRow]) {
 		self.rows = result
-		self.delegate?.tableViewSection(self, rowsWereAddedAt: indices)
+		self.delegate.tableViewSection(self, rowsWereAddedAt: indices)
 		for index in indices {
 			self.rows[index].willBecomeActive(self)
 		}

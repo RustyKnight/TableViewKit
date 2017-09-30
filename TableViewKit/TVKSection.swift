@@ -5,36 +5,6 @@
 
 import Foundation
 
-public protocol TVKSection: class, Hidable, Contextual {
-
-	var name: String? { get }
-	var rowCount: Int { get }
-
-	var isHidden: Bool { get }
-
-	var delegate: TVKSectionDelegate? { get set }
-
-	func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
-//	func segueIdentifierFor(tableView: UITableView, at indexPath: IndexPath) -> String?
-
-	func willBecomeActive()
-	func didBecomeInactive()
-
-	func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?)
-
-	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
-	func shouldSelectRow(at path: IndexPath) -> Bool
-
-	func willDisplay(_ cell: UITableViewCell, forRowAt: Int)
-	func didEndDisplaying(_ cell: UITableViewCell, forRowAt: Int)
-}
-
-public func ==(lhs: TVKSection, rhs: TVKSection) -> Bool {
-	let lhsAddress = Unmanaged.passUnretained(lhs as AnyObject).toOpaque()
-	let rhsAddress = Unmanaged.passUnretained(rhs as AnyObject).toOpaque()
-	return lhsAddress == rhsAddress
-}
-
 public protocol TVKSectionDelegate {
 	func tableViewSection(_ section: TVKSection, rowsWereRemovedAt rows: [Int])
 	func tableViewSection(_ section: TVKSection, rowsWereAddedAt rows: [Int])
@@ -70,6 +40,42 @@ public protocol TVKSectionDelegate {
 	func setContext(`for`: AnyHashable, to: Any?)
 	func context(`for`: AnyHashable) -> Any?
 
+	// This returns the cell with the specified identifier. Because it's possible for the UITableView
+	// to manage the cells in different ways, this provides a simply delegation of responsibility
+	// back up the call chain to all the UITableView implementation to decide how it should respond
+	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
+}
+
+public protocol TVKSection: class, Hidable, Contextual {
+
+	var name: String? { get }
+	var rowCount: Int { get }
+
+	var isHidden: Bool { get }
+
+	var delegate: TVKSectionDelegate { get }
+
+//	func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
+//	func segueIdentifierFor(tableView: UITableView, at indexPath: IndexPath) -> String?
+
+	func willBecomeActive()
+	func didBecomeInactive()
+
+	func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?)
+
+	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
+	func shouldSelectRow(at path: IndexPath) -> Bool
+
+	func willDisplay(_ cell: UITableViewCell, forRowAt: Int)
+	func didEndDisplaying(_ cell: UITableViewCell, forRowAt: Int)
+	
+	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
+}
+
+public func ==(lhs: TVKSection, rhs: TVKSection) -> Bool {
+	let lhsAddress = Unmanaged.passUnretained(lhs as AnyObject).toOpaque()
+	let rhsAddress = Unmanaged.passUnretained(rhs as AnyObject).toOpaque()
+	return lhsAddress == rhsAddress
 }
 
 public extension TVKSection {
@@ -94,9 +100,17 @@ open class TVKAnySection: TVKSection, TVKRowDelegate {
 	public var rowCount: Int = 0
 	public var isHidden: Bool = true
 
-	public var delegate: TVKSectionDelegate? = nil
+	public var delegate: TVKSectionDelegate
+	
+	public init(delegate: TVKSectionDelegate) {
+		self.delegate = delegate
+	}
 
-	open func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+	public func cell(withIdentifier identifier: String, at indexPath: IndexPath) -> UITableViewCell {
+		return delegate.cell(withIdentifier: identifier, at: indexPath)
+	}
+
+	open func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
 
@@ -196,28 +210,22 @@ open class TVKDefaultSection: TVKAnySection {
 		}
 	}
 
-	override public init() {
-		super.init()
-		commonInit()
-	}
-
-	public init(delegate: TVKSectionDelegate) {
-		super.init()
-		self.delegate = delegate
+	public override init(delegate: TVKSectionDelegate) {
+		super.init(delegate: delegate)
 		commonInit()
 	}
 	
 	open func commonInit() {
 	}
 	
+	open override func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+		return rows[indexPath.section].cell(forRowAt: indexPath)
+	}
+	
 	override open func sharedContext(for key: AnyHashable, didChangeTo to: Any?) {
 		for row in rows {
 			row.sharedContext(for: key, didChangeTo: to)
 		}
-	}
-
-	override open func cellFor(tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-		return rows[indexPath.row].cellFor(tableView: tableView, at: indexPath)
 	}
 
 	override open func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
@@ -249,9 +257,6 @@ open class TVKDefaultSection: TVKAnySection {
 	// MARK: TableViewRowDelegate
 
 	open override func tableViewRowWasUpdated(_ row: TVKRow) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let index = index(of: row) else {
 			return
 		}
@@ -259,9 +264,6 @@ open class TVKDefaultSection: TVKAnySection {
 	}
 
 	open override func tableViewRowWasRemoved(_ row: TVKRow) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let index = index(of: row) else {
 			return
 		}
@@ -269,7 +271,7 @@ open class TVKDefaultSection: TVKAnySection {
 	}
 
 	open override func tableViewRow(_ row: TVKRow, didFailWith error: Error) {
-		delegate?.tableViewSection(self, didFailWith: error)
+		delegate.tableViewSection(self, didFailWith: error)
 	}
 
 	override open func tableViewRow(
@@ -281,7 +283,7 @@ open class TVKDefaultSection: TVKAnySection {
 		guard let index = index(of: row) else {
 			return
 		}
-		delegate?.tableViewSection(
+		delegate.tableViewSection(
 				self,
 				showAlertAtRow: index,
 				titled: title,
@@ -294,7 +296,7 @@ open class TVKDefaultSection: TVKAnySection {
 			_ row: TVKRow,
 			performSegueWithIdentifier identifier: String,
 			controller: TVKSegueController) {
-		delegate?.tableViewSection(self, performSegueWithIdentifier: identifier, controller: controller)
+		delegate.tableViewSection(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 
 	open override func tableViewRow(
@@ -302,9 +304,6 @@ open class TVKDefaultSection: TVKAnySection {
 			presentActionSheetWithTitle title: String?,
 			message: String?,
 			actions: [UIAlertAction]) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let rowIndex = index(of: row) else {
 			return
 		}
@@ -312,16 +311,10 @@ open class TVKDefaultSection: TVKAnySection {
 	}
 
 	override open func setContext(`for` key: AnyHashable, to value: Any?) {
-		guard let delegate = delegate else {
-			return
-		}
 		delegate.setContext(for: key, to: value)
 	}
 
 	override open func context(`for` key: AnyHashable) -> Any? {
-		guard let delegate = delegate else {
-			return nil
-		}
 		return delegate.context(for: key)
 	}
 }

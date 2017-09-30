@@ -13,8 +13,8 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 	public var allSections: [SectionIdentifier: TVKAnySection] = [:]
 	public var preferredSectionOrder: [SectionIdentifier] = []
 	
-	public override init() {
-		super.init()
+	public override init(delegate: TVKModelDelegate) {
+		super.init(delegate: delegate)
 		commonInit()
 	}
 	
@@ -52,12 +52,12 @@ open class TVKDynamicModel<SectionIdentifier: Hashable>: TVKDefaultModel {
 		}
 
 		self.sections = result
-		self.delegate?.tableViewModel(self, sectionsWereAddedAt: indices)
+		self.delegate.tableViewModel(self, sectionsWereAddedAt: indices)
 	}
 
 	internal func sectionsWereRemoved(from indices: [Int], withSectionsAfter result: [TVKAnySection]) {
 		self.sections = result
-		self.delegate?.tableViewModel(self, sectionsWereRemovedAt: indices)
+		self.delegate.tableViewModel(self, sectionsWereRemovedAt: indices)
 		for index in indices {
 			self.sections[index].didBecomeInactive()
 		}

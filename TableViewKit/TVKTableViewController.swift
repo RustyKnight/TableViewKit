@@ -26,10 +26,7 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 		loadModel()
 	}
 
-	open func loadModel(disableDelegate: Bool = true) {
-		if disableDelegate {
-			model.delegate = nil
-		}
+	open func loadModel() {
 		// Promise here would make it easier to
 		// inject the loading process
 		model.willBecomeActive()
@@ -47,6 +44,10 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 	}
 
 	// MARK: UITableViewDataSource
+	
+	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		return model.cell(forRowAt: indexPath)
+	}
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).name
@@ -55,10 +56,6 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return model.section(at: section).rowCount
-	}
-
-	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return model.section(at: indexPath.section).cellFor(tableView: tableView, at: indexPath)
 	}
 
 	open override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -91,28 +88,40 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 
 	// MARK: TVKModel
 
+	public func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell {
+		fatalError("Not yet implemented")
+		// Typically, this will use reusable cell with identifer, but I'll leave that up
+		// to the implementor
+	}
+
 	open func tableViewModel(_ model: TVKModel, sectionsWereRemovedAt sections: [Int]) {
-		tableView.deleteSections(IndexSet(sections), with: preferredDeleteAnimation)
+		performUpdate()
+//		tableView.deleteSections(IndexSet(sections), with: preferredDeleteAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, sectionsWereAddedAt sections: [Int]) {
-		tableView.insertSections(IndexSet(sections), with: preferredAddAnimation)
+		performUpdate()
+//		tableView.insertSections(IndexSet(sections), with: preferredAddAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, sectionsWereChangedAt sections: [Int]) {
-		tableView.reloadSections(IndexSet(sections), with: preferredRefreshAnimation)
+		performUpdate()
+//		tableView.reloadSections(IndexSet(sections), with: preferredRefreshAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, rowsWereAddedAt rows: [IndexPath]) {
-		tableView.insertRows(at: rows, with: preferredAddAnimation)
+		performUpdate()
+//		tableView.insertRows(at: rows, with: preferredAddAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, rowsWereRemovedAt rows: [IndexPath]) {
-		tableView.reloadRows(at: rows, with: preferredRefreshAnimation)
+		performUpdate()
+//		tableView.reloadRows(at: rows, with: preferredRefreshAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, rowsWereChangedAt rows: [IndexPath]) {
-		tableView.deleteRows(at: rows, with: preferredDeleteAnimation)
+		performUpdate()
+//		tableView.deleteRows(at: rows, with: preferredDeleteAnimation)
 	}
 
 	open func tableViewModel(_ model: TVKModel, section: TVKSection, didFailWith: Error) {
@@ -146,6 +155,20 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 	}
 
 	open func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int]) {
+	}
+	
+	// MARK: Extended functionality
+
+	open func performUpdate() {
+		
+	}
+
+	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+		guard let controller = seguePreparer else {
+			return false
+		}
+		
+		return controller.shouldPerformSegue(withIdentifier: identifier, sender: sender)
 	}
 
 	open func tableViewModel(

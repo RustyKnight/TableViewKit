@@ -30,6 +30,7 @@
 		3ED4AD38207A104A1BADAC26 /* TVKRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKRow.swift; sourceTree = "<group>"; };
 		3ED4AF7D18EF6B73794DFCC1 /* Hidable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hidable.swift; sourceTree = "<group>"; };
 		5A6824CA19E1256045D5B7E9 /* TVKDynamicSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKDynamicSection.swift; sourceTree = "<group>"; };
+		70B029C31F7F6F2E006DEC21 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +73,7 @@
 				3ED4AB07285B81076C4225E5 /* TVKDynamicModel.swift */,
 				5A6824CA19E1256045D5B7E9 /* TVKDynamicSection.swift */,
 				3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */,
+				70B029C31F7F6F2E006DEC21 /* README.md */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";

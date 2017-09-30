@@ -10,8 +10,14 @@ public protocol Contextual {
 	func context(`for` key: AnyHashable) -> Any?
 }
 
+public enum Operation {
+	case updated
+	case deleted
+	case inserted
+}
+
 public protocol TVKModel: Contextual {
-	var delegate: TVKModelDelegate? { get set }
+	var delegate: TVKModelDelegate { get set }
 	var sectionCount: Int { get }
 
 	func section(at: Int) -> TVKSection
@@ -20,6 +26,13 @@ public protocol TVKModel: Contextual {
 
 	func willBecomeActive()
 	func didBecomeInactive()
+	
+	// This is responsible for applying the changes which have been made
+	// since the last update pass, so that the "view" mode matches the
+	// "desired" state of the model
+	func applyChanges() -> [Operation: [IndexPath]]
+	
+	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 }
 
 public protocol TVKModelDelegate {
@@ -57,6 +70,11 @@ public protocol TVKModelDelegate {
 
 	func tableViewModel(_ model: TVKModel, sectionsDidStartLoading: [Int])
 	func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int])
+
+	// This returns the cell with the specified identifier. Because it's possible for the UITableView
+	// to manage the cells in different ways, this provides a simply delegation of responsibility
+	// back up the call chain to all the UITableView implementation to decide how it should respond
+	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
 }
 
 open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
@@ -65,10 +83,23 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 
 	internal var sections: [TVKAnySection] = []
 
-	public var delegate: TVKModelDelegate?
+	public var delegate: TVKModelDelegate
 	
-	public init() {
-		
+	public init(delegate: TVKModelDelegate) {
+		self.delegate = delegate
+	}
+	
+	public func applyChanges() -> [Operation : [IndexPath]] {
+		fatalError("Not yet implemented")
+	}
+	
+	public func cell(withIdentifier identifier: String, at indexPath: IndexPath) -> UITableViewCell {
+		return delegate.cell(withIdentifier: identifier, at: indexPath)
+	}
+	
+	public func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+		let aSection = section(at: indexPath.section)
+		return aSection.cell(forRowAt: indexPath)
 	}
 
 	public var sectionCount: Int {
@@ -107,9 +138,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	}
 
 	public func tableViewSectionDidStartLoading(_ section: TVKSection) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let index = index(of: section) else {
 			return
 		}
@@ -117,9 +145,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	}
 
 	public func tableViewSectionDidCompleteLoading(_ section: TVKSection) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let index = index(of: section) else {
 			return
 		}
@@ -145,9 +170,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		guard !section.isHidden else {
 			return
 		}
-		guard let delegate = delegate else {
-			return
-		}
 		guard let paths = indexPaths(forRows: rows, from: section) else {
 			return
 		}
@@ -156,9 +178,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 
 	public func tableViewSection(_ section: TVKSection, rowsWereAddedAt rows: [Int]) {
 		guard !section.isHidden else {
-			return
-		}
-		guard let delegate = delegate else {
 			return
 		}
 		guard let paths = indexPaths(forRows: rows, from: section) else {
@@ -171,9 +190,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		guard !section.isHidden else {
 			return
 		}
-		guard let delegate = delegate else {
-			return
-		}
 		guard let paths = indexPaths(forRows: rows, from: section) else {
 			return
 		}
@@ -182,9 +198,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 
 	public func tableViewSectionDidChange(_ section: TVKSection) {
 		guard !section.isHidden else {
-			return
-		}
-		guard let delegate = delegate else {
 			return
 		}
 		guard let index = index(of: section) else {
@@ -197,7 +210,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 			_ section: TVKSection,
 			performSegueWithIdentifier identifier: String,
 			controller: TVKSegueController) {
-		delegate?.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
+		delegate.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 
 	public func tableViewSection(
@@ -209,7 +222,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		guard let sectionIndex = index(of: tableViewSection) else {
 			return
 		}
-		delegate?.tableViewModel(self,
+		delegate.tableViewModel(self,
 				presentActionSheetAtSection: sectionIndex,
 				row: row,
 				title: title,
@@ -218,9 +231,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	}
 
 	public func tableViewSection(_ section: TVKSection, didFailWith error: Error) {
-		guard let delegate = delegate else {
-			return
-		}
 		delegate.tableViewModel(self, section: section, didFailWith: error)
 	}
 
@@ -231,9 +241,6 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 			message: String?,
 			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction]) {
-		guard let delegate = delegate else {
-			return
-		}
 		guard let index = index(of: section) else {
 			return
 		}
