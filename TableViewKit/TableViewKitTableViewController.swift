@@ -6,6 +6,7 @@
 import Foundation
 
 open class TableViewKitTableViewController: UITableViewController, TableViewKitModelDelegate {
+	
 
 	public var model: TableViewKitModel!
 
@@ -92,7 +93,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	// MARK: TVKModel
 
-	public func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell {
+	open func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
 		fatalError("Not yet implemented")
 		// Typically, this will use reusable cell with identifer, but I'll leave that up
 		// to the implementor

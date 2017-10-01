@@ -42,7 +42,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemeted")
 	}
 	
-	public func cell(withIdentifier identifier: String, at indexPath: IndexPath) -> UITableViewCell {
+	public func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
 	

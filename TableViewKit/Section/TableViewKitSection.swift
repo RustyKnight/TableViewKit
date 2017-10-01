@@ -43,7 +43,7 @@ public protocol TableViewKitSectionDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
+	func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String
 }
 
 public protocol TableViewKitSection: class, Statful, Contextual {

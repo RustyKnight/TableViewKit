@@ -47,10 +47,10 @@
             </objects>
             <point key="canvasLocation" x="456.80000000000001" y="118.29085457271366"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Static Table View Controller-->
         <scene sceneID="WXT-gs-A8e">
             <objects>
-                <tableViewController id="3m8-L2-Jp3" sceneMemberID="viewController">
+                <tableViewController id="3m8-L2-Jp3" customClass="StaticTableViewController" customModule="Sample" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="vt1-lC-FXA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -186,6 +186,13 @@
                             <outlet property="delegate" destination="3m8-L2-Jp3" id="MWr-8m-X2K"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="section1Cell1" destination="nfc-3T-ugK" id="RKf-Qi-56A"/>
+                        <outlet property="section1Cell2" destination="gpV-gd-6bD" id="4wX-D8-A7j"/>
+                        <outlet property="section1Cell3" destination="S5G-BI-IIX" id="09Q-Pi-h5c"/>
+                        <outlet property="section1Cell4" destination="ApS-o7-dhL" id="1kW-7Y-oqx"/>
+                        <outlet property="section1Cell5" destination="IdC-EU-IMz" id="6Iz-9W-Kk5"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dqu-jY-znt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
