@@ -74,7 +74,7 @@ public protocol TableViewKitSection: class, Statful, Contextual {
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	
-	func applyDesiredState() -> [Operation:[Int]]
+	func applyDesiredState() -> [Operation:[OperationTarget]]
 }
 
 public func ==(lhs: TableViewKitSection, rhs: TableViewKitSection) -> Bool {

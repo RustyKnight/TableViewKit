@@ -43,6 +43,11 @@ public protocol TableViewKitModelOperation {
 	var rows: [Operation: [IndexPath]] {get}
 }
 
+struct DefaultTableViewKitModelOperation: TableViewKitModelOperation {
+  let sections: [Operation : IndexSet]
+  let rows: [Operation : [IndexPath]]
+}
+
 public protocol TableViewKitModelDelegate {
 
 	func tableViewModel(_ model: TableViewKitModel, sectionsWereRemovedAt sections: [Int])
@@ -100,20 +105,69 @@ open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitMo
 	}
 	
 	public func applyDesiredState() -> TableViewKitModelOperation {
+    
+    var newSectionState: [SectionIdentifier] = []
+    newSectionState.append(contentsOf: activeSections)
+    
 		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
-		let sortedActiveSections = stateManager.sortByPreferredOrder(activeSections)
-		let sortedAllSections = stateManager.sortByPreferredOrder(Array(allSections.keys))
+    let operations = stateManager.applyDesiredState(basedOn: activeSections)
+    
+    // Sections which have been removed, we don't care about
+    // Sections which have been inserted, only really need to update the rows
+    // to their desired state.
+    // It's sections that havn't changed (or want to be reloaded) which are of
+    // interest
 
-		for section in sortedActiveSections {
-			if section.desiredState == .hide {
-				// This is a special case, where it overrides the
-				// state of the rows
-				// Should this be possible??
-			} else {
-				section.applyDesiredState()
-			}
-		}
+    // Inserted sections only need to generate notifications for the section
+    // This just makes sure that the rows in the sections are updated to their
+    // desired state
+    let sectionsToBeInserted = operations[.insert]!
+    let sectionsToBeRemoved = operations[.delete]!
+    let sectionsToBeReloaded = operations[.update]!
+    
+    for property in sectionsToBeRemoved {
+      let id = property.identifier as! SectionIdentifier
+      guard let index = newSectionState.index(of: id) else {
+        // What happended here??
+        continue
+      }
+      newSectionState.remove(at: index)
+    }
+    for property in sectionsToBeInserted {
+      let id = property.identifier as! SectionIdentifier
+      newSectionState.insert(id, at: property.index)
+    }
+    
+    var deletePaths: [IndexPath] = []
+    var insertPaths: [IndexPath] = []
+    var updatePaths: [IndexPath] = []
+    
+    for sectionIndex in 0..<newSectionState.count {
+      let identifier: SectionIdentifier = newSectionState[sectionIndex]
+      let section = self.section(withIdentifier: identifier)
+      let sectionOperations = section.applyDesiredState()
+      deletePaths.append(contentsOf: sectionOperations[.delete]!.map { IndexPath(row: $0.index, section: sectionIndex) })
+      insertPaths.append(contentsOf: sectionOperations[.insert]!.map { IndexPath(row: $0.index, section: sectionIndex) })
+      updatePaths.append(contentsOf: sectionOperations[.update]!.map { IndexPath(row: $0.index, section: sectionIndex) })
+    }
+    
+    var rowOperations: [Operation: [IndexPath]] = [:]
+    rowOperations[.delete] = deletePaths
+    rowOperations[.insert] = insertPaths
+    rowOperations[.update] = updatePaths
+    
+    var sectionOperations: [Operation: IndexSet] = [:]
+    sectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
+    sectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
+    sectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
+
+    return DefaultTableViewKitModelOperation(sections: sectionOperations,
+                                             rows: rowOperations)
 	}
+  
+  func section(withIdentifier identifier: SectionIdentifier) -> TableViewKitSection {
+    return allSections[identifier]!
+  }
 	
 	public func cell(withIdentifier identifier: String, at indexPath: IndexPath) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)

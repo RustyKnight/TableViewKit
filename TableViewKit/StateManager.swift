@@ -38,6 +38,16 @@ public func ==(lhs: Statful, rhs: Statful) -> Bool {
 	return lhsAddress == rhsAddress
 }
 
+public protocol OperationTarget {
+  var identifier: AnyHashable {get}
+  var index: Int {get}
+}
+
+struct DefaultOperationTarget: OperationTarget {
+  let identifier: AnyHashable
+  let index: Int
+}
+
 public typealias Evaluator<T> = (T, T) -> Bool
 
 public class StateManager<ItemType: Statful> {
@@ -71,8 +81,8 @@ public class StateManager<ItemType: Statful> {
     return value.desiredState == .reload
   }
 
-	func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [Int]] {
-		var operations: [Operation: [Int]] = [:]
+	func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
+		var operations: [Operation: [OperationTarget]] = [:]
 		
 		var items: [AnyHashable] = []
 		items.append(contentsOf: activeItems)
@@ -84,26 +94,31 @@ public class StateManager<ItemType: Statful> {
 		}
 		// Items to be inserted
 		let toInsert = showItems(in: items)
-		for entry in toDelete {
-			items.insert(entry.value, at: entry.index)
+		for entry in toInsert {
+			items.insert(entry.identifier, at: entry.index)
 		}
 		
-		operations[.delete] = toDelete.map { $0.index }
-		operations[.insert] = toInsert.map { $0.index }
+		operations[.delete] = toDelete
+		operations[.insert] = toInsert
 		operations[.update] = updateItems(in: items)
 
 		return operations
 	}
 	
-	func updateItems(in activeItems: [AnyHashable]) -> [Int] {
+	func updateItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let items = activeItems.filter { wantsToBeReloaded($0) }
 		let rowIndicies = indices(of: items, in: activeItems)
 
 		for identifier in items {
       item(forIdentifier: identifier).updateToDesiredState()
 		}
+    
+    var targets: [OperationTarget] = []
+    for index in rowIndicies {
+      targets.append(DefaultOperationTarget(identifier: activeItems[index], index: index))
+    }
 
-		return rowIndicies
+		return targets
 	}
 
 //	public func update(wereRemoved: WereRemoved? = nil,
@@ -146,15 +161,15 @@ public class StateManager<ItemType: Statful> {
 //		return results
 //	}
 	
-	internal func map(_ items: [AnyHashable], with indicies: [Int]) -> [(value: AnyHashable, index: Int)] {
-		var results: [(value: AnyHashable, index: Int)] = []
+	internal func map(_ items: [AnyHashable], with indicies: [Int]) -> [OperationTarget] {
+		var results: [OperationTarget] = []
 		for index in 0..<items.count {
-			results.append((items[index], indicies[index]))
+			results.append(DefaultOperationTarget(identifier: items[index], index: indicies[index]))
 		}
 		return results
 	}
 
-	internal func hideItems(in activeItems: [AnyHashable]) -> [(value: AnyHashable, index: Int)] {
+	internal func hideItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let itemsToBeRemoved = activeItems.filter {	return wantsToBeHidden($0) }
 		let rowIndicies = indices(of: itemsToBeRemoved, in: activeItems)
 		
@@ -256,7 +271,7 @@ public class StateManager<ItemType: Statful> {
 		return sortedNames.map { allItems[$0]! }
 	}
 	
-	internal func showItems(in activeItems: [AnyHashable]) -> [(value: AnyHashable, index: Int)] {
+	internal func showItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		
 		var itemsToBeAdded: [AnyHashable] = []
 		

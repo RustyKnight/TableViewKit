@@ -62,7 +62,7 @@ open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitS
 		activeRow(at: rowIndex).didEndDisplaying(cell)
 	}
 	
-	open override func applyDesiredState() -> [Operation : [Int]] {
+	open override func applyDesiredState() -> [Operation : [OperationTarget]] {
 		let stateManager = StateManager(allItems: allRows,
 		                                preferredOrder: preferredRowOrder)
     
