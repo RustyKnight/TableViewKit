@@ -66,7 +66,7 @@ public protocol TableViewKitSection: class, Statful, Contextual {
 
 	func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?)
 
-	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
+	func didSelectRow(at path: IndexPath) -> Bool
 	func shouldSelectRow(at path: IndexPath) -> Bool
 
 	func willDisplay(_ cell: UITableViewCell, forRowAt: Int)

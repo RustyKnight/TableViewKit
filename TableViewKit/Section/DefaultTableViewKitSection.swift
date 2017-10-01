@@ -8,9 +8,9 @@
 
 import Foundation
 
-open class DefaultTableViewKitSectionSection<RowIdentifier: Hashable>: AnyTableViewKitSection {
+open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitSection {
 	
-	public var allRows: [RowIdentifier: TableViewKitRow] = [:]
+	public var allRows: [RowIdentifier: AnyTableViewKitRow] = [:]
 	public var preferredRowOrder: [RowIdentifier] = []
 	public var activeRows: [RowIdentifier] = []
 	
@@ -33,6 +33,10 @@ open class DefaultTableViewKitSectionSection<RowIdentifier: Hashable>: AnyTableV
 	func row(withIdentifier identifier: RowIdentifier) -> TableViewKitRow {
 		return allRows[identifier]!
 	}
+  
+  func activeRow(at index: Int) -> TableViewKitRow {
+    return row(withIdentifier: identifier(forActiveRowAt: index))
+  }
 	
 	func identifier(forActiveRowAt index: Int) -> RowIdentifier {
 		return activeRows[index]
@@ -51,57 +55,52 @@ open class DefaultTableViewKitSectionSection<RowIdentifier: Hashable>: AnyTableV
 	}
 	
 	open override func willDisplay(_ cell: UITableViewCell, forRowAt rowIndex: Int) {
-		row(withIdentifier: identifier(forActiveRowAt: rowIndex)).willDisplay(cell)
+    activeRow(at: rowIndex).willDisplay(cell)
 	}
 	
 	open override func didEndDisplaying(_ cell: UITableViewCell, forRowAt rowIndex: Int) {
-		row(withIdentifier: identifier(forActiveRowAt: rowIndex)).didEndDisplaying(cell)
+		activeRow(at: rowIndex).didEndDisplaying(cell)
 	}
 	
-	open func applyDesiredState() -> [Operation : [Int]] {
+	open override func applyDesiredState() -> [Operation : [Int]] {
 		let stateManager = StateManager(allItems: allRows,
 		                                preferredOrder: preferredRowOrder)
+    
+    return stateManager.applyDesiredState(basedOn: activeRows)
 	}
 	
-	open func updateToDesiredState() {
-		actualState = desiredState
+	open override func updateToDesiredState() {
+    actualState = desiredState == .reload ? .show : actualState
 	}
 	
 	open override func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
-		return rows[indexPath.section].cell(forRowAt: indexPath)
+    return activeRow(at: indexPath.row).cell(forRowAt: indexPath)
 	}
 	
 	override open func sharedContext(for key: AnyHashable, didChangeTo to: Any?) {
-		for row in rows {
-			row.sharedContext(for: key, didChangeTo: to)
-		}
+    for row in allRows.values {
+      row.sharedContext(for: key, didChangeTo: to)
+    }
 	}
 	
-	override open func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
-		let context = TVKDefaultSectionRowContext(tableViewRowDelegate: self,
-		                                          tableViewController: controller,
-		                                          indexPath: path)
-		let rowValue = rows[path.row]
-		rowValue.didSelect(withContext: context)
-		return true
+	override open func didSelectRow(at path: IndexPath) -> Bool {
+    return activeRow(at: path.row).didSelect()
 	}
 	
 	override open func shouldSelectRow(at path: IndexPath) -> Bool {
-		let rowValue = rows[path.row]
-		return rowValue.shouldSelectRow()
+    return activeRow(at: path.row).shouldSelectRow()
 	}
-	
-	public func index(of value: AnyTableViewKitRow) -> Int? {
-		return index(of: value, in: rows) {
-			$0 == $1
-		}
-	}
-	
-	public func index(of value: TableViewKitRow) -> Int? {
-		return index(of: value, in: rows) {
-			$0 == $1
-		}
-	}
+  
+  func identifier(for row: TableViewKitRow) -> RowIdentifier? {
+    return allRows.filter { $1 == row }.first?.key
+  }
+
+  public func index(of value: TableViewKitRow) -> Int? {
+    guard let id = identifier(for: value) else {
+      return nil
+    }
+    return activeRows.index(of: id)
+  }
 	
 	// MARK: TableViewRowDelegate
 	

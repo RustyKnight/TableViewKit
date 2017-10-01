@@ -41,27 +41,24 @@ public protocol TableViewKitRowDelegate {
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
 	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
-	
-	func willDisplay(_ cell: UITableView)
-	func didEndDisplaying(_ cell: UITableView)
 }
 
-public protocol TableViewKitSectionRowContext {
-	var tableViewRowDelegate: TableViewKitRowDelegate { get }
-	var tableViewController: UITableViewController { get }
-	var indexPath: IndexPath { get }
-}
-
-public struct TVKDefaultSectionRowContext: TableViewKitSectionRowContext {
-	public let tableViewRowDelegate: TableViewKitRowDelegate
-	public let tableViewController: UITableViewController
-	public let indexPath: IndexPath
-}
+//public protocol TableViewKitSectionRowContext {
+//  var tableViewRowDelegate: TableViewKitRowDelegate { get }
+//  var tableViewController: UITableViewController { get }
+//  var indexPath: IndexPath { get }
+//}
+//
+//public struct DefaultTableViewKitSectionRowContext: TableViewKitSectionRowContext {
+//  public let tableViewRowDelegate: TableViewKitRowDelegate
+//  public let tableViewController: UITableViewController
+//  public let indexPath: IndexPath
+//}
 
 public protocol TableViewKitRow: Statful {
 	var delegate: TableViewKitRowDelegate { get }
 
-	func didSelect(withContext context: TableViewKitSectionRowContext)
+	func didSelect() -> Bool
 	func shouldSelectRow() -> Bool
 
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
@@ -69,6 +66,9 @@ public protocol TableViewKitRow: Statful {
 	func didBecomeInactive()
 
 	func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?)
+  
+  func willDisplay(_ cell: UITableViewCell)
+  func didEndDisplaying(_ cell: UITableViewCell)
 }
 
 public func ==(lhs: TableViewKitRow, rhs: TableViewKitRow) -> Bool {

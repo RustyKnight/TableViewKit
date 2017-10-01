@@ -26,9 +26,9 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:RawRepresentable, Cell
 		cell.accessoryType = .disclosureIndicator
 	}
 	
-	override open func didSelect(withContext context: TableViewKitSectionRowContext) {
-		let delegate = context.tableViewRowDelegate
+	override open func didSelect() -> Bool {
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
+    return false
 	}
 	
 	open func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {

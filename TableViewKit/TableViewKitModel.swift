@@ -23,7 +23,7 @@ public protocol TableViewKitModel: Contextual {
 
 	func section(at: Int) -> TableViewKitSection
 
-	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
+	func didSelectRow(at path: IndexPath) -> Bool
 
 	func willBecomeActive()
 	func didBecomeInactive()
@@ -132,9 +132,9 @@ open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitMo
 		return allSections[activeSections[at]]!
 	}
 
-	public func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
+	public func didSelectRow(at path: IndexPath) -> Bool {
 		let section = self.section(at: path.section)
-		return section.didSelectRow(at: path, from: controller)
+		return section.didSelectRow(at: path)
 	}
 
 	public func setContext(`for` key: AnyHashable, to value: Any?) {

@@ -67,7 +67,7 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 	}
 
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if model.didSelectRow(at: indexPath, from: self) {
+		if !model.didSelectRow(at: indexPath) {
 			tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}

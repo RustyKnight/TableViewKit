@@ -18,7 +18,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	}
 	
 	open var desiredState: State = .show
-	public private (set) var actualState: State = .show
+  public internal (set) var actualState: State = .show
 	
 	public var delegate: TableViewKitSectionDelegate
 	
@@ -62,7 +62,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemented")
 	}
 	
-	open func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
+	open func didSelectRow(at path: IndexPath) -> Bool {
 		fatalError("Not yet implemented")
 	}
 	

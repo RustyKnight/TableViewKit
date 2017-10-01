@@ -46,26 +46,35 @@ public class StateManager<ItemType: Statful> {
 	let preferredOrder: [AnyHashable]
 
 	public init(
-//		activeItems: [ItemType],
 		allItems: [AnyHashable: ItemType],
 		preferredOrder: [AnyHashable]) {
-//		self.activeItems = activeItems
 		self.allItems = allItems
 		self.preferredOrder = preferredOrder
 	}
+  
+  func item(forIdentifier identifier: AnyHashable) -> ItemType {
+    return allItems[identifier]!
+  }
 	
-	func wantsToBeHidden(_ item: ItemType) -> Bool {
-		return item.desiredState == .hide && item.actualState != .hide
+	func wantsToBeHidden(_ identifier: AnyHashable) -> Bool {
+    let value = item(forIdentifier: identifier)
+		return value.desiredState == .hide && value.actualState != .hide
 	}
 	
-	func wantsToBeShown(_ item: ItemType) -> Bool {
-		return item.desiredState == .show && item.actualState == .hide
+	func wantsToBeShown(_ identifier: AnyHashable) -> Bool {
+    let value = item(forIdentifier: identifier)
+		return value.desiredState == .show && value.actualState == .hide
 	}
-	
-	func applyDesiredState(basedOn activeItems: [ItemType]) -> [Operation: [Int]] {
+
+  func wantsToBeReloaded(_ identifier: AnyHashable) -> Bool {
+    let value = item(forIdentifier: identifier)
+    return value.desiredState == .reload
+  }
+
+	func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [Int]] {
 		var operations: [Operation: [Int]] = [:]
 		
-		var items: [ItemType] = []
+		var items: [AnyHashable] = []
 		items.append(contentsOf: activeItems)
 		
 		// Items to be removed
@@ -86,12 +95,12 @@ public class StateManager<ItemType: Statful> {
 		return operations
 	}
 	
-	func updateItems(in activeItems: [ItemType]) -> [Int] {
-		let items = activeItems.filter { $0.desiredState == .reload }
+	func updateItems(in activeItems: [AnyHashable]) -> [Int] {
+		let items = activeItems.filter { wantsToBeReloaded($0) }
 		let rowIndicies = indices(of: items, in: activeItems)
 
-		for item in items {
-			item.updateToDesiredState()
+		for identifier in items {
+      item(forIdentifier: identifier).updateToDesiredState()
 		}
 
 		return rowIndicies
@@ -137,27 +146,27 @@ public class StateManager<ItemType: Statful> {
 //		return results
 //	}
 	
-	internal func map(_ items: [ItemType], with indicies: [Int]) -> [(value: ItemType, index: Int)] {
-		var results: [(value: ItemType, index: Int)] = []
+	internal func map(_ items: [AnyHashable], with indicies: [Int]) -> [(value: AnyHashable, index: Int)] {
+		var results: [(value: AnyHashable, index: Int)] = []
 		for index in 0..<items.count {
 			results.append((items[index], indicies[index]))
 		}
 		return results
 	}
 
-	internal func hideItems(in activeItems: [ItemType]) -> [(value: ItemType, index: Int)] {
+	internal func hideItems(in activeItems: [AnyHashable]) -> [(value: AnyHashable, index: Int)] {
 		let itemsToBeRemoved = activeItems.filter {	return wantsToBeHidden($0) }
 		let rowIndicies = indices(of: itemsToBeRemoved, in: activeItems)
 		
-		for item in itemsToBeRemoved {
-			item.updateToDesiredState()
+		for identifier in itemsToBeRemoved {
+      item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
 		return map(itemsToBeRemoved, with: rowIndicies)
 	}
 
-	internal func indices(of from: [ItemType], `in` source: [ItemType]) -> [Int] {
-		let values: [Int] = from.map { (item: ItemType) -> Int in
+	internal func indices(of from: [AnyHashable], `in` source: [AnyHashable]) -> [Int] {
+		let values: [Int] = from.map { (item: AnyHashable) -> Int in
 			self.index(of: item, in: source)!
 		}
 
@@ -247,16 +256,12 @@ public class StateManager<ItemType: Statful> {
 		return sortedNames.map { allItems[$0]! }
 	}
 	
-	internal func showItems(in activeItems: [ItemType]) -> [(value: ItemType, index: Int)] {
+	internal func showItems(in activeItems: [AnyHashable]) -> [(value: AnyHashable, index: Int)] {
 		
-		var itemsToBeAdded: [ItemType] = []
+		var itemsToBeAdded: [AnyHashable] = []
 		
 		for name in preferredOrder {
-			guard let item = allItems[name] else {
-				continue
-			}
-			
-			guard wantsToBeShown(item) else {
+			guard wantsToBeShown(name) else {
 				continue
 			}
 			
@@ -264,30 +269,30 @@ public class StateManager<ItemType: Statful> {
 				continue
 			}
 			
-			guard !isActive(section: item, in: activeItems) else {
+			guard !isActive(name, in: activeItems) else {
 				continue
 			}
 			
-			itemsToBeAdded.append(item)
+			itemsToBeAdded.append(name)
 		}
 		
-		var updateActivity: [ItemType] = []
+		var updateActivity: [AnyHashable] = []
 		updateActivity.append(contentsOf: activeItems)
 		updateActivity.append(contentsOf: itemsToBeAdded)
 		
 		// This sorts the active based on the order of the specified
 		// sectionOrder array
-		updateActivity.sort { (item1: ItemType, item2: ItemType) -> Bool in
+		updateActivity.sort { (lhs: AnyHashable, rhs: AnyHashable) -> Bool in
 			// Got to get the SectionHeader for the view
-			let name1 = name(of: item1, in: allItems)!
-			let name2 = name(of: item2, in: allItems)!
+//      let name1 = name(of: item1, in: allItems)!
+//      let name2 = name(of: item2, in: allItems)!
 
 			// Then we can figure out the preferred index
-			let index1 = index(of: name1, in: preferredOrder, where: { $0 == $1 })!
-			let index2 = index(of: name2, in: preferredOrder, where: { $0 == $1 })!
+			let lhsIndex = index(of: lhs, in: preferredOrder, where: { $0 == $1 })!
+			let rhsIndex = index(of: rhs, in: preferredOrder, where: { $0 == $1 })!
 
 			// And we can sort them
-			return index1 < index2
+			return lhsIndex < rhsIndex
 		}
 		
 		var indicies: [Int] = []
@@ -298,8 +303,8 @@ public class StateManager<ItemType: Statful> {
 			indicies.append(index)
 		}
 		
-		for item in itemsToBeAdded {
-			item.updateToDesiredState()
+		for identifier in itemsToBeAdded {
+      item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
 		return map(itemsToBeAdded, with: indicies)
@@ -314,12 +319,12 @@ public class StateManager<ItemType: Statful> {
 		return nil
 	}
 
-	internal func isActive(section: ItemType, in items: [ItemType]) -> Bool {
-		return index(of: section, in: items) != nil
+	internal func isActive(_ item: AnyHashable, in items: [AnyHashable]) -> Bool {
+		return index(of: item, in: items) != nil
 	}
 
-	internal func index(of section: ItemType, `in` sections: [ItemType]) -> Int? {
-		return sections.index(where: { (entry: ItemType) -> Bool in
+	internal func index(of section: AnyHashable, `in` sections: [AnyHashable]) -> Int? {
+		return sections.index(where: { (entry: AnyHashable) -> Bool in
 			section == entry
 		})
 	}

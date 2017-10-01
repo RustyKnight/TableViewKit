@@ -24,10 +24,11 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	}
 	
 	public func updateToDesiredState() {
-		actualState = desiredState == .reload ? .show : desiredState
+		actualState = desiredState == .reload ? .show : actualState
 	}
 	
-	open func didSelect(withContext context: TableViewKitSectionRowContext) {
+	open func didSelect() -> Bool {
+    return false
 	}
 	
 	open func shouldSelectRow() -> Bool {
@@ -46,5 +47,12 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	
 	open func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
 	}
+  
+  public func willDisplay(_ cell: UITableViewCell) {
+  }
+  
+  public func didEndDisplaying(_ cell: UITableViewCell) {
+  }
+
 	
 }
