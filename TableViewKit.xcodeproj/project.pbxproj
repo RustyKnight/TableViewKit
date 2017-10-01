@@ -11,7 +11,7 @@
 		3ED4A027B8D37508D2ECB7D4 /* TableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */; };
 		3ED4A2192194933272989339 /* TableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */; };
 		3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */; };
-		3ED4A8C2551834C66D271AAE /* TVKTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */; };
+		3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */; };
 		3ED4AD77B3772A0BB70CDF10 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */; };
 		3ED4AEA7BC9256E7D29615BA /* Seguable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4ACB58E47EB22286449BE /* Seguable.swift */; };
 		7019EC3E1F80662B008EBFD0 /* AnyTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */; };
@@ -20,13 +20,14 @@
 		7019EC451F806749008EBFD0 /* DefaultTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC441F806749008EBFD0 /* DefaultTableViewKitRow.swift */; };
 		7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */; };
 		7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */; };
+		705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		12F3AD131DFDF94300381A23 /* TableViewKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TableViewKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F3AD161DFDF94300381A23 /* TableViewKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewKit.h; sourceTree = "<group>"; };
 		12F3AD171DFDF94300381A23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKTableViewController.swift; sourceTree = "<group>"; };
+		3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitTableViewController.swift; sourceTree = "<group>"; };
 		3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitModel.swift; sourceTree = "<group>"; };
 		3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitSection.swift; sourceTree = "<group>"; };
 		3ED4ACB58E47EB22286449BE /* Seguable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seguable.swift; sourceTree = "<group>"; };
@@ -38,6 +39,7 @@
 		7019EC441F806749008EBFD0 /* DefaultTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitRow.swift; sourceTree = "<group>"; };
 		7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIdentifableTableViewRowKit.swift; sourceTree = "<group>"; };
 		7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSeguableTableViewKitRow.swift; sourceTree = "<group>"; };
+		705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitModel.swift; sourceTree = "<group>"; };
 		70B029C31F7F6F2E006DEC21 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,6 +73,7 @@
 		12F3AD151DFDF94300381A23 /* TableViewKit */ = {
 			isa = PBXGroup;
 			children = (
+				705A2BB91F80DA6500F3DCA4 /* Model */,
 				7019EC411F8066CA008EBFD0 /* Row */,
 				7019EC3C1F806608008EBFD0 /* Section */,
 				12F3AD171DFDF94300381A23 /* Info.plist */,
@@ -78,8 +81,7 @@
 				3ED4ACB58E47EB22286449BE /* Seguable.swift */,
 				3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
-				3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */,
-				3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */,
+				3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -104,6 +106,15 @@
 				7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */,
 			);
 			path = Row;
+			sourceTree = "<group>";
+		};
+		705A2BB91F80DA6500F3DCA4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */,
+				3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,7 +207,8 @@
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
 				7019EC451F806749008EBFD0 /* DefaultTableViewKitRow.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
-				3ED4A8C2551834C66D271AAE /* TVKTableViewController.swift in Sources */,
+				3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */,
+				705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */,
 				7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */,
 				7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */,
 			);

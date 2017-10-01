@@ -5,7 +5,7 @@
 
 import Foundation
 
-open class TVKDefaultTableViewController: UITableViewController, TableViewKitModelDelegate {
+open class TableViewKitTableViewController: UITableViewController, TableViewKitModelDelegate {
 
 	public var model: TableViewKitModel!
 
@@ -139,6 +139,7 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 			message: String?,
 			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction]) {
+
 //		let indexPath = IndexPath(row: row, section: section)
 //		let bounds = tableView.rectForRow(at: indexPath)
 		
@@ -160,25 +161,6 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 
 	open func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int]) {
 	}
-	
-	// MARK: Extended functionality
-
-	open func performUpdate() {
-		let operation = model.applyDesiredState()
-    tableView.beginUpdates()
-    
-    tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
-    tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
-    tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)
-
-    tableView.deleteRows(at: operation.rows[.delete]!, with: deleteRowAnimation)
-    tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
-    tableView.reloadRows(at: operation.rows[.update]!, with: reloadRowAnimation)
-
-    tableView.endUpdates()
-    
-    tableView.reloadData()
-	}
 
 	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		guard let controller = seguePreparer else {
@@ -187,24 +169,24 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 		
 		return controller.shouldPerformSegue(withIdentifier: identifier, sender: sender)
 	}
-
+	
 	open func tableViewModel(
-			_ model: TableViewKitModel,
-			performSegueWithIdentifier identifier: String,
-			controller: TableViewKitSegueController) {
+		_ model: TableViewKitModel,
+		performSegueWithIdentifier identifier: String,
+		controller: TableViewKitSegueController) {
 		performSegue(withIdentifier: identifier, sender: controller)
 	}
-
+	
 	open func tableViewModel(
-			_ model: TableViewKitModel,
-			presentActionSheetAtSection section: Int,
-			row: Int,
-			title: String?,
-			message: String?,
-			actions: [UIAlertAction]) {
+		_ model: TableViewKitModel,
+		presentActionSheetAtSection section: Int,
+		row: Int,
+		title: String?,
+		message: String?,
+		actions: [UIAlertAction]) {
 		let indexPath = IndexPath(row: row, section: section)
 		let bounds = tableView.rectForRow(at: indexPath)
-
+		
 		let controller = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
 		for action in actions {
 			controller.addAction(action)
@@ -212,6 +194,30 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 		controller.popoverPresentationController?.sourceView = self.tableView
 		controller.popoverPresentationController?.sourceRect = bounds
 		self.present(controller, animated: true)
+	}
+
+	// MARK: Extended functionality
+
+	open func performUpdate() {
+		// This is here to allow the off loading of the actualy application of the changes
+		// to a future time, allowing the changes to be bayched
+	}
+	
+	open func applyDesiredState() {
+		let operation = model.applyDesiredState()
+		tableView.beginUpdates()
+		
+		tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
+		tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
+		tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)
+		
+		tableView.deleteRows(at: operation.rows[.delete]!, with: deleteRowAnimation)
+		tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
+		tableView.reloadRows(at: operation.rows[.update]!, with: reloadRowAnimation)
+		
+		tableView.endUpdates()
+		
+		tableView.reloadData()
 	}
 
 	open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
