@@ -5,11 +5,11 @@
 
 import Foundation
 
-open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegate {
+open class TVKDefaultTableViewController: UITableViewController, TableViewKitModelDelegate {
 
-	public var model: TVKModel!
+	public var model: TableViewKitModel!
 
-	public var seguePreparer: TVKSegueController?
+	public var seguePreparer: TableViewKitSegueController?
 
 	public var preferredAddAnimation: UITableViewRowAnimation = .automatic
 	public var preferredDeleteAnimation: UITableViewRowAnimation = .automatic
@@ -94,41 +94,41 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 		// to the implementor
 	}
 
-	open func tableViewModel(_ model: TVKModel, sectionsWereRemovedAt sections: [Int]) {
+	open func tableViewModel(_ model: TableViewKitModel, sectionsWereRemovedAt sections: [Int]) {
 		performUpdate()
 //		tableView.deleteSections(IndexSet(sections), with: preferredDeleteAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, sectionsWereAddedAt sections: [Int]) {
+	open func tableViewModel(_ model: TableViewKitModel, sectionsWereAddedAt sections: [Int]) {
 		performUpdate()
 //		tableView.insertSections(IndexSet(sections), with: preferredAddAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, sectionsWereChangedAt sections: [Int]) {
+	open func tableViewModel(_ model: TableViewKitModel, sectionsWereChangedAt sections: [Int]) {
 		performUpdate()
 //		tableView.reloadSections(IndexSet(sections), with: preferredRefreshAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, rowsWereAddedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TableViewKitModel, rowsWereAddedAt rows: [IndexPath]) {
 		performUpdate()
 //		tableView.insertRows(at: rows, with: preferredAddAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, rowsWereRemovedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TableViewKitModel, rowsWereRemovedAt rows: [IndexPath]) {
 		performUpdate()
 //		tableView.reloadRows(at: rows, with: preferredRefreshAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, rowsWereChangedAt rows: [IndexPath]) {
+	open func tableViewModel(_ model: TableViewKitModel, rowsWereChangedAt rows: [IndexPath]) {
 		performUpdate()
 //		tableView.deleteRows(at: rows, with: preferredDeleteAnimation)
 	}
 
-	open func tableViewModel(_ model: TVKModel, section: TVKSection, didFailWith: Error) {
+	open func tableViewModel(_ model: TableViewKitModel, section: TableViewKitSection, didFailWith: Error) {
 	}
 
 	open func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			showAlertAtSection section: Int,
 			row: Int,
 			titled title: String?,
@@ -151,10 +151,10 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 				completion: nil)
 	}
 
-	open func tableViewModel(_ model: TVKModel, sectionsDidStartLoading: [Int]) {
+	open func tableViewModel(_ model: TableViewKitModel, sectionsDidStartLoading: [Int]) {
 	}
 
-	open func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int]) {
+	open func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int]) {
 	}
 	
 	// MARK: Extended functionality
@@ -172,14 +172,14 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 	}
 
 	open func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			performSegueWithIdentifier identifier: String,
-			controller: TVKSegueController) {
+			controller: TableViewKitSegueController) {
 		performSegue(withIdentifier: identifier, sender: controller)
 	}
 
 	open func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			presentActionSheetAtSection section: Int,
 			row: Int,
 			title: String?,
@@ -202,7 +202,7 @@ open class TVKDefaultTableViewController: UITableViewController, TVKModelDelegat
 			return
 		}
 
-		if let preparer = sender as? TVKSegueController {
+		if let preparer = sender as? TableViewKitSegueController {
 			seguePreparer = preparer
 			preparer.prepare(for: segue)
 		}

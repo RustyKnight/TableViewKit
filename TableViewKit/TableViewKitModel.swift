@@ -5,22 +5,23 @@
 
 import Foundation
 
+public enum Operation {
+	case insert
+	case delete
+	case update //?
+}
+
 public protocol Contextual {
 	func setContext(`for` key: AnyHashable, to value: Any?)
 	func context(`for` key: AnyHashable) -> Any?
 }
 
-public enum Operation {
-	case updated
-	case deleted
-	case inserted
-}
-
-public protocol TVKModel: Contextual {
-	var delegate: TVKModelDelegate { get set }
+public protocol TableViewKitModel: Contextual {
+	
+	var delegate: TableViewKitModelDelegate { get set }
 	var sectionCount: Int { get }
 
-	func section(at: Int) -> TVKSection
+	func section(at: Int) -> TableViewKitSection
 
 	func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool
 
@@ -30,24 +31,31 @@ public protocol TVKModel: Contextual {
 	// This is responsible for applying the changes which have been made
 	// since the last update pass, so that the "view" mode matches the
 	// "desired" state of the model
-	func applyChanges() -> [Operation: [IndexPath]]
+	func applyDesiredState() -> TableViewKitModelOperation
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 }
 
-public protocol TVKModelDelegate {
+// A set of operations which need to be carried out
+// when moving desired state to the actvie state
+public protocol TableViewKitModelOperation {
+	var sections: [Operation: IndexSet] {get}
+	var rows: [Operation: [IndexPath]] {get}
+}
 
-	func tableViewModel(_ model: TVKModel, sectionsWereRemovedAt sections: [Int])
-	func tableViewModel(_ model: TVKModel, sectionsWereAddedAt sections: [Int])
-	func tableViewModel(_ model: TVKModel, sectionsWereChangedAt sections: [Int])
+public protocol TableViewKitModelDelegate {
 
-	func tableViewModel(_ model: TVKModel, rowsWereAddedAt rows: [IndexPath])
-	func tableViewModel(_ model: TVKModel, rowsWereRemovedAt rows: [IndexPath])
-	func tableViewModel(_ model: TVKModel, rowsWereChangedAt rows: [IndexPath])
+	func tableViewModel(_ model: TableViewKitModel, sectionsWereRemovedAt sections: [Int])
+	func tableViewModel(_ model: TableViewKitModel, sectionsWereAddedAt sections: [Int])
+	func tableViewModel(_ model: TableViewKitModel, sectionsWereChangedAt sections: [Int])
 
-	func tableViewModel(_ model: TVKModel, section: TVKSection, didFailWith: Error)
+	func tableViewModel(_ model: TableViewKitModel, rowsWereAddedAt rows: [IndexPath])
+	func tableViewModel(_ model: TableViewKitModel, rowsWereRemovedAt rows: [IndexPath])
+	func tableViewModel(_ model: TableViewKitModel, rowsWereChangedAt rows: [IndexPath])
+
+	func tableViewModel(_ model: TableViewKitModel, section: TableViewKitSection, didFailWith: Error)
 	func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			showAlertAtSection section: Int,
 			row: Int,
 			titled title: String?,
@@ -56,20 +64,20 @@ public protocol TVKModelDelegate {
 			actions: [UIAlertAction])
 
 	func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			performSegueWithIdentifier identifier: String,
-			controller: TVKSegueController)
+			controller: TableViewKitSegueController)
 
 	func tableViewModel(
-			_ model: TVKModel,
+			_ model: TableViewKitModel,
 			presentActionSheetAtSection section: Int,
 			row: Int,
 			title: String?,
 			message: String?,
 			actions: [UIAlertAction])
 
-	func tableViewModel(_ model: TVKModel, sectionsDidStartLoading: [Int])
-	func tableViewModel(_ model: TVKModel, sectionsDidCompleteLoading: [Int])
+	func tableViewModel(_ model: TableViewKitModel, sectionsDidStartLoading: [Int])
+	func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int])
 
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
@@ -77,20 +85,34 @@ public protocol TVKModelDelegate {
 	func cell(withIdentifier: String, at indexPath: IndexPath) -> UITableViewCell
 }
 
-open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
-
+open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitModel {
+	
 	public var sharedContext: [AnyHashable: Any] = [:]
 
-	internal var sections: [TVKAnySection] = []
+	public var allSections: [SectionIdentifier: AnyTableViewKitSection] = [:]
+	public var preferredSectionOrder: [SectionIdentifier] = []
+	internal var activeSections: [SectionIdentifier] = []
 
-	public var delegate: TVKModelDelegate
+	public var delegate: TableViewKitModelDelegate
 	
-	public init(delegate: TVKModelDelegate) {
+	public init(delegate: TableViewKitModelDelegate) {
 		self.delegate = delegate
 	}
 	
-	public func applyChanges() -> [Operation : [IndexPath]] {
-		fatalError("Not yet implemented")
+	public func applyDesiredState() -> TableViewKitModelOperation {
+		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
+		let sortedActiveSections = stateManager.sortByPreferredOrder(activeSections)
+		let sortedAllSections = stateManager.sortByPreferredOrder(Array(allSections.keys))
+
+		for section in sortedActiveSections {
+			if section.desiredState == .hide {
+				// This is a special case, where it overrides the
+				// state of the rows
+				// Should this be possible??
+			} else {
+				section.applyDesiredState()
+			}
+		}
 	}
 	
 	public func cell(withIdentifier identifier: String, at indexPath: IndexPath) -> UITableViewCell {
@@ -103,11 +125,11 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	}
 
 	public var sectionCount: Int {
-		return sections.count
+		return activeSections.count
 	}
 
-	public func section(at: Int) -> TVKSection {
-		return sections[at]
+	public func section(at: Int) -> TableViewKitSection {
+		return allSections[activeSections[at]]!
 	}
 
 	public func didSelectRow(at path: IndexPath, from controller: UITableViewController) -> Bool {
@@ -118,7 +140,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	public func setContext(`for` key: AnyHashable, to value: Any?) {
 		sharedContext[key] = value
 
-		for section in sections {
+		for section in allSections.values {
 			section.sharedContext(for: key, didChangeTo: value)
 		}
 	}
@@ -127,31 +149,34 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		return sharedContext[key]
 	}
 
-	func index(of section: TVKSection) -> Int? {
-		return index(of: section, in: sections)
+	func index(of section: TableViewKitSection) -> Int? {
+		return index(of: section, in: activeSections)
 	}
 
-	func index(of section: TVKSection, `in` sections: [TVKSection]) -> Int? {
-		return sections.index(where: { (entry: TVKSection) -> Bool in
-			section == entry
+	func index(of section: TableViewKitSection, `in` sections: [SectionIdentifier]) -> Int? {
+		return sections.index(where: { (entry: SectionIdentifier) -> Bool in
+			guard let element = allSections[entry] else {
+				return false
+			}
+			return section == element
 		})
 	}
 
-	public func tableViewSectionDidStartLoading(_ section: TVKSection) {
+	public func tableViewSectionDidStartLoading(_ section: TableViewKitSection) {
 		guard let index = index(of: section) else {
 			return
 		}
 		delegate.tableViewModel(self, sectionsDidStartLoading: [index])
 	}
 
-	public func tableViewSectionDidCompleteLoading(_ section: TVKSection) {
+	public func tableViewSectionDidCompleteLoading(_ section: TableViewKitSection) {
 		guard let index = index(of: section) else {
 			return
 		}
 		delegate.tableViewModel(self, sectionsDidCompleteLoading: [index])
 	}
 
-	internal func indexPaths(forRows rows: [Int], from section: TVKSection) -> [IndexPath]? {
+	internal func indexPaths(forRows rows: [Int], from section: TableViewKitSection) -> [IndexPath]? {
 		guard rows.count > 0 else {
 			return nil
 		}
@@ -166,7 +191,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		return paths
 	}
 
-	public func tableViewSection(_ section: TVKSection, rowsWereRemovedAt rows: [Int]) {
+	public func tableViewSection(_ section: TableViewKitSection, rowsWereRemovedAt rows: [Int]) {
 		guard !section.isHidden else {
 			return
 		}
@@ -176,7 +201,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		delegate.tableViewModel(self, rowsWereRemovedAt: paths)
 	}
 
-	public func tableViewSection(_ section: TVKSection, rowsWereAddedAt rows: [Int]) {
+	public func tableViewSection(_ section: TableViewKitSection, rowsWereAddedAt rows: [Int]) {
 		guard !section.isHidden else {
 			return
 		}
@@ -186,7 +211,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		delegate.tableViewModel(self, rowsWereAddedAt: paths)
 	}
 
-	public func tableViewSection(_ section: TVKSection, rowsWereChangedAt rows: [Int]) {
+	public func tableViewSection(_ section: TableViewKitSection, rowsWereChangedAt rows: [Int]) {
 		guard !section.isHidden else {
 			return
 		}
@@ -196,7 +221,7 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 		delegate.tableViewModel(self, rowsWereChangedAt: paths)
 	}
 
-	public func tableViewSectionDidChange(_ section: TVKSection) {
+	public func tableViewSectionDidChange(_ section: TableViewKitSection) {
 		guard !section.isHidden else {
 			return
 		}
@@ -207,14 +232,14 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 	}
 
 	public func tableViewSection(
-			_ section: TVKSection,
+			_ section: TableViewKitSection,
 			performSegueWithIdentifier identifier: String,
-			controller: TVKSegueController) {
+			controller: TableViewKitSegueController) {
 		delegate.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 
 	public func tableViewSection(
-			_ tableViewSection: TVKSection,
+			_ tableViewSection: TableViewKitSection,
 			presentActionSheetAtRow row: Int,
 			title: String?,
 			message: String?,
@@ -230,12 +255,12 @@ open class TVKDefaultModel: TVKModel, TVKSectionDelegate {
 				actions: actions)
 	}
 
-	public func tableViewSection(_ section: TVKSection, didFailWith error: Error) {
+	public func tableViewSection(_ section: TableViewKitSection, didFailWith error: Error) {
 		delegate.tableViewModel(self, section: section, didFailWith: error)
 	}
 
 	public func tableViewSection(
-			_ section: TVKSection,
+			_ section: TableViewKitSection,
 			showAlertAtRow row: Int,
 			titled title: String?,
 			message: String?,
