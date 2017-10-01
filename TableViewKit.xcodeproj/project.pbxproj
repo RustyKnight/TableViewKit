@@ -12,10 +12,8 @@
 		3ED4A2192194933272989339 /* TableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */; };
 		3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */; };
 		3ED4A8C2551834C66D271AAE /* TVKTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */; };
-		3ED4A91175C513AE13B28E3F /* TVKDynamicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AB07285B81076C4225E5 /* TVKDynamicModel.swift */; };
 		3ED4AD77B3772A0BB70CDF10 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */; };
 		3ED4AEA7BC9256E7D29615BA /* Seguable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4ACB58E47EB22286449BE /* Seguable.swift */; };
-		5A682EBD8AE22FC70A4655A6 /* TVKDynamicSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6824CA19E1256045D5B7E9 /* TVKDynamicSection.swift */; };
 		7019EC3E1F80662B008EBFD0 /* AnyTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */; };
 		7019EC401F80663A008EBFD0 /* DefaultTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */; };
 		7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC421F80672D008EBFD0 /* AnyTableViewKitRow.swift */; };
@@ -31,11 +29,9 @@
 		3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKTableViewController.swift; sourceTree = "<group>"; };
 		3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitModel.swift; sourceTree = "<group>"; };
 		3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitSection.swift; sourceTree = "<group>"; };
-		3ED4AB07285B81076C4225E5 /* TVKDynamicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKDynamicModel.swift; sourceTree = "<group>"; };
 		3ED4ACB58E47EB22286449BE /* Seguable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seguable.swift; sourceTree = "<group>"; };
 		3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitRow.swift; sourceTree = "<group>"; };
 		3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
-		5A6824CA19E1256045D5B7E9 /* TVKDynamicSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVKDynamicSection.swift; sourceTree = "<group>"; };
 		7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTableViewKitSection.swift; sourceTree = "<group>"; };
 		7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitSection.swift; sourceTree = "<group>"; };
 		7019EC421F80672D008EBFD0 /* AnyTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTableViewKitRow.swift; sourceTree = "<group>"; };
@@ -83,8 +79,6 @@
 				3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
 				3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */,
-				3ED4AB07285B81076C4225E5 /* TVKDynamicModel.swift */,
-				5A6824CA19E1256045D5B7E9 /* TVKDynamicSection.swift */,
 				3ED4A46745A06CA9B0DDE2DB /* TVKTableViewController.swift */,
 			);
 			path = TableViewKit;
@@ -202,8 +196,6 @@
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
 				7019EC451F806749008EBFD0 /* DefaultTableViewKitRow.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
-				3ED4A91175C513AE13B28E3F /* TVKDynamicModel.swift in Sources */,
-				5A682EBD8AE22FC70A4655A6 /* TVKDynamicSection.swift in Sources */,
 				3ED4A8C2551834C66D271AAE /* TVKTableViewController.swift in Sources */,
 				7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */,
 				7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */,

@@ -11,9 +11,13 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 
 	public var seguePreparer: TableViewKitSegueController?
 
-	public var preferredAddAnimation: UITableViewRowAnimation = .automatic
-	public var preferredDeleteAnimation: UITableViewRowAnimation = .automatic
-	public var preferredRefreshAnimation: UITableViewRowAnimation = .automatic
+	public var deleteRowAnimation: UITableViewRowAnimation = .automatic
+	public var insertRowAnimation: UITableViewRowAnimation = .automatic
+	public var reloadRowAnimation: UITableViewRowAnimation = .automatic
+  
+  public var deleteSectionAnimation: UITableViewRowAnimation = .automatic
+  public var insertSectionAnimation: UITableViewRowAnimation = .automatic
+  public var reloadSectionAnimation: UITableViewRowAnimation = .automatic
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -160,7 +164,20 @@ open class TVKDefaultTableViewController: UITableViewController, TableViewKitMod
 	// MARK: Extended functionality
 
 	open func performUpdate() {
-		
+		let operation = model.applyDesiredState()
+    tableView.beginUpdates()
+    
+    tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
+    tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
+    tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)
+
+    tableView.deleteRows(at: operation.rows[.delete]!, with: deleteRowAnimation)
+    tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
+    tableView.reloadRows(at: operation.rows[.update]!, with: reloadRowAnimation)
+
+    tableView.endUpdates()
+    
+    tableView.reloadData()
 	}
 
 	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
