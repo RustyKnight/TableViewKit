@@ -22,8 +22,6 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
-
-		model.delegate = self
 	}
 
 	open override func viewWillAppear(_ animated: Bool) {
@@ -34,8 +32,8 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	open func loadModel() {
 		// Promise here would make it easier to
 		// inject the loading process
+    _ = model.applyDesiredState()
 		model.willBecomeActive()
-		model.delegate = self
 		tableView.reloadData()
 	}
 	

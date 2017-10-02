@@ -273,7 +273,7 @@ public class StateManager<ItemType: Statful> {
 	
 	internal func showItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		
-		var itemsToBeAdded: [AnyHashable] = []
+		var itemsToBeAdded: Set<AnyHashable> = Set<AnyHashable>()
 		
 		for name in preferredOrder {
 			guard wantsToBeShown(name) else {
@@ -283,21 +283,24 @@ public class StateManager<ItemType: Statful> {
 			guard index(of: name, in: preferredOrder, where: { $0 == $1 }) != nil else {
 				continue
 			}
+
+      // If the item is already active, we don't want to insert it again
+      guard !isActive(name, in: activeItems) else {
+        continue
+      }
 			
-			guard !isActive(name, in: activeItems) else {
-				continue
-			}
-			
-			itemsToBeAdded.append(name)
+      itemsToBeAdded.insert(name)
 		}
 		
-		var updateActivity: [AnyHashable] = []
-		updateActivity.append(contentsOf: activeItems)
-		updateActivity.append(contentsOf: itemsToBeAdded)
+		var updateActivity: Set<AnyHashable> = Set<AnyHashable>()
+    updateActivity = updateActivity.union(activeItems)
+    updateActivity = updateActivity.union(itemsToBeAdded)
+//    updateActivity.append(contentsOf: activeItems)
+//    updateActivity.append(contentsOf: itemsToBeAdded)
 		
 		// This sorts the active based on the order of the specified
 		// sectionOrder array
-		updateActivity.sort { (lhs: AnyHashable, rhs: AnyHashable) -> Bool in
+    let sorted = updateActivity.sorted(by: { (lhs: AnyHashable, rhs: AnyHashable) -> Bool in
 			// Got to get the SectionHeader for the view
 //      let name1 = name(of: item1, in: allItems)!
 //      let name2 = name(of: item2, in: allItems)!
@@ -308,11 +311,11 @@ public class StateManager<ItemType: Statful> {
 
 			// And we can sort them
 			return lhsIndex < rhsIndex
-		}
+		})
 		
 		var indicies: [Int] = []
 		for item in itemsToBeAdded {
-			guard let index = index(of: item, in: updateActivity) else {
+			guard let index = index(of: item, in: sorted) else {
 				continue
 			}
 			indicies.append(index)
@@ -322,7 +325,7 @@ public class StateManager<ItemType: Statful> {
       item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
-		return map(itemsToBeAdded, with: indicies)
+		return map(Array(itemsToBeAdded), with: indicies)
 	}
 	
 	internal func name(of item: ItemType, in items: [AnyHashable: ItemType]) -> AnyHashable? {
