@@ -25,7 +25,6 @@
 		706E52831F81A82200CA75A2 /* TableViewKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F3AD131DFDF94300381A23 /* TableViewKit.framework */; };
 		706E528A1F81A83C00CA75A2 /* TestStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E52891F81A83C00CA75A2 /* TestStateManager.swift */; };
 		706E528C1F81A96800CA75A2 /* SimpleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E528B1F81A96800CA75A2 /* SimpleState.swift */; };
-		706E528E1F81AD9100CA75A2 /* WhyDontYouWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E528D1F81AD9100CA75A2 /* WhyDontYouWork.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +59,6 @@
 		706E52821F81A82200CA75A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		706E52891F81A83C00CA75A2 /* TestStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestStateManager.swift; sourceTree = "<group>"; };
 		706E528B1F81A96800CA75A2 /* SimpleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleState.swift; sourceTree = "<group>"; };
-		706E528D1F81AD9100CA75A2 /* WhyDontYouWork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhyDontYouWork.swift; sourceTree = "<group>"; };
 		70B029C31F7F6F2E006DEC21 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,7 +110,6 @@
 				3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
 				3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */,
-				706E528D1F81AD9100CA75A2 /* WhyDontYouWork.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -272,7 +269,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				706E528E1F81AD9100CA75A2 /* WhyDontYouWork.swift in Sources */,
 				3ED4A2192194933272989339 /* TableViewKitModel.swift in Sources */,
 				3ED4A027B8D37508D2ECB7D4 /* TableViewKitRow.swift in Sources */,
 				7019EC401F80663A008EBFD0 /* DefaultTableViewKitSection.swift in Sources */,

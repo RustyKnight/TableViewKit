@@ -81,6 +81,21 @@ public class StateManager<ItemType: Statful> {
     return value.desiredState == .reload
   }
 
+  func isShown(_ identifier: AnyHashable) -> Bool {
+    let value = item(forIdentifier: identifier)
+    return value.actualState == .show
+  }
+
+  func isShowingButNotActive(_ identifier: AnyHashable, in activeItems: [AnyHashable]) -> Bool {
+    guard isShown(identifier) else {
+      return false
+    }
+    guard !wantsToBeHidden(identifier) else {
+      return false
+    }
+    return !activeItems.contains(identifier)
+  }
+
 	func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
 		var operations: [Operation: [OperationTarget]] = [:]
 		
@@ -90,7 +105,11 @@ public class StateManager<ItemType: Statful> {
 		// Items to be removed
 		let toDelete = hideItems(in: items)
 		for entry in toDelete {
-			items.remove(at: entry.index)
+      guard let index = items.index(of: entry.identifier) else {
+        print("!! Could not find index of item with identifier = \(entry.identifier)")
+        continue
+      }
+			items.remove(at: index)
 		}
 		// Items to be inserted
 		let toInsert = showItems(in: items)
@@ -102,12 +121,20 @@ public class StateManager<ItemType: Statful> {
 		operations[.insert] = toInsert
 		operations[.update] = updateItems(in: items)
 
+    // Move all items to their desired state, this ensures
+    // that any items not handled by the hide/show/update
+    // functions are updated
+    for item in allItems {
+      item.value.updateToDesiredState()
+    }
+
 		return operations
 	}
 	
 	func updateItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let items = activeItems.filter { wantsToBeReloaded($0) }
 		let rowIndicies = indices(of: items, in: activeItems)
+    print("Reload \(items)")
 
 		for identifier in items {
       item(forIdentifier: identifier).updateToDesiredState()
@@ -171,6 +198,7 @@ public class StateManager<ItemType: Statful> {
 
 	internal func hideItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let itemsToBeRemoved = activeItems.filter {	return wantsToBeHidden($0) }
+    print("To be removed = \(itemsToBeRemoved)")
 		let rowIndicies = indices(of: itemsToBeRemoved, in: activeItems)
 		
 		for identifier in itemsToBeRemoved {
@@ -275,8 +303,10 @@ public class StateManager<ItemType: Statful> {
 		
 		var itemsToBeAdded: Set<AnyHashable> = Set<AnyHashable>()
 		
+    // What happens if an item's active state is "show"
+    // but is not in the active items list    
 		for name in preferredOrder {
-			guard wantsToBeShown(name) else {
+      guard wantsToBeShown(name) || isShowingButNotActive(name, in: activeItems) else {
 				continue
 			}
 			
@@ -295,15 +325,10 @@ public class StateManager<ItemType: Statful> {
 		var updateActivity: Set<AnyHashable> = Set<AnyHashable>()
     updateActivity = updateActivity.union(activeItems)
     updateActivity = updateActivity.union(itemsToBeAdded)
-//    updateActivity.append(contentsOf: activeItems)
-//    updateActivity.append(contentsOf: itemsToBeAdded)
 		
 		// This sorts the active based on the order of the specified
 		// sectionOrder array
     let sorted = updateActivity.sorted(by: { (lhs: AnyHashable, rhs: AnyHashable) -> Bool in
-			// Got to get the SectionHeader for the view
-//      let name1 = name(of: item1, in: allItems)!
-//      let name2 = name(of: item2, in: allItems)!
 
 			// Then we can figure out the preferred index
 			let lhsIndex = index(of: lhs, in: preferredOrder, where: { $0 == $1 })!
@@ -325,6 +350,7 @@ public class StateManager<ItemType: Statful> {
       item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
+    print("To be added = \(itemsToBeAdded)")
 		return map(Array(itemsToBeAdded), with: indicies)
 	}
 	

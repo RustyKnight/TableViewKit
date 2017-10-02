@@ -365,13 +365,16 @@ class TestStateManager: XCTestCase {
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
     let operations = stateManager.applyDesiredState(basedOn: items)
     
+    print(operations[.update])
+    
     assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
-    assert(operations[.update]?.count == 1, "Expecting 1 update items")
+    assert(operations[.insert]?.count == 1, "Expecting 1 insert items")
+    assert(operations[.update]?.count == 2, "Expecting 2 update items")
     
     assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be updated")
-    assert(!(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false), "Expecting Row 04 to be updated")
-    
+    assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be updated")
+    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be inserted")
+
     assert(allItems["Row 03"]?.actualState == .show, "Expecting Row 03's state to be .show")
     assert(allItems["Row 04"]?.actualState == .show, "Expecting Row 04's state to be .show")
   }
