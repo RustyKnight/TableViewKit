@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import TableViewKit
 
 class StaticSection: DefaultTableViewKitSection<StaticModel.CellIdentifiers> {
@@ -35,4 +36,8 @@ class StaticSection: DefaultTableViewKitSection<StaticModel.CellIdentifiers> {
 
 class StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.CellIdentifiers> {
 	
+	override func configure(_ cell: UITableViewCell) {
+		cell.detailTextLabel?.text = "Check"
+	}
+
 }

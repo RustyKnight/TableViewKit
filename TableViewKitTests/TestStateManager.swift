@@ -20,6 +20,46 @@ class TestStateManager: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     super.tearDown()
   }
+	
+	func testEnumIdentifier() {
+		enum RowIdentifier: String {
+			case row1
+			case row2
+			case row3
+			case row4
+			case row5
+		}
+		let allItems: [RowIdentifier: SimpleState] = [
+			.row5: SimpleState(name: "Row 05"),
+			.row4: SimpleState(name: "Row 04"),
+			.row3: SimpleState(name: "Row 03"),
+			.row2: SimpleState(name: "Row 02"),
+			.row1: SimpleState(name: "Row 01"),
+			]
+		let preferredOrder: [RowIdentifier] = [
+			.row1,
+			.row2,
+			.row3,
+			.row4,
+			.row5,
+			]
+		let items: [RowIdentifier] = [
+			.row1,
+			.row2,
+			.row5
+			]
+		let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
+		let operations = stateManager.applyDesiredState(basedOn: items)
+		
+		let insert = operations[.insert]!
+		for op in insert {
+			print(op.identifier)
+			guard let id = op.identifier as? RowIdentifier else {
+				XCTFail("Could not convert Operation Identifier to RowIdentifier")
+				return
+			}
+		}
+	}
 
   func testThatStateManagerDoesNotChange() {
     let allItems: [AnyHashable: SimpleState] = [

@@ -29,8 +29,12 @@ class StaticTableViewController: TableViewKitTableViewController {
 			StaticModel.CellIdentifiers.section1Cell5: section1Cell5
 		]
 		
+		model = StaticModel(delegate: self)
+		
 		super.viewDidLoad()
 	}
+	
+	
 
 	override func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
 		guard let id = StaticModel.CellIdentifiers(rawValue: identifier.rawValue) else {
