@@ -134,7 +134,7 @@ public class StateManager<ItemType: Stateful> {
 		for op in operations.insert {
 			items.append(op.identifier)
 		}
-		return Utilities.sort(items, byPreferredOrder: preferredSortOrder)
+		return sort(items, byPreferredOrder: preferredSortOrder)
 	}
 
 	func operationsForDesiredState(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
@@ -335,7 +335,7 @@ public class StateManager<ItemType: Stateful> {
 //			return lhsIndex < rhsIndex
 //		})
 		
-		let sortedNames = Utilities.sort(items, byPreferredOrder: preferredOrder)
+		let sortedNames = sort(items, byPreferredOrder: preferredOrder)
 		return sortedNames.map { allItems[$0]! }
 	}
 	
@@ -417,6 +417,20 @@ public class StateManager<ItemType: Stateful> {
 		return values.index(where: { (entry: T) -> Bool in
 			evaluator(value, entry)
 		})
+	}
+	
+
+	func sort(_ items: [AnyHashable], byPreferredOrder preferredOrder: [AnyHashable]) -> [AnyHashable] {
+		let sortedNames = items.sorted(by: {(lhs: AnyHashable, rhs: AnyHashable) -> Bool in
+			// Then we can figure out the preferred index
+			let lhsIndex = index(of: lhs, in: preferredOrder, where: { $0 == $1 })!
+			let rhsIndex = index(of: rhs, in: preferredOrder, where: { $0 == $1 })!
+			
+			// And we can sort them
+			return lhsIndex < rhsIndex
+		})
+		
+		return sortedNames
 	}
 
 }
