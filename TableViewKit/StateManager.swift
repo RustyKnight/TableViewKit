@@ -24,7 +24,7 @@ public enum State {
 	case reload
 }
 
-public protocol Statful {
+public protocol Stateful {
 	var actualState: State {get}
 	var desiredState: State {get}
 	
@@ -32,7 +32,7 @@ public protocol Statful {
 	func updateToDesiredState()
 }
 
-public func ==(lhs: Statful, rhs: Statful) -> Bool {
+public func ==(lhs: Stateful, rhs: Stateful) -> Bool {
 	let lhsAddress = Unmanaged.passUnretained(lhs as AnyObject).toOpaque()
 	let rhsAddress = Unmanaged.passUnretained(rhs as AnyObject).toOpaque()
 	return lhsAddress == rhsAddress
@@ -43,14 +43,40 @@ public protocol OperationTarget {
   var index: Int {get}
 }
 
-struct DefaultOperationTarget: OperationTarget {
+struct DefaultOperationTarget: OperationTarget, CustomStringConvertible {
   let identifier: AnyHashable
   let index: Int
+	
+	var description: String {
+		return "DefaultOperationTarget: \(identifier) @ \(index)"
+	}
+}
+
+public protocol StatefulOperations {
+	var insert: [OperationTarget] {get}
+	var update: [OperationTarget] {get}
+	var delete: [OperationTarget] {get}
+
+	func operations(for operation: Operation) -> [OperationTarget]
+}
+
+struct DefaultStatefulOperations: StatefulOperations {
+	let insert: [OperationTarget]
+	let update: [OperationTarget]
+	let delete: [OperationTarget]
+	
+	func operations(for operation: Operation) -> [OperationTarget] {
+		switch operation {
+		case .insert: return insert
+		case .update: return update
+		case .delete: return delete
+		}
+	}
 }
 
 public typealias Evaluator<T> = (T, T) -> Bool
 
-public class StateManager<ItemType: Statful> {
+public class StateManager<ItemType: Stateful> {
 
 	let allItems: [AnyHashable: ItemType]
 	let preferredOrder: [AnyHashable]
@@ -95,10 +121,23 @@ public class StateManager<ItemType: Statful> {
     }
     return !activeItems.contains(identifier)
   }
+	
+	func apply(operations: StatefulOperations, to activeItems: [AnyHashable], sortBy preferredSortOrder: [AnyHashable]) -> [AnyHashable] {
+		var items: [AnyHashable] = []
+		items.append(contentsOf: activeItems)
+		for op in operations.delete {
+			guard let index = items.index(of: op.identifier) else {
+				continue
+			}
+			items.remove(at: index)
+		}
+		for op in operations.insert {
+			items.append(op.identifier)
+		}
+		return Utilities.sort(items, byPreferredOrder: preferredSortOrder)
+	}
 
-	func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-		var operations: [Operation: [OperationTarget]] = [:]
-		
+	func operationsForDesiredState(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
 		var items: [AnyHashable] = []
 		items.append(contentsOf: activeItems)
 		
@@ -112,14 +151,13 @@ public class StateManager<ItemType: Statful> {
 			items.remove(at: index)
 		}
 		// Items to be inserted
-		let toInsert = showItems(in: items)
+		let toInsert = showItems(in: items).sorted(by: { $0.index < $1.index })
 		for entry in toInsert {
+			print(entry)
 			items.insert(entry.identifier, at: entry.index)
 		}
 		
-		operations[.delete] = toDelete
-		operations[.insert] = toInsert
-		operations[.update] = updateItems(in: items)
+		let operations = DefaultStatefulOperations(insert: toInsert, update: updateItems(in: items), delete: toDelete)
 
     // Move all items to their desired state, this ensures
     // that any items not handled by the hide/show/update
@@ -191,7 +229,8 @@ public class StateManager<ItemType: Statful> {
 	internal func map(_ items: [AnyHashable], with indicies: [Int]) -> [OperationTarget] {
 		var results: [OperationTarget] = []
 		for index in 0..<items.count {
-			results.append(DefaultOperationTarget(identifier: items[index], index: indicies[index]))
+			let op = DefaultOperationTarget(identifier: items[index], index: indicies[index])
+			results.append(op)
 		}
 		return results
 	}
@@ -287,15 +326,16 @@ public class StateManager<ItemType: Statful> {
 //	}
 	
 	func sortByPreferredOrder(_ items: [AnyHashable]) -> [ItemType] {
-		let sortedNames = items.sorted(by: {(lhs: AnyHashable, rhs: AnyHashable) -> Bool in
-			// Then we can figure out the preferred index
-			let lhsIndex = index(of: lhs, in: preferredOrder, where: { $0 == $1 })!
-			let rhsIndex = index(of: rhs, in: preferredOrder, where: { $0 == $1 })!
-			
-			// And we can sort them
-			return lhsIndex < rhsIndex
-		})
+//		let sortedNames = items.sorted(by: {(lhs: AnyHashable, rhs: AnyHashable) -> Bool in
+//			// Then we can figure out the preferred index
+//			let lhsIndex = index(of: lhs, in: preferredOrder, where: { $0 == $1 })!
+//			let rhsIndex = index(of: rhs, in: preferredOrder, where: { $0 == $1 })!
+//
+//			// And we can sort them
+//			return lhsIndex < rhsIndex
+//		})
 		
+		let sortedNames = Utilities.sort(items, byPreferredOrder: preferredOrder)
 		return sortedNames.map { allItems[$0]! }
 	}
 	

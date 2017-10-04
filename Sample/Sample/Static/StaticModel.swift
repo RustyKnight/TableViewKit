@@ -9,12 +9,12 @@
 import Foundation
 import TableViewKit
 
-enum StaticSectionIdentifier: String {
-	case section1 = "section1"
-}
+class StaticModel: DefaultTableViewKitModel {
 
-class StaticModel: DefaultTableViewKitModel<StaticSectionIdentifier> {
-	
+	enum StaticSectionIdentifier: String {
+		case section1 = "section1"
+	}
+
 	enum CellIdentifiers: String {
 		case section1Cell1 = "S1C1"
 		case section1Cell2 = "S1C2"
@@ -27,11 +27,11 @@ class StaticModel: DefaultTableViewKitModel<StaticSectionIdentifier> {
 		super.init(delegate: delegate)
 		
 		allSections = [
-			.section1: StaticSection(delegate: self)
+			StaticSectionIdentifier.section1: StaticSection(name: StaticSectionIdentifier.section1.rawValue, delegate: self)
 		]
 		
 		preferredSectionOrder = [
-			.section1
+			StaticSectionIdentifier.section1
 		]
 	}
 	

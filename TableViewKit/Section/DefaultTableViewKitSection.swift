@@ -8,11 +8,11 @@
 
 import Foundation
 
-open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitSection {
+open class DefaultTableViewKitSection: AnyTableViewKitSection {
 	
-	public var allRows: [RowIdentifier: AnyTableViewKitRow] = [:]
-	public var preferredRowOrder: [RowIdentifier] = []
-	public var activeRows: [RowIdentifier] = []
+	public var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
+	public var preferredRowOrder: [AnyHashable] = []
+	public var activeRows: [AnyHashable] = []
 	
 	public override var rowCount: Int {
 		set {}
@@ -30,7 +30,7 @@ open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitS
 	open func commonInit() {
 	}
 	
-	func row(withIdentifier identifier: RowIdentifier) -> TableViewKitRow {
+	func row(withIdentifier identifier: AnyHashable) -> TableViewKitRow {
 		return allRows[identifier]!
 	}
   
@@ -38,7 +38,7 @@ open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitS
     return row(withIdentifier: identifier(forActiveRowAt: index))
   }
 	
-	func identifier(forActiveRowAt index: Int) -> RowIdentifier {
+	func identifier(forActiveRowAt index: Int) -> AnyHashable {
 		return activeRows[index]
 	}
 	
@@ -62,11 +62,19 @@ open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitS
 		activeRow(at: rowIndex).didEndDisplaying(cell)
 	}
 	
-	open override func applyDesiredState() -> [Operation : [OperationTarget]] {
+	open override func applyDesiredState() -> [Operation : [Int]] {
 		let stateManager = StateManager(allItems: allRows,
 		                                preferredOrder: preferredRowOrder)
     
-    return stateManager.applyDesiredState(basedOn: activeRows)
+    let operations = stateManager.operationsForDesiredState(basedOn: activeRows)
+		activeRows = stateManager.apply(operations: operations, to: activeRows, sortBy: preferredRowOrder)
+		
+		var operationPaths: [Operation: [Int]] = [:]
+		operationPaths[.insert] = operations.insert.map { $0.index }
+		operationPaths[.update] = operations.update.map { $0.index }
+		operationPaths[.delete] = operations.delete.map { $0.index }
+		
+		return operationPaths
 	}
 	
 	open override func updateToDesiredState() {
@@ -91,7 +99,7 @@ open class DefaultTableViewKitSection<RowIdentifier: Hashable>: AnyTableViewKitS
     return activeRow(at: path.row).shouldSelectRow()
 	}
   
-  func identifier(for row: TableViewKitRow) -> RowIdentifier? {
+  func identifier(for row: TableViewKitRow) -> AnyHashable? {
     return allRows.filter { $1 == row }.first?.key
   }
 

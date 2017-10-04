@@ -37,7 +37,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		actualState = desiredState == .reload ? .show : desiredState
 	}
 	
-	public func applyDesiredState() -> [Operation:[OperationTarget]] {
+	public func applyDesiredState() -> [Operation:[Int]] {
 		//		return stateManager.applyDesiredState(basedOn: activeItems)
 		fatalError("Not yet implemeted")
 	}

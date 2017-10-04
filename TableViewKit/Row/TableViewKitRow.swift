@@ -55,7 +55,7 @@ public protocol TableViewKitRowDelegate {
 //  public let indexPath: IndexPath
 //}
 
-public protocol TableViewKitRow: Statful {
+public protocol TableViewKitRow: Stateful {
 	var delegate: TableViewKitRowDelegate { get }
 
 	func didSelect() -> Bool

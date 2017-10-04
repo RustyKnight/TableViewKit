@@ -10,25 +10,30 @@ import Foundation
 import UIKit
 import TableViewKit
 
-class StaticSection: DefaultTableViewKitSection<StaticModel.CellIdentifiers> {
+class StaticSection: DefaultTableViewKitSection {
+	
+	init(name: String, delegate: TableViewKitSectionDelegate) {
+		super.init(delegate: delegate)
+		self.name = name
+	}
 	
 	override func commonInit() {
 		super.commonInit()
 		
 		allRows = [
-			.section1Cell1: StaticRow(cellIdentifier: .section1Cell1, delegate: self),
-			.section1Cell2: StaticRow(cellIdentifier: .section1Cell2, delegate: self),
-			.section1Cell3: StaticRow(cellIdentifier: .section1Cell3, delegate: self),
-			.section1Cell4: StaticRow(cellIdentifier: .section1Cell4, delegate: self),
-			.section1Cell5: StaticRow(cellIdentifier: .section1Cell5, delegate: self)
+			StaticModel.CellIdentifiers.section1Cell1: StaticRow(cellIdentifier: .section1Cell1, delegate: self),
+			StaticModel.CellIdentifiers.section1Cell2: StaticRow(cellIdentifier: .section1Cell2, delegate: self),
+			StaticModel.CellIdentifiers.section1Cell3: StaticRow(cellIdentifier: .section1Cell3, delegate: self),
+			StaticModel.CellIdentifiers.section1Cell4: StaticRow(cellIdentifier: .section1Cell4, delegate: self),
+			StaticModel.CellIdentifiers.section1Cell5: StaticRow(cellIdentifier: .section1Cell5, delegate: self)
 		]
 		
 		preferredRowOrder = [
-			.section1Cell1,
-			.section1Cell2,
-			.section1Cell3,
-			.section1Cell4,
-			.section1Cell5
+			StaticModel.CellIdentifiers.section1Cell1,
+			StaticModel.CellIdentifiers.section1Cell2,
+			StaticModel.CellIdentifiers.section1Cell3,
+			StaticModel.CellIdentifiers.section1Cell4,
+			StaticModel.CellIdentifiers.section1Cell5
 		]
 	}
 	

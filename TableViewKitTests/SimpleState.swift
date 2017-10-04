@@ -9,7 +9,7 @@
 import Foundation
 import TableViewKit
 
-class SimpleState: Statful {
+class SimpleState: Stateful {
   var actualState: State = .show
   var desiredState: State = .show
   

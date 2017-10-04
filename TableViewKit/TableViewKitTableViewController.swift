@@ -43,6 +43,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 
 	open override func numberOfSections(in tableView: UITableView) -> Int {
+		print("numberOfSections = \(model.sectionCount)")
 		return model.sectionCount
 	}
 
@@ -54,10 +55,12 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).name
+		print("titleForHeaderInSection = \(String(describing: title))")
 		return title
 	}
 
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		print("numberOfRowsInSection = \(section)")
 		return model.section(at: section).rowCount
 	}
 

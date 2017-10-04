@@ -9,13 +9,13 @@
 import Foundation
 
 
-open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitModel, TableViewKitSectionDelegate {
+open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDelegate {
 	
 	public var sharedContext: [AnyHashable: Any] = [:]
 	
-	public var allSections: [SectionIdentifier: AnyTableViewKitSection] = [:]
-	public var preferredSectionOrder: [SectionIdentifier] = []
-	internal var activeSections: [SectionIdentifier] = []
+	public var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
+	public var preferredSectionOrder: [AnyHashable] = []
+	internal var activeSections: [AnyHashable] = []
 	
 	public var delegate: TableViewKitModelDelegate
 	
@@ -25,49 +25,58 @@ open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitMo
 	
 	public func applyDesiredState() -> TableViewKitModelOperation {
 		
-		var newSectionState: [SectionIdentifier] = []
-		newSectionState.append(contentsOf: activeSections)
+		var unmodifiedSections: [AnyHashable] = []
+		unmodifiedSections.append(contentsOf: activeSections)
 		
 		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
-		let operations = stateManager.applyDesiredState(basedOn: activeSections)
+		let operations = stateManager.operationsForDesiredState(basedOn: activeSections)
+		activeSections = stateManager.apply(operations: operations, to: activeSections, sortBy: preferredSectionOrder)
 		
 		// Sections which have been removed, we don't care about
-		// Sections which have been inserted, only really need to update the rows
-		// to their desired state.
-		// It's sections that havn't changed (or want to be reloaded) which are of
-		// interest
+		// Sections which have been inserted, we don't care about - will initialise their default state
+		// Sections which have been updated, we don't care about - they will update their entire contents
 		
-		// Inserted sections only need to generate notifications for the section
-		// This just makes sure that the rows in the sections are updated to their
-		// desired state
-		let sectionsToBeInserted = operations[.insert]!
-		let sectionsToBeRemoved = operations[.delete]!
-		let sectionsToBeReloaded = operations[.update]!
-		
-		for property in sectionsToBeRemoved {
-			let id = property.identifier as! SectionIdentifier
-			guard let index = newSectionState.index(of: id) else {
-				// What happended here??
-				continue
+		let sectionsToBeInserted = operations.insert
+		let sectionsToBeRemoved = operations.delete
+		let sectionsToBeReloaded = operations.update
+
+		// Remove all sections which might have changed
+		for key in [Operation.update, Operation.delete] {
+			for property in operations.operations(for: key) {
+				let id = property.identifier
+				guard let index = unmodifiedSections.index(of: id) else {
+					// What happended here??
+					continue
+				}
+				unmodifiedSections.remove(at: index)
 			}
-			newSectionState.remove(at: index)
 		}
-		for property in sectionsToBeInserted {
-			let id = property.identifier as! SectionIdentifier
-			newSectionState.insert(id, at: property.index)
+		
+		// Update the state of the rows in all the
+		// sections that were inserted to ensure that the
+		// rows are at their desired states
+		for op in operations.operations(for: .insert) {
+			let identifier = op.identifier
+			let section = self.section(withIdentifier: identifier)
+			_ = section.applyDesiredState()
 		}
 		
 		var deletePaths: [IndexPath] = []
 		var insertPaths: [IndexPath] = []
 		var updatePaths: [IndexPath] = []
 		
-		for sectionIndex in 0..<newSectionState.count {
-			let identifier: SectionIdentifier = newSectionState[sectionIndex]
+		for sectionIndex in 0..<unmodifiedSections.count {
+			let identifier: AnyHashable = unmodifiedSections[sectionIndex]
 			let section = self.section(withIdentifier: identifier)
 			let sectionOperations = section.applyDesiredState()
-			deletePaths.append(contentsOf: sectionOperations[.delete]!.map { IndexPath(row: $0.index, section: sectionIndex) })
-			insertPaths.append(contentsOf: sectionOperations[.insert]!.map { IndexPath(row: $0.index, section: sectionIndex) })
-			updatePaths.append(contentsOf: sectionOperations[.update]!.map { IndexPath(row: $0.index, section: sectionIndex) })
+			guard let sectionIndex = index(of: section) else {
+				// What happended here?
+				continue
+			}
+			
+			deletePaths.append(contentsOf: sectionOperations[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
+			insertPaths.append(contentsOf: sectionOperations[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+			updatePaths.append(contentsOf: sectionOperations[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
 		}
 		
 		var rowOperations: [Operation: [IndexPath]] = [:]
@@ -84,7 +93,7 @@ open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitMo
 		                                         rows: rowOperations)
 	}
 	
-	func section(withIdentifier identifier: SectionIdentifier) -> TableViewKitSection {
+	func section(withIdentifier identifier: AnyHashable) -> TableViewKitSection {
 		return allSections[identifier]!
 	}
 	
@@ -126,8 +135,8 @@ open class DefaultTableViewKitModel<SectionIdentifier: Hashable>: TableViewKitMo
 		return index(of: section, in: activeSections)
 	}
 	
-	func index(of section: TableViewKitSection, `in` sections: [SectionIdentifier]) -> Int? {
-		return sections.index(where: { (entry: SectionIdentifier) -> Bool in
+	func index(of section: TableViewKitSection, `in` sections: [AnyHashable]) -> Int? {
+		return sections.index(where: { (entry: AnyHashable) -> Bool in
 			guard let element = allSections[entry] else {
 				return false
 			}

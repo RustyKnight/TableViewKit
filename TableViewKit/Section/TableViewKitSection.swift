@@ -46,7 +46,7 @@ public protocol TableViewKitSectionDelegate {
 	func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String
 }
 
-public protocol TableViewKitSection: class, Statful, Contextual {
+public protocol TableViewKitSection: class, Stateful, Contextual {
 
 	var name: String? { get }
 	var rowCount: Int { get }
@@ -74,7 +74,7 @@ public protocol TableViewKitSection: class, Statful, Contextual {
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	
-	func applyDesiredState() -> [Operation:[OperationTarget]]
+	func applyDesiredState() -> [Operation:[Int]]
 }
 
 public func ==(lhs: TableViewKitSection, rhs: TableViewKitSection) -> Bool {

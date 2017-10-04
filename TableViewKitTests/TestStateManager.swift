@@ -49,15 +49,17 @@ class TestStateManager: XCTestCase {
 			.row5
 			]
 		let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
-		let operations = stateManager.applyDesiredState(basedOn: items)
+		let operations = stateManager.operationsForDesiredState(basedOn: items)
 		
-		let insert = operations[.insert]!
+		let insert = operations.insert
 		for op in insert {
 			print(op.identifier)
+			allItems[op.identifier]
 			guard let id = op.identifier as? RowIdentifier else {
 				XCTFail("Could not convert Operation Identifier to RowIdentifier")
 				return
 			}
+			print(id)
 		}
 	}
 
@@ -86,11 +88,11 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
   }
   
   func testThatStateManagerCanDeleteWithActiveItems() {
@@ -118,15 +120,15 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 2, "Expecting 2 deleted items")
+    assert(operations.delete.count == 2, "Expecting 2 deleted items")
 
-    assert(operations[.delete]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be removed")
-    assert(operations[.delete]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be removed")
+    assert(operations.delete.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be removed")
+    assert(operations.delete.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be removed")
     
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
   }
   
   func testThatStateManagerCanDeleteWithoutActiveItems() {
@@ -154,11 +156,11 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
   }
   
   func testThatStateManagerCanDeleteWithMixedActiveItems() {
@@ -186,15 +188,15 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 1, "Expecting 1 deleted items")
+    assert(operations.delete.count == 1, "Expecting 1 deleted items")
     
-    assert(!(operations[.delete]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false), "Not expecting Row 03 to be removed")
-    assert(operations[.delete]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be removed")
+    assert(!(operations.delete.contains(where: { $0.identifier.hashValue == "Row 03".hashValue})), "Not expecting Row 03 to be removed")
+    assert(operations.delete.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be removed")
     
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
   }
 
   func testThatStateManagerCanInsertWithoutActiveItems() {
@@ -222,15 +224,15 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    print("toInsert = \(operations[.insert]?.count)")
-    assert(operations[.insert]?.count == 2, "Expecting 2 insert items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    print("toInsert = \(operations.insert.count)")
+    assert(operations.insert.count == 2, "Expecting 2 insert items")
     
-    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be inserted")
-    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be inserted")
+    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
+    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be inserted")
     
   }
   
@@ -259,15 +261,15 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    print("toInsert = \(operations[.insert]?.count)")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    print("toInsert = \(operations.insert.count)")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
     
-//    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be inserted")
-//    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be inserted")
+//    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
+//    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be inserted")
     
   }
   
@@ -296,15 +298,15 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
-    print("toInsert = \(operations[.insert]?.count)")
-    assert(operations[.insert]?.count == 1, "Expecting 1 insert items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
+    print("toInsert = \(operations.insert.count)")
+    assert(operations.insert.count == 1, "Expecting 1 insert items")
     
-    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be inserted")
-    assert(!(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false), "Not expecting Row 04 to be inserted")
+    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
+    assert(!(operations.insert.contains(where: { $0.identifier.hashValue == "Row 04".hashValue})), "Not expecting Row 04 to be inserted")
     
   }
 
@@ -333,14 +335,14 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
-    assert(operations[.update]?.count == 2, "Expecting 2 update items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
+    assert(operations.update.count == 2, "Expecting 2 update items")
 
-    assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be updated")
-    assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be updated")
+    assert(operations.update.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be updated")
+    assert(operations.update.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be updated")
     
     assert(allItems["Row 03"]?.actualState == .show, "Expecting Row 03's state to be .show")
     assert(allItems["Row 04"]?.actualState == .show, "Expecting Row 04's state to be .show")
@@ -371,11 +373,11 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.insert]?.count == 0, "Expecting 0 insert items")
-    assert(operations[.update]?.count == 0, "Expecting 0 update items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.insert.count == 0, "Expecting 0 insert items")
+    assert(operations.update.count == 0, "Expecting 0 update items")
   }
   
   func testThatStateManagerCanReloadWithMixedItem() {
@@ -403,17 +405,17 @@ class TestStateManager: XCTestCase {
     
     let stateManager = StateManager(allItems: allItems, preferredOrder: preferredOrder)
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
-    let operations = stateManager.applyDesiredState(basedOn: items)
+    let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    print(operations[.update])
+    print(operations.update)
     
-    assert(operations[.delete]?.count == 0, "Expecting 0 deleted items")
-    assert(operations[.insert]?.count == 1, "Expecting 1 insert items")
-    assert(operations[.update]?.count == 2, "Expecting 2 update items")
+    assert(operations.delete.count == 0, "Expecting 0 deleted items")
+    assert(operations.insert.count == 1, "Expecting 1 insert items")
+    assert(operations.update.count == 2, "Expecting 2 update items")
     
-    assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}) ??  false, "Expecting Row 03 to be updated")
-    assert(operations[.update]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be updated")
-    assert(operations[.insert]?.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}) ??  false, "Expecting Row 04 to be inserted")
+    assert(operations.update.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be updated")
+    assert(operations.update.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be updated")
+    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 04".hashValue}), "Expecting Row 04 to be inserted")
 
     assert(allItems["Row 03"]?.actualState == .show, "Expecting Row 03's state to be .show")
     assert(allItems["Row 04"]?.actualState == .show, "Expecting Row 04's state to be .show")
