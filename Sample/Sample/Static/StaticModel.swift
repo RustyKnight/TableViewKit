@@ -27,7 +27,7 @@ class StaticModel: DefaultTableViewKitModel {
 		super.init(delegate: delegate)
 		
 		allSections = [
-			StaticSectionIdentifier.section1: StaticSection(name: StaticSectionIdentifier.section1.rawValue, delegate: self)
+			StaticSectionIdentifier.section1: StaticSection(title: StaticSectionIdentifier.section1, delegate: self)
 		]
 		
 		preferredSectionOrder = [

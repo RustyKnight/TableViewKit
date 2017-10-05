@@ -54,8 +54,14 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		let title = model.section(at: section).name
+		let title = model.section(at: section).title
 		print("titleForHeaderInSection = \(String(describing: title))")
+		return title
+	}
+	
+	open override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+		let title = model.section(at: section).footer
+		print("titleForFooterInSection = \(String(describing: title))")
 		return title
 	}
 

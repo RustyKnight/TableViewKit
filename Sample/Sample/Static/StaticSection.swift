@@ -12,11 +12,10 @@ import TableViewKit
 
 class StaticSection: DefaultTableViewKitSection {
 	
-	init(name: String, delegate: TableViewKitSectionDelegate) {
-		super.init(delegate: delegate)
-		self.name = name
+	override init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
+		super.init(title: title, footer: footer, delegate: delegate)
 	}
-	
+
 	override func commonInit() {
 		super.commonInit()
 		

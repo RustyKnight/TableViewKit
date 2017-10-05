@@ -48,7 +48,8 @@ public protocol TableViewKitSectionDelegate {
 
 public protocol TableViewKitSection: class, Stateful, Contextual {
 
-	var name: String? { get }
+	var title: String? { get }
+	var footer: String? { get }
 	var rowCount: Int { get }
 
 	// This can only be true if the desired and actual states are hidden

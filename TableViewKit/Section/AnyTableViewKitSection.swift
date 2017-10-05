@@ -10,7 +10,8 @@ import Foundation
 
 open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate {
 	
-	public var name: String? = nil
+	public var title: String? = nil
+	public var footer: String? = nil
 	public var rowCount: Int = 0
 	
 	public var isHidden: Bool {
@@ -24,8 +25,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	
 	internal var stateManager: StateManager<AnyTableViewKitRow>!
 	
-	public init(delegate: TableViewKitSectionDelegate) {
+	public init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
 		self.delegate = delegate
+		self.title = title?.rawValue
+		self.footer = footer?.rawValue
 	}
 	
 	func prepareStateManagerWith(allRows: [AnyHashable: AnyTableViewKitRow], preferredOrder: [AnyHashable]) {
