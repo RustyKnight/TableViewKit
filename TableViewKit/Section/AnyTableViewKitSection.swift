@@ -18,7 +18,16 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		return actualState == .hide
 	}
 	
-	open var desiredState: State = .show
+	var preferredDesiredState: State = .show
+	open var desiredState: State {
+		set {
+			preferredDesiredState = newValue
+		}
+		
+		get {
+			return rowCount == 0 ? .hide : preferredDesiredState
+		}
+	}
   public internal (set) var actualState: State = .show
 	
 	public var delegate: TableViewKitSectionDelegate
@@ -29,6 +38,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		self.delegate = delegate
 		self.title = title?.rawValue
 		self.footer = footer?.rawValue
+	}
+	
+	public func rowIndex(for: TableViewKitRow) -> Int? {
+		fatalError("Not yet implemented")
 	}
 	
 	func prepareStateManagerWith(allRows: [AnyHashable: AnyTableViewKitRow], preferredOrder: [AnyHashable]) {
@@ -89,6 +102,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemented")
 	}
 	
+	open func tableViewRowWasAdded(_ row: TableViewKitRow) {
+		fatalError("Not yet implemented")
+	}
+
 	open func tableViewRow(_ row: TableViewKitRow, didFailWith error: Error) {
 		fatalError("Not yet implemented")
 	}

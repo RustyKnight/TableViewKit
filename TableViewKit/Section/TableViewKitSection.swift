@@ -6,13 +6,13 @@
 import Foundation
 
 public protocol TableViewKitSectionDelegate {
-	func tableViewSection(_ section: TableViewKitSection, rowsWereRemovedAt rows: [Int])
-	func tableViewSection(_ section: TableViewKitSection, rowsWereAddedAt rows: [Int])
-	func tableViewSection(_ section: TableViewKitSection, rowsWereChangedAt rows: [Int])
+	
+	func rowsWereAddedTo(_ section: TableViewKitSection)
+	func rowsWereRemovedFrom(_ section: TableViewKitSection)
+	func rowsWereUpdatedIn(_ section: TableViewKitSection)
 
-	// The change is so significant, that's just easier to reload the
-	// section
-	func tableViewSectionDidChange(_ section: TableViewKitSection)
+	// The section itself was hidden/shown
+	func stateDidChange(forSection section: TableViewKitSection)
 
 	func tableViewSection(_ section: TableViewKitSection, didFailWith: Error)
 	func tableViewSection(
@@ -23,8 +23,8 @@ public protocol TableViewKitSectionDelegate {
 			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction])
 
-	func tableViewSectionDidStartLoading(_ section: TableViewKitSection)
-	func tableViewSectionDidCompleteLoading(_ section: TableViewKitSection)
+//	func tableViewSectionDidStartLoading(_ section: TableViewKitSection)
+//	func tableViewSectionDidCompleteLoading(_ section: TableViewKitSection)
 
 	func tableViewSection(
 			_ tableViewSection: TableViewKitSection,

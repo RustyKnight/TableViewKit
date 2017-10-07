@@ -11,22 +11,34 @@ import TableViewKit
 
 class StaticTableViewController: TableViewKitTableViewController {
 	
-	@IBOutlet weak var section1Cell1: UITableViewCell!
-	@IBOutlet weak var section1Cell2: UITableViewCell!
-	@IBOutlet weak var section1Cell3: UITableViewCell!
-	@IBOutlet weak var section1Cell4: UITableViewCell!
-	@IBOutlet weak var section1Cell5: UITableViewCell!
+	@IBOutlet weak var cell1: UITableViewCell!
+	@IBOutlet weak var cell2: UITableViewCell!
+	@IBOutlet weak var cell3: UITableViewCell!
+	@IBOutlet weak var cell4: UITableViewCell!
+	@IBOutlet weak var cell5: UITableViewCell!
 	
-	var cells: [StaticModel.CellIdentifiers: UITableViewCell]!
+	@IBOutlet weak var section02Cell01: UITableViewCell!
+	@IBOutlet weak var section02Cell02: UITableViewCell!
+	@IBOutlet weak var section02Cell03: UITableViewCell!
+	@IBOutlet weak var section02Cell04: UITableViewCell!
+	@IBOutlet weak var section02Cell05: UITableViewCell!
+	
+	var cells: [String: UITableViewCell]!
 
 	override func viewDidLoad() {
 		
 		cells = [
-			StaticModel.CellIdentifiers.section1Cell1: section1Cell1,
-			StaticModel.CellIdentifiers.section1Cell2: section1Cell2,
-			StaticModel.CellIdentifiers.section1Cell3: section1Cell3,
-			StaticModel.CellIdentifiers.section1Cell4: section1Cell4,
-			StaticModel.CellIdentifiers.section1Cell5: section1Cell5
+			StaticModel.Section1.cell1.rawValue: cell1,
+			StaticModel.Section1.cell2.rawValue: cell2,
+			StaticModel.Section1.cell3.rawValue: cell3,
+			StaticModel.Section1.cell4.rawValue: cell4,
+			StaticModel.Section1.cell5.rawValue: cell5,
+			
+			StaticModel.Section2.cell1.rawValue: section02Cell01,
+			StaticModel.Section2.cell2.rawValue: section02Cell02,
+			StaticModel.Section2.cell3.rawValue: section02Cell03,
+			StaticModel.Section2.cell4.rawValue: section02Cell04,
+			StaticModel.Section2.cell5.rawValue: section02Cell05,
 		]
 		
 		model = StaticModel(delegate: self)
@@ -34,13 +46,14 @@ class StaticTableViewController: TableViewKitTableViewController {
 		super.viewDidLoad()
 	}
 	
-	
 
 	override func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
-		guard let id = StaticModel.CellIdentifiers(rawValue: identifier.rawValue) else {
-			fatalError("Unknown cell identifier \(identifier)")
-		}
+		let id = identifier.rawValue
 		return cells[id]!
 	}
 	
+	override func performUpdate() {
+		applyDesiredState()
+	}
+
 }

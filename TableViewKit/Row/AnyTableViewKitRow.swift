@@ -10,7 +10,7 @@ import Foundation
 
 open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	
-	public var isHidden: Bool {
+	open var isHidden: Bool {
 		return actualState == .hide
 	}
 	

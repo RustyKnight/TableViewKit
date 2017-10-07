@@ -25,6 +25,13 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	
 	public func applyDesiredState() -> TableViewKitModelOperation {
 		
+		// This is done here because it could effect the desired state
+		// of a section
+		var sectionOperations: [AnyHashable: [Operation:[Int]]] = [:]
+		for entry in allSections {
+			sectionOperations[entry.key] = entry.value.applyDesiredState()
+		}
+		
 		var unmodifiedSections: [AnyHashable] = []
 		unmodifiedSections.append(contentsOf: activeSections)
 		
@@ -68,15 +75,18 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		for sectionIndex in 0..<unmodifiedSections.count {
 			let identifier: AnyHashable = unmodifiedSections[sectionIndex]
 			let section = self.section(withIdentifier: identifier)
-			let sectionOperations = section.applyDesiredState()
+//			let sectionOperations = section.applyDesiredState()
+			guard let operations = sectionOperations[identifier] else {
+				fatalError("Can not find section operations for section with identifier \(identifier)")
+			}
 			guard let sectionIndex = index(of: section) else {
 				// What happended here?
 				continue
 			}
 			
-			deletePaths.append(contentsOf: sectionOperations[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
-			insertPaths.append(contentsOf: sectionOperations[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
-			updatePaths.append(contentsOf: sectionOperations[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
+			deletePaths.append(contentsOf: operations[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
+			insertPaths.append(contentsOf: operations[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+			updatePaths.append(contentsOf: operations[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
 		}
 		
 		var rowOperations: [Operation: [IndexPath]] = [:]
@@ -84,12 +94,12 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		rowOperations[.insert] = insertPaths
 		rowOperations[.update] = updatePaths
 		
-		var sectionOperations: [Operation: IndexSet] = [:]
-		sectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
-		sectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
-		sectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
+		var finalSectionOperations: [Operation: IndexSet] = [:]
+		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
+		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
+		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
 		
-		return DefaultTableViewKitModelOperation(sections: sectionOperations,
+		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
 		                                         rows: rowOperations)
 	}
 	
@@ -144,20 +154,6 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		})
 	}
 	
-	public func tableViewSectionDidStartLoading(_ section: TableViewKitSection) {
-		guard let index = index(of: section) else {
-			return
-		}
-		delegate.tableViewModel(self, sectionsDidStartLoading: [index])
-	}
-	
-	public func tableViewSectionDidCompleteLoading(_ section: TableViewKitSection) {
-		guard let index = index(of: section) else {
-			return
-		}
-		delegate.tableViewModel(self, sectionsDidCompleteLoading: [index])
-	}
-	
 	internal func indexPaths(forRows rows: [Int], from section: TableViewKitSection) -> [IndexPath]? {
 		guard rows.count > 0 else {
 			return nil
@@ -173,46 +169,38 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return paths
 	}
 	
-	public func tableViewSection(_ section: TableViewKitSection, rowsWereRemovedAt rows: [Int]) {
+	public func stateDidChange(forSection section: TableViewKitSection) {
+		delegate.tableViewModel(self, sectionStateDidChange: section)
+	}
+
+	public func rowsWereAddedTo(_ section: TableViewKitSection) {
 		guard !section.isHidden else {
 			return
 		}
-		guard let paths = indexPaths(forRows: rows, from: section) else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereRemovedAt: paths)
+		delegate.tableViewModel(self, rowsWereAddedTo: section)
 	}
 	
-	public func tableViewSection(_ section: TableViewKitSection, rowsWereAddedAt rows: [Int]) {
+	public func rowsWereRemovedFrom(_ section: TableViewKitSection) {
 		guard !section.isHidden else {
 			return
 		}
-		guard let paths = indexPaths(forRows: rows, from: section) else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereAddedAt: paths)
+		delegate.tableViewModel(self, rowsWereRemovedFrom: section)
 	}
 	
-	public func tableViewSection(_ section: TableViewKitSection, rowsWereChangedAt rows: [Int]) {
+	public func rowsWereUpdatedIn(_ section: TableViewKitSection) {
 		guard !section.isHidden else {
 			return
 		}
-		guard let paths = indexPaths(forRows: rows, from: section) else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereChangedAt: paths)
+		delegate.tableViewModel(self, rowsWereUpdatedIn: section)
 	}
 	
-	public func tableViewSectionDidChange(_ section: TableViewKitSection) {
+	public func structureDidChangeFor(_ section: TableViewKitSection) {
 		guard !section.isHidden else {
 			return
 		}
-		guard let index = index(of: section) else {
-			return
-		}
-		delegate.tableViewModel(self, sectionsWereChangedAt: [index])
+		delegate.tableViewModel(self, rowsWereUpdatedIn: section)
 	}
-	
+
 	public func tableViewSection(
 		_ section: TableViewKitSection,
 		performSegueWithIdentifier identifier: String,

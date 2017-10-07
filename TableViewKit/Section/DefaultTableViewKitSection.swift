@@ -30,6 +30,14 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 	open func commonInit() {
 	}
 	
+	public override func rowIndex(for row: TableViewKitRow) -> Int? {
+		guard let identifier = identifier(for: row) else {
+			return nil
+		}
+		
+		return activeRows.index(where: { $0 == identifier })
+	}
+	
 	func row(withIdentifier identifier: AnyHashable) -> TableViewKitRow {
 		return allRows[identifier]!
 	}
@@ -113,19 +121,23 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 	// MARK: TableViewRowDelegate
 	
 	open override func tableViewRowWasUpdated(_ row: TableViewKitRow) {
-		guard let index = index(of: row) else {
+		guard row.isHidden else {
 			return
 		}
-		delegate.tableViewSection(self, rowsWereChangedAt: [index])
+		delegate.rowsWereUpdatedIn(self)
 	}
 	
 	open override func tableViewRowWasRemoved(_ row: TableViewKitRow) {
-		guard let index = index(of: row) else {
+		guard row.isHidden else {
 			return
 		}
-		delegate.tableViewSection(self, rowsWereRemovedAt: [index])
+		delegate.rowsWereRemovedFrom(self)
 	}
 	
+	open override func tableViewRowWasAdded(_ row: TableViewKitRow) {
+		delegate.rowsWereRemovedFrom(self)
+	}
+
 	open override func tableViewRow(_ row: TableViewKitRow, didFailWith error: Error) {
 		delegate.tableViewSection(self, didFailWith: error)
 	}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70C434481F8876B30048B9D1 /* StaticSection02.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C434471F8876B30048B9D1 /* StaticSection02.swift */; };
 		70FE77091F80D5F600C287F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE77081F80D5F600C287F6 /* AppDelegate.swift */; };
 		70FE770B1F80D5F600C287F6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE770A1F80D5F600C287F6 /* ViewController.swift */; };
 		70FE770E1F80D5F600C287F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70FE770C1F80D5F600C287F6 /* Main.storyboard */; };
@@ -17,7 +18,7 @@
 		70FE772A1F80D63000C287F6 /* TableViewKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70FE77281F80D63000C287F6 /* TableViewKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		70FE772D1F80D77900C287F6 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE772C1F80D77900C287F6 /* StaticTableViewController.swift */; };
 		70FE77301F80D7E700C287F6 /* StaticModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE772F1F80D7E700C287F6 /* StaticModel.swift */; };
-		70FE77321F80D8B900C287F6 /* StaticSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE77311F80D8B900C287F6 /* StaticSection.swift */; };
+		70FE77321F80D8B900C287F6 /* StaticSection01.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE77311F80D8B900C287F6 /* StaticSection01.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70C434471F8876B30048B9D1 /* StaticSection02.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSection02.swift; sourceTree = "<group>"; };
 		70FE77051F80D5F600C287F6 /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70FE77081F80D5F600C287F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70FE770A1F80D5F600C287F6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -58,7 +60,7 @@
 		70FE77281F80D63000C287F6 /* TableViewKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TableViewKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70FE772C1F80D77900C287F6 /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		70FE772F1F80D7E700C287F6 /* StaticModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticModel.swift; sourceTree = "<group>"; };
-		70FE77311F80D8B900C287F6 /* StaticSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSection.swift; sourceTree = "<group>"; };
+		70FE77311F80D8B900C287F6 /* StaticSection01.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSection01.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,7 +129,8 @@
 			children = (
 				70FE772C1F80D77900C287F6 /* StaticTableViewController.swift */,
 				70FE772F1F80D7E700C287F6 /* StaticModel.swift */,
-				70FE77311F80D8B900C287F6 /* StaticSection.swift */,
+				70FE77311F80D8B900C287F6 /* StaticSection01.swift */,
+				70C434471F8876B30048B9D1 /* StaticSection02.swift */,
 			);
 			path = Static;
 			sourceTree = "<group>";
@@ -236,9 +239,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70C434481F8876B30048B9D1 /* StaticSection02.swift in Sources */,
 				70FE770B1F80D5F600C287F6 /* ViewController.swift in Sources */,
 				70FE77301F80D7E700C287F6 /* StaticModel.swift in Sources */,
-				70FE77321F80D8B900C287F6 /* StaticSection.swift in Sources */,
+				70FE77321F80D8B900C287F6 /* StaticSection01.swift in Sources */,
 				70FE772D1F80D77900C287F6 /* StaticTableViewController.swift in Sources */,
 				70FE77091F80D5F600C287F6 /* AppDelegate.swift in Sources */,
 			);

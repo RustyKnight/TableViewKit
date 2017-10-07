@@ -13,6 +13,7 @@ public protocol TableViewKitSegueController {
 
 public protocol TableViewKitRowDelegate {
 
+	func tableViewRowWasAdded(_ row: TableViewKitRow)
 	func tableViewRowWasUpdated(_ row: TableViewKitRow)
 	func tableViewRowWasRemoved(_ row: TableViewKitRow)
 
@@ -36,6 +37,10 @@ public protocol TableViewKitRowDelegate {
 			presentActionSheetWithTitle title: String?,
 			message: String?,
 			actions: [UIAlertAction])
+	
+	// Returns the active row index of the specified row, or nil. This could mean that the row
+	// is hidden
+	func rowIndex(for: TableViewKitRow) -> Int?
 
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
@@ -57,6 +62,8 @@ public protocol TableViewKitRowDelegate {
 
 public protocol TableViewKitRow: Stateful {
 	var delegate: TableViewKitRowDelegate { get }
+
+	var isHidden: Bool { get }
 
 	func didSelect() -> Bool
 	func shouldSelectRow() -> Bool
