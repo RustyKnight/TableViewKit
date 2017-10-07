@@ -28,7 +28,8 @@ class StaticSection02: DefaultTableViewKitSection {
 			StaticModel.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
 			StaticModel.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
 			StaticModel.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
-			StaticModel.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self)
+			StaticModel.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
+			StaticModel.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)
 		]
 		
 		preferredRowOrder = [
@@ -36,7 +37,8 @@ class StaticSection02: DefaultTableViewKitSection {
 			StaticModel.Section2.cell2,
 			StaticModel.Section2.cell3,
 			StaticModel.Section2.cell4,
-			StaticModel.Section2.cell5
+			StaticModel.Section2.cell5,
+			StaticModel.Section2.cell6
 		]
 	}
 	
@@ -58,4 +60,26 @@ class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Section2
 		return false
 	}
 	
+}
+
+class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueIdenitifer, StaticModel.Section2> {
+	init(cellIdentifier: StaticModel.Section2,
+	     delegate: TableViewKitRowDelegate) {
+		super.init(segueIdentifier: StaticTableViewController.SegueIdenitifer.hello,
+		           cellIdentifier: cellIdentifier,
+		           delegate: delegate)
+	}
+	
+	override func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {
+		print("shouldPerformSegue with \(withIdentifier)")
+		return true
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue) {
+		print("prepareForSeqgue")
+	}
+	
+	override func unwound(from segue: UIStoryboardSegue) {
+		print("unwoundForSeqgue")
+	}
 }

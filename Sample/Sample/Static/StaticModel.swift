@@ -32,7 +32,8 @@ class StaticModel: DefaultTableViewKitModel {
 		case cell3 = "2003"
 		case cell4 = "2004"
 		case cell5 = "2005"
-		
+		case cell6 = "2006"
+
 		var description: String { return self.rawValue }
 	}
 

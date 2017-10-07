@@ -11,6 +11,10 @@ import TableViewKit
 
 class StaticTableViewController: TableViewKitTableViewController {
 	
+	enum SegueIdenitifer: String {
+		case hello = "Hello"
+	}
+	
 	@IBOutlet weak var cell1: UITableViewCell!
 	@IBOutlet weak var cell2: UITableViewCell!
 	@IBOutlet weak var cell3: UITableViewCell!
@@ -22,7 +26,8 @@ class StaticTableViewController: TableViewKitTableViewController {
 	@IBOutlet weak var section02Cell03: UITableViewCell!
 	@IBOutlet weak var section02Cell04: UITableViewCell!
 	@IBOutlet weak var section02Cell05: UITableViewCell!
-	
+	@IBOutlet weak var section02Cell06: UITableViewCell!
+
 	var cells: [String: UITableViewCell]!
 
 	override func viewDidLoad() {
@@ -39,6 +44,7 @@ class StaticTableViewController: TableViewKitTableViewController {
 			StaticModel.Section2.cell3.rawValue: section02Cell03,
 			StaticModel.Section2.cell4.rawValue: section02Cell04,
 			StaticModel.Section2.cell5.rawValue: section02Cell05,
+			StaticModel.Section2.cell6.rawValue: section02Cell06,
 		]
 		
 		model = StaticModel(delegate: self)
@@ -54,6 +60,10 @@ class StaticTableViewController: TableViewKitTableViewController {
 	
 	override func performUpdate() {
 		applyDesiredState()
+	}
+
+	@IBAction func unwindTo(segue: UIStoryboardSegue) {
+		didUnwindFrom(segue)
 	}
 
 }

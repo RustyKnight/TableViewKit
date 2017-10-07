@@ -9,7 +9,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	public var model: TableViewKitModel!
 
-	public var seguePreparer: TableViewKitSegueController?
+	public var segueController: TableViewKitSegueController?
 
 	public var deleteRowAnimation: UITableViewRowAnimation = .automatic
 	public var insertRowAnimation: UITableViewRowAnimation = .automatic
@@ -197,20 +197,16 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	open func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int]) {
 	}
-
-	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-		guard let controller = seguePreparer else {
-			return false
-		}
-		
-		return controller.shouldPerformSegue(withIdentifier: identifier, sender: sender)
-	}
 	
 	open func tableViewModel(
 		_ model: TableViewKitModel,
 		performSegueWithIdentifier identifier: String,
 		controller: TableViewKitSegueController) {
-		performSegue(withIdentifier: identifier, sender: controller)
+		
+		print("performSegue with \(identifier)")
+		segueController = controller
+		performSegue(withIdentifier: identifier, sender: self)
+		
 	}
 	
 	open func tableViewModel(
@@ -256,22 +252,32 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		tableView.reloadData()
 	}
 
+	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+		print("shouldPerformSegue with \(identifier)")
+		guard let controller = segueController else {
+			return false
+		}
+		
+		return controller.shouldPerformSegue(withIdentifier: identifier, sender: sender)
+	}
+
 	open override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard segue.identifier != nil else {
 			return
 		}
+		print("prepare with \(segue.identifier!)")
 
 		if let preparer = sender as? TableViewKitSegueController {
-			seguePreparer = preparer
+			segueController = preparer
 			preparer.prepare(for: segue)
 		}
 	}
 
 	open func didUnwindFrom(_ segue: UIStoryboardSegue) {
 		defer {
-			seguePreparer = nil
+			segueController = nil
 		}
-		guard let seguePreparer = seguePreparer else {
+		guard let seguePreparer = segueController else {
 			return
 		}
 
