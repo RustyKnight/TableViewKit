@@ -94,15 +94,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemented")
 	}
 	
-	open func tableViewRowWasUpdated(_ row: TableViewKitRow) {
-		fatalError("Not yet implemented")
-	}
-	
-	open func tableViewRowWasRemoved(_ row: TableViewKitRow) {
-		fatalError("Not yet implemented")
-	}
-	
-	open func tableViewRowWasAdded(_ row: TableViewKitRow) {
+	open func stateDidChange(for row: TableViewKitRow) {
 		fatalError("Not yet implemented")
 	}
 

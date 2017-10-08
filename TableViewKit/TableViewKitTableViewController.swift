@@ -105,64 +105,9 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		// to the implementor
 	}
 	
-	public func sectionsWereRemovedFrom(_ model: TableViewKitModel) {
+	public func stateDidChange(for model: TableViewKitModel) {
 		performUpdate()
 	}
-	
-	public func sectionsWereAddedTo(_ model: TableViewKitModel) {
-		performUpdate()
-	}
-	
-	public func sectionsWereChangedIn(_ model: TableViewKitModel) {
-		performUpdate()
-	}
-	
-	public func tableViewModel(_ model: TableViewKitModel, sectionStateDidChange section: TableViewKitSection) {
-		performUpdate()
-	}
-	
-	public func tableViewModel(_ model: TableViewKitModel, rowsWereAddedTo section: TableViewKitSection) {
-		performUpdate()
-	}
-	
-	public func tableViewModel(_ model: TableViewKitModel, rowsWereRemovedFrom section: TableViewKitSection) {
-		performUpdate()
-	}
-	
-	public func tableViewModel(_ model: TableViewKitModel, rowsWereUpdatedIn section: TableViewKitSection) {
-		performUpdate()
-	}
-
-//
-//	open func sectionsWereRemovedFrom(_ model: TableViewKitModel, sectionsWereRemovedAt sections: [Int]) {
-//		performUpdate()
-////		tableView.deleteSections(IndexSet(sections), with: preferredDeleteAnimation)
-//	}
-//
-//	open func tableViewModel(_ model: TableViewKitModel, sectionsWereAddedAt sections: [Int]) {
-//		performUpdate()
-////		tableView.insertSections(IndexSet(sections), with: preferredAddAnimation)
-//	}
-//
-//	open func tableViewModel(_ model: TableViewKitModel, sectionsWereChangedAt sections: [Int]) {
-//		performUpdate()
-////		tableView.reloadSections(IndexSet(sections), with: preferredRefreshAnimation)
-//	}
-//
-//	open func tableViewModel(_ model: TableViewKitModel, rowsWereAddedAt rows: [IndexPath]) {
-//		performUpdate()
-////		tableView.insertRows(at: rows, with: preferredAddAnimation)
-//	}
-//
-//	open func tableViewModel(_ model: TableViewKitModel, rowsWereRemovedAt rows: [IndexPath]) {
-//		performUpdate()
-////		tableView.reloadRows(at: rows, with: preferredRefreshAnimation)
-//	}
-//
-//	open func tableViewModel(_ model: TableViewKitModel, rowsWereChangedAt rows: [IndexPath]) {
-//		performUpdate()
-////		tableView.deleteRows(at: rows, with: preferredDeleteAnimation)
-//	}
 
 	open func tableViewModel(_ model: TableViewKitModel, section: TableViewKitSection, didFailWith: Error) {
 	}

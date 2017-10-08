@@ -6,13 +6,9 @@
 import Foundation
 
 public protocol TableViewKitSectionDelegate {
-	
-	func rowsWereAddedTo(_ section: TableViewKitSection)
-	func rowsWereRemovedFrom(_ section: TableViewKitSection)
-	func rowsWereUpdatedIn(_ section: TableViewKitSection)
 
 	// The section itself was hidden/shown
-	func stateDidChange(forSection section: TableViewKitSection)
+	func stateDidChange(for section: TableViewKitSection)
 
 	func tableViewSection(_ section: TableViewKitSection, didFailWith: Error)
 	func tableViewSection(

@@ -50,15 +50,7 @@ struct DefaultTableViewKitModelOperation: TableViewKitModelOperation {
 
 public protocol TableViewKitModelDelegate {
 
-	func sectionsWereRemovedFrom(_ model: TableViewKitModel)
-	func sectionsWereAddedTo(_ model: TableViewKitModel)
-	func sectionsWereChangedIn(_ model: TableViewKitModel)
-
-	func tableViewModel(_ model: TableViewKitModel, sectionStateDidChange section: TableViewKitSection)
-
-	func tableViewModel(_ model: TableViewKitModel, rowsWereAddedTo section: TableViewKitSection)
-	func tableViewModel(_ model: TableViewKitModel, rowsWereRemovedFrom section: TableViewKitSection)
-	func tableViewModel(_ model: TableViewKitModel, rowsWereUpdatedIn section: TableViewKitSection)
+	func stateDidChange(for model: TableViewKitModel)
 
 	func tableViewModel(_ model: TableViewKitModel, section: TableViewKitSection, didFailWith: Error)
 	func tableViewModel(

@@ -13,9 +13,7 @@ public protocol TableViewKitSegueController {
 
 public protocol TableViewKitRowDelegate {
 
-	func tableViewRowWasAdded(_ row: TableViewKitRow)
-	func tableViewRowWasUpdated(_ row: TableViewKitRow)
-	func tableViewRowWasRemoved(_ row: TableViewKitRow)
+	func stateDidChange(for row: TableViewKitRow)
 
 //	func remove(row: TableViewRow)
 

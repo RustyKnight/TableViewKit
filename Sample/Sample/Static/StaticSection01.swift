@@ -62,10 +62,10 @@ class StaticSection01: DefaultTableViewKitSection {
 		switch cell.desiredState {
 		case .hide:
 			cell.desiredState = .show
-			delegate.rowsWereAddedTo(self)
+			delegate.stateDidChange(for: self)
 		case .show:
 			cell.desiredState = .hide
-			delegate.rowsWereRemovedFrom(self)
+			delegate.stateDidChange(for: self)
 		default: break;
 		}
 	}

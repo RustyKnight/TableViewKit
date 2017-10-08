@@ -120,22 +120,8 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 	
 	// MARK: TableViewRowDelegate
 	
-	open override func tableViewRowWasUpdated(_ row: TableViewKitRow) {
-		guard row.isHidden else {
-			return
-		}
-		delegate.rowsWereUpdatedIn(self)
-	}
-	
-	open override func tableViewRowWasRemoved(_ row: TableViewKitRow) {
-		guard row.isHidden else {
-			return
-		}
-		delegate.rowsWereRemovedFrom(self)
-	}
-	
-	open override func tableViewRowWasAdded(_ row: TableViewKitRow) {
-		delegate.rowsWereRemovedFrom(self)
+	open override func stateDidChange(for row: TableViewKitRow) {
+		delegate.stateDidChange(for: self)
 	}
 
 	open override func tableViewRow(_ row: TableViewKitRow, didFailWith error: Error) {

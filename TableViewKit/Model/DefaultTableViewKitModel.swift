@@ -169,36 +169,8 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return paths
 	}
 	
-	public func stateDidChange(forSection section: TableViewKitSection) {
-		delegate.tableViewModel(self, sectionStateDidChange: section)
-	}
-
-	public func rowsWereAddedTo(_ section: TableViewKitSection) {
-		guard !section.isHidden else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereAddedTo: section)
-	}
-	
-	public func rowsWereRemovedFrom(_ section: TableViewKitSection) {
-		guard !section.isHidden else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereRemovedFrom: section)
-	}
-	
-	public func rowsWereUpdatedIn(_ section: TableViewKitSection) {
-		guard !section.isHidden else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereUpdatedIn: section)
-	}
-	
-	public func structureDidChangeFor(_ section: TableViewKitSection) {
-		guard !section.isHidden else {
-			return
-		}
-		delegate.tableViewModel(self, rowsWereUpdatedIn: section)
+	open func stateDidChange(for section: TableViewKitSection) {
+		delegate.stateDidChange(for: self)
 	}
 
 	public func tableViewSection(
