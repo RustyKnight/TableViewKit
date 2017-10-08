@@ -205,8 +205,11 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		
 		print("performSegue with \(identifier)")
 		segueController = controller
-		performSegue(withIdentifier: identifier, sender: self)
-		
+    
+    guard shouldPerformSegue(withIdentifier: identifier, sender: self) else {
+      return
+    }
+    self.performSegue(withIdentifier: identifier, sender: self)
 	}
 	
 	open func tableViewModel(

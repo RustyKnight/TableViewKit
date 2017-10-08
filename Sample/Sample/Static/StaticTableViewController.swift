@@ -51,7 +51,6 @@ class StaticTableViewController: TableViewKitTableViewController {
 		
 		super.viewDidLoad()
 	}
-	
 
 	override func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
 		let id = identifier.rawValue
