@@ -17,7 +17,6 @@
 		7019EC3E1F80662B008EBFD0 /* AnyTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */; };
 		7019EC401F80663A008EBFD0 /* DefaultTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */; };
 		7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC421F80672D008EBFD0 /* AnyTableViewKitRow.swift */; };
-		7019EC451F806749008EBFD0 /* DefaultTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC441F806749008EBFD0 /* DefaultTableViewKitRow.swift */; };
 		7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */; };
 		7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */; };
 		705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */; };
@@ -50,7 +49,6 @@
 		7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTableViewKitSection.swift; sourceTree = "<group>"; };
 		7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitSection.swift; sourceTree = "<group>"; };
 		7019EC421F80672D008EBFD0 /* AnyTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTableViewKitRow.swift; sourceTree = "<group>"; };
-		7019EC441F806749008EBFD0 /* DefaultTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitRow.swift; sourceTree = "<group>"; };
 		7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultIdentifableTableViewRowKit.swift; sourceTree = "<group>"; };
 		7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSeguableTableViewKitRow.swift; sourceTree = "<group>"; };
 		705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTableViewKitModel.swift; sourceTree = "<group>"; };
@@ -130,7 +128,6 @@
 				7019EC421F80672D008EBFD0 /* AnyTableViewKitRow.swift */,
 				7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */,
 				7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */,
-				7019EC441F806749008EBFD0 /* DefaultTableViewKitRow.swift */,
 				3ED4ACB58E47EB22286449BE /* Seguable.swift */,
 				3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */,
 			);
@@ -276,7 +273,6 @@
 				3ED4AEA7BC9256E7D29615BA /* Seguable.swift in Sources */,
 				7019EC3E1F80662B008EBFD0 /* AnyTableViewKitSection.swift in Sources */,
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
-				7019EC451F806749008EBFD0 /* DefaultTableViewKitRow.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
 				3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */,
 				705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */,

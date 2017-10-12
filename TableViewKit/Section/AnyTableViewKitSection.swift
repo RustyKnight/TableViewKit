@@ -49,8 +49,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	}
 	
 	public func updateToDesiredState() {
-		// What does it mean for a section to be hidden/shown?
-		actualState = desiredState == .reload ? .show : desiredState
+		actualState = actualState.newStateBasedOn(desiredState: desiredState)
 	}
 	
 	public func applyDesiredState() -> [Operation:[Int]] {

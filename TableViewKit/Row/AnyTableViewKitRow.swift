@@ -24,7 +24,7 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	}
 	
 	public func updateToDesiredState() {
-		actualState = desiredState == .reload ? .show : actualState
+		actualState = actualState.newStateBasedOn(desiredState: desiredState)
 	}
 	
 	open func didSelect() -> Bool {

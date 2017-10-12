@@ -22,6 +22,14 @@ public enum State {
 	case show
 	// Change is only valid where an item's actual state is show...
 	case reload
+	
+	func newStateBasedOn(desiredState: State) -> State {
+		guard desiredState == .reload else {
+			return self;
+		}
+		
+		return desiredState;
+	}
 }
 
 public protocol Stateful {
