@@ -8,14 +8,15 @@
 
 import Foundation
 
-public typealias SectionIdentifable = Identifiable
+public typealias SectionIdentifiable = Identifiable
 
 open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate {
 	
-	public var title: String? = nil
-	public var footer: String? = nil
 	public var rowCount: Int = 0
 	
+	public var title: String?
+	public var footer: String?
+
 	public var isHidden: Bool {
 		return actualState == .hide
 	}
@@ -36,10 +37,13 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	
 	internal var stateManager: StateManager<AnyTableViewKitRow>!
 	
-	public init(title: SectionIdentifable? = nil, footer: SectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
+	public let identifier: SectionIdentifiable
+	
+	public init(identifier: SectionIdentifiable, title: String? = nil, footer: String?, delegate: TableViewKitSectionDelegate) {
+		self.identifier = identifier
+		self.title = title
+		self.footer = footer
 		self.delegate = delegate
-		self.title = title?.value
-		self.footer = footer?.value
 	}
 	
 	public func rowIndex(for: TableViewKitRow) -> Int? {

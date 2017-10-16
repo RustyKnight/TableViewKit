@@ -11,8 +11,10 @@ import TableViewKit
 
 class StaticTableViewController: TableViewKitTableViewController {
 	
-	enum SegueIdenitifer: String {
+	enum SegueIdenitifer: String, Identifiable {
 		case hello = "Hello"
+		
+		var value: String { return self.rawValue }
 	}
 	
 	@IBOutlet weak var cell1: UITableViewCell!
@@ -33,27 +35,27 @@ class StaticTableViewController: TableViewKitTableViewController {
 	override func viewDidLoad() {
 		
 		cells = [
-			StaticModel.Section1.cell1.rawValue: cell1,
-			StaticModel.Section1.cell2.rawValue: cell2,
-			StaticModel.Section1.cell3.rawValue: cell3,
-			StaticModel.Section1.cell4.rawValue: cell4,
-			StaticModel.Section1.cell5.rawValue: cell5,
+			StaticModel.Sections.Section1.cell1.rawValue: cell1,
+			StaticModel.Sections.Section1.cell2.rawValue: cell2,
+			StaticModel.Sections.Section1.cell3.rawValue: cell3,
+			StaticModel.Sections.Section1.cell4.rawValue: cell4,
+			StaticModel.Sections.Section1.cell5.rawValue: cell5,
 			
-			StaticModel.Section2.cell1.rawValue: section02Cell01,
-			StaticModel.Section2.cell2.rawValue: section02Cell02,
-			StaticModel.Section2.cell3.rawValue: section02Cell03,
-			StaticModel.Section2.cell4.rawValue: section02Cell04,
-			StaticModel.Section2.cell5.rawValue: section02Cell05,
-			StaticModel.Section2.cell6.rawValue: section02Cell06,
+			StaticModel.Sections.Section2.cell1.rawValue: section02Cell01,
+			StaticModel.Sections.Section2.cell2.rawValue: section02Cell02,
+			StaticModel.Sections.Section2.cell3.rawValue: section02Cell03,
+			StaticModel.Sections.Section2.cell4.rawValue: section02Cell04,
+			StaticModel.Sections.Section2.cell5.rawValue: section02Cell05,
+			StaticModel.Sections.Section2.cell6.rawValue: section02Cell06,
 		]
 		
 		model = StaticModel(delegate: self)
 		
 		super.viewDidLoad()
 	}
-
-	override func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
-		let id = identifier.rawValue
+	
+	override func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
+		let id = identifier.value
 		return cells[id]!
 	}
 	

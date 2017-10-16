@@ -87,6 +87,6 @@ public protocol TableViewKitModelDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell(withIdentifier: SectionIdentifable, at indexPath: IndexPath) -> UITableViewCell
+	func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell
 }
 

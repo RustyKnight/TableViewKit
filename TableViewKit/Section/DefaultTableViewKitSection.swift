@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class DefaultTableViewKitSection: AnyTableViewKitSection {
+open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTableViewKitSection {
 	
 	public var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
 	public var preferredRowOrder: [AnyHashable] = []
@@ -22,8 +22,8 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 		}
 	}
 	
-	public override init(title: SectionIdentifable? = nil, footer: SectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
-		super.init(title: title, footer: footer, delegate: delegate)
+	public override init(identifier: SectionIdentifiable, title: String? = nil, footer: String? = nil, delegate: TableViewKitSectionDelegate) {
+		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
 		commonInit()
 	}
 	

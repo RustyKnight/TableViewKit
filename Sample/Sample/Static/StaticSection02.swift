@@ -14,37 +14,37 @@ extension Notification.Name {
 	static let changeCellState = Notification.Name(rawValue: "ChangeCellState")
 }
 
-class StaticSection02: DefaultTableViewKitSection {
+class StaticSection02: DefaultTableViewKitSection<StaticModel.Sections> {
 	
-	override init(title: AnySectionIdentifable? = nil, footer: AnySectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
-		super.init(title: title, footer: footer, delegate: delegate)
+	init(identifier: StaticModel.Sections, delegate: TableViewKitSectionDelegate) {
+		super.init(identifier: identifier, title: "Section 02", delegate: delegate)
 	}
 	
 	override func commonInit() {
 		super.commonInit()
 		
 		allRows = [
-			StaticModel.Section2.cell1: Section2StaticRow(cellIdentifier: .cell1, delegate: self),
-			StaticModel.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
-			StaticModel.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
-			StaticModel.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
-			StaticModel.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
-			StaticModel.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)
+			StaticModel.Sections.Section2.cell1: Section2StaticRow(cellIdentifier: .cell1, delegate: self),
+			StaticModel.Sections.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
+			StaticModel.Sections.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
+			StaticModel.Sections.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
+			StaticModel.Sections.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
+			StaticModel.Sections.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)
 		]
 		
 		preferredRowOrder = [
-			StaticModel.Section2.cell1,
-			StaticModel.Section2.cell2,
-			StaticModel.Section2.cell3,
-			StaticModel.Section2.cell4,
-			StaticModel.Section2.cell5,
-			StaticModel.Section2.cell6
+			StaticModel.Sections.Section2.cell1,
+			StaticModel.Sections.Section2.cell2,
+			StaticModel.Sections.Section2.cell3,
+			StaticModel.Sections.Section2.cell4,
+			StaticModel.Sections.Section2.cell5,
+			StaticModel.Sections.Section2.cell6
 		]
 	}
 	
 }
 
-class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Section2> {
+class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Sections.Section2> {
 	
 	override func configure(_ cell: UITableViewCell) {
 		cell.detailTextLabel?.text = "Check"
@@ -62,8 +62,8 @@ class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Section2
 	
 }
 
-class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueIdenitifer, StaticModel.Section2> {
-	init(cellIdentifier: StaticModel.Section2,
+class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueIdenitifer, StaticModel.Sections.Section2> {
+	init(cellIdentifier: StaticModel.Sections.Section2,
 	     delegate: TableViewKitRowDelegate) {
 		super.init(segueIdentifier: StaticTableViewController.SegueIdenitifer.hello,
 		           cellIdentifier: cellIdentifier,

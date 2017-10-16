@@ -10,29 +10,29 @@ import Foundation
 import UIKit
 import TableViewKit
 
-class StaticSection01: DefaultTableViewKitSection {
+class StaticSection01: DefaultTableViewKitSection<StaticModel.Sections> {
 	
-	override init(title: AnySectionIdentifable? = nil, footer: AnySectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
-		super.init(title: title, footer: footer, delegate: delegate)
+	init(identifier: StaticModel.Sections, delegate: TableViewKitSectionDelegate) {
+		super.init(identifier: identifier, title: "Section 02", delegate: delegate)
 	}
 
 	override func commonInit() {
 		super.commonInit()
 		
 		allRows = [
-			StaticModel.Section1.cell1: Section1StaticRow(cellIdentifier: .cell1, delegate: self),
-			StaticModel.Section1.cell2: Section1StaticRow(cellIdentifier: .cell2, delegate: self),
-			StaticModel.Section1.cell3: Section1StaticRow(cellIdentifier: .cell3, delegate: self),
-			StaticModel.Section1.cell4: Section1StaticRow(cellIdentifier: .cell4, delegate: self),
-			StaticModel.Section1.cell5: Section1StaticRow(cellIdentifier: .cell5, delegate: self)
+			StaticModel.Sections.Section1.cell1: Section1StaticRow(cellIdentifier: .cell1, delegate: self),
+			StaticModel.Sections.Section1.cell2: Section1StaticRow(cellIdentifier: .cell2, delegate: self),
+			StaticModel.Sections.Section1.cell3: Section1StaticRow(cellIdentifier: .cell3, delegate: self),
+			StaticModel.Sections.Section1.cell4: Section1StaticRow(cellIdentifier: .cell4, delegate: self),
+			StaticModel.Sections.Section1.cell5: Section1StaticRow(cellIdentifier: .cell5, delegate: self)
 		]
 		
 		preferredRowOrder = [
-			StaticModel.Section1.cell1,
-			StaticModel.Section1.cell2,
-			StaticModel.Section1.cell3,
-			StaticModel.Section1.cell4,
-			StaticModel.Section1.cell5
+			StaticModel.Sections.Section1.cell1,
+			StaticModel.Sections.Section1.cell2,
+			StaticModel.Sections.Section1.cell3,
+			StaticModel.Sections.Section1.cell4,
+			StaticModel.Sections.Section1.cell5
 		]
 	}
 	
@@ -72,7 +72,7 @@ class StaticSection01: DefaultTableViewKitSection {
 	
 }
 
-class Section1StaticRow: DefaultIdentifiableTableViewKitRow {
+class Section1StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Sections.Section1> {
 	
 	override func configure(_ cell: UITableViewCell) {
 		cell.detailTextLabel?.text = "Check"

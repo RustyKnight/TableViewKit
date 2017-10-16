@@ -59,11 +59,19 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 	
 	open override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		let title = model.section(at: section).footer
+		let footer = model.section(at: section).footer
 		print("titleForFooterInSection = \(String(describing: title))")
-		return title
+		return footer
+	}
+	
+	open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		return nil
 	}
 
+	open override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		return nil
+	}
+	
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		print("numberOfRowsInSection = \(section)")
 		return model.section(at: section).rowCount

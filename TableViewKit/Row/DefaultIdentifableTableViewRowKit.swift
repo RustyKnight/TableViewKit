@@ -10,9 +10,9 @@ import Foundation
 
 open class DefaultIdentifiableTableViewKitRow<Identifer: CellIdentifiable>: AnyTableViewKitRow {
 	
-	public let cellIdentifier: CellIdentifiable
+	public let cellIdentifier: Identifer
 	
-	public init(cellIdentifier: CellIdentifiable, delegate: TableViewKitRowDelegate) {
+	public init(cellIdentifier: Identifer, delegate: TableViewKitRowDelegate) {
 		self.cellIdentifier = cellIdentifier
 		super.init(delegate: delegate)
 	}
