@@ -107,7 +107,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return allSections[identifier]!
 	}
 	
-	public func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
+	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
 	
@@ -175,7 +175,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 
 	public func tableViewSection(
 		_ section: TableViewKitSection,
-		performSegueWithIdentifier identifier: String,
+		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		delegate.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}

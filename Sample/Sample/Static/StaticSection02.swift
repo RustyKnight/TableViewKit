@@ -16,7 +16,7 @@ extension Notification.Name {
 
 class StaticSection02: DefaultTableViewKitSection {
 	
-	override init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
+	override init(title: AnySectionIdentifable? = nil, footer: AnySectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
 		super.init(title: title, footer: footer, delegate: delegate)
 	}
 	
@@ -70,7 +70,7 @@ class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueId
 		           delegate: delegate)
 	}
 	
-	override func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {
+	override func shouldPerformSegue(withIdentifier: SegueIdentifiable, sender: Any?) -> Bool {
 		print("shouldPerformSegue with \(withIdentifier)")
 		return true
 	}

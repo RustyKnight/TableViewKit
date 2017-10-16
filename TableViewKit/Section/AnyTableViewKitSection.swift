@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias SectionIdentifable = Identifiable
+
 open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate {
 	
 	public var title: String? = nil
@@ -34,10 +36,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	
 	internal var stateManager: StateManager<AnyTableViewKitRow>!
 	
-	public init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
+	public init(title: SectionIdentifable? = nil, footer: SectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
 		self.delegate = delegate
-		self.title = title?.rawValue
-		self.footer = footer?.rawValue
+		self.title = title?.value
+		self.footer = footer?.value
 	}
 	
 	public func rowIndex(for: TableViewKitRow) -> Int? {
@@ -57,7 +59,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemeted")
 	}
 	
-	public func cell<Identifier>(withIdentifier identifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
+	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
 	
@@ -112,7 +114,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	
 	open func tableViewRow(
 		_ row: TableViewKitRow,
-		performSegueWithIdentifier identifier: String,
+		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		fatalError("Not yet implemented")
 	}

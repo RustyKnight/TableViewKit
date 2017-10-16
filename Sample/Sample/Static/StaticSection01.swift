@@ -12,7 +12,7 @@ import TableViewKit
 
 class StaticSection01: DefaultTableViewKitSection {
 	
-	override init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
+	override init(title: AnySectionIdentifable? = nil, footer: AnySectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
 		super.init(title: title, footer: footer, delegate: delegate)
 	}
 
@@ -72,7 +72,7 @@ class StaticSection01: DefaultTableViewKitSection {
 	
 }
 
-class Section1StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Section1> {
+class Section1StaticRow: DefaultIdentifiableTableViewKitRow {
 	
 	override func configure(_ cell: UITableViewCell) {
 		cell.detailTextLabel?.text = "Check"

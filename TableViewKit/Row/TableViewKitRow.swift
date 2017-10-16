@@ -6,7 +6,7 @@
 import Foundation
 
 public protocol TableViewKitSegueController {
-	func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool
+	func shouldPerformSegue(withIdentifier: SegueIdentifiable, sender: Any?) -> Bool
 	func prepare(for segue: UIStoryboardSegue)
 	func unwound(from segue: UIStoryboardSegue)
 }
@@ -25,7 +25,7 @@ public protocol TableViewKitRowDelegate {
 			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction])
 
-	func tableViewRow(_ row: TableViewKitRow, performSegueWithIdentifier identifier: String, controller: TableViewKitSegueController)
+	func tableViewRow(_ row: TableViewKitRow, performSegueWithIdentifier identifier: SegueIdentifiable, controller: TableViewKitSegueController)
 
 	func setContext(`for` key: AnyHashable, to value: Any?)
 	func context(`for` key: AnyHashable) -> Any?
@@ -43,7 +43,7 @@ public protocol TableViewKitRowDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String
+	func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell
 }
 
 //public protocol TableViewKitSectionRowContext {

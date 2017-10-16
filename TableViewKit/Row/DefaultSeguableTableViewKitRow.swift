@@ -8,17 +8,18 @@
 
 import Foundation
 
-open class DefaultSeguableTableViewKitRow<SegueIdentifier:RawRepresentable, CellIdentifier:RawRepresentable>: DefaultIdentifiableTableViewKitRow<CellIdentifier>,
-	Seguable, TableViewKitSegueController where SegueIdentifier.RawValue == String, CellIdentifier.RawValue == String {
+public typealias SegueIdentifiable = Identifiable
+
+open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, CellIdentifier: CellIdentifiable>: DefaultIdentifiableTableViewKitRow<CellIdentifier>, TableViewKitSegueController {
 	
-	public let segueIdentifier: String
+	public let segueIdentifier: SegueIdentifier
 	
 	public init(segueIdentifier: SegueIdentifier,
 	            cellIdentifier: CellIdentifier,
 	            delegate: TableViewKitRowDelegate) {
 		// I'd call self.init, but I want this initialise to be callable by child implementations,
 		// it's kind of the point of providing the generic support
-		self.segueIdentifier = segueIdentifier.rawValue
+		self.segueIdentifier = segueIdentifier
 		super.init(cellIdentifier: cellIdentifier, delegate: delegate)
 	}
 	
@@ -31,7 +32,7 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:RawRepresentable, Cell
     return false
 	}
 	
-	open func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {
+	open func shouldPerformSegue(withIdentifier: SegueIdentifiable, sender: Any?) -> Bool {
 		return true
 	}
 	

@@ -99,7 +99,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	// MARK: TVKModel
 
-	open func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String {
+	open func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 		// Typically, this will use reusable cell with identifer, but I'll leave that up
 		// to the implementor
@@ -145,7 +145,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	
 	open func tableViewModel(
 		_ model: TableViewKitModel,
-		performSegueWithIdentifier identifier: String,
+		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		
 		print("performSegue with \(identifier)")
@@ -154,7 +154,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
     guard shouldPerformSegue(withIdentifier: identifier, sender: self) else {
       return
     }
-    self.performSegue(withIdentifier: identifier, sender: self)
+    self.performSegue(withIdentifier: identifier.value, sender: self)
 	}
 	
 	open func tableViewModel(
@@ -200,7 +200,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		tableView.reloadData()
 	}
 
-	open override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+	open func shouldPerformSegue(withIdentifier identifier: SegueIdentifiable, sender: Any?) -> Bool {
 		print("shouldPerformSegue with \(identifier)")
 		guard let controller = segueController else {
 			return false

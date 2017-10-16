@@ -8,11 +8,11 @@
 
 import Foundation
 
-open class DefaultIdentifiableTableViewKitRow<T:RawRepresentable>: AnyTableViewKitRow where T.RawValue == String {
+open class DefaultIdentifiableTableViewKitRow<Identifer: CellIdentifiable>: AnyTableViewKitRow {
 	
-	public let cellIdentifier: T
+	public let cellIdentifier: CellIdentifiable
 	
-	public init(cellIdentifier: T, delegate: TableViewKitRowDelegate) {
+	public init(cellIdentifier: CellIdentifiable, delegate: TableViewKitRowDelegate) {
 		self.cellIdentifier = cellIdentifier
 		super.init(delegate: delegate)
 	}

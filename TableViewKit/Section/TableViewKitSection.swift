@@ -24,7 +24,7 @@ public protocol TableViewKitSectionDelegate {
 
 	func tableViewSection(
 			_ tableViewSection: TableViewKitSection,
-			performSegueWithIdentifier: String,
+			performSegueWithIdentifier: SegueIdentifiable,
 			controller: TableViewKitSegueController)
 
 	func tableViewSection(_ tableViewSection: TableViewKitSection,
@@ -39,7 +39,7 @@ public protocol TableViewKitSectionDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell<Identifier>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier : RawRepresentable, Identifier.RawValue == String
+	func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell
 }
 
 public protocol TableViewKitSection: class, Stateful, Contextual {

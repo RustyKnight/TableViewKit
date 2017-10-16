@@ -5,6 +5,12 @@
 
 import Foundation
 
+// I tried a lot of different ways to make this work, that would produce a flexible
+// API which wasn't bound to unchecked strings and nothing work satisfactorly
+public protocol Identifiable {
+	var value: String {get}
+}
+
 public enum Operation {
 	case insert
 	case delete
@@ -64,7 +70,7 @@ public protocol TableViewKitModelDelegate {
 
 	func tableViewModel(
 			_ model: TableViewKitModel,
-			performSegueWithIdentifier identifier: String,
+			performSegueWithIdentifier identifier: SegueIdentifiable,
 			controller: TableViewKitSegueController)
 
 	func tableViewModel(
@@ -81,6 +87,6 @@ public protocol TableViewKitModelDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell<Identifier: RawRepresentable>(withIdentifier: Identifier, at indexPath: IndexPath) -> UITableViewCell where Identifier.RawValue == String
+	func cell(withIdentifier: SectionIdentifable, at indexPath: IndexPath) -> UITableViewCell
 }
 

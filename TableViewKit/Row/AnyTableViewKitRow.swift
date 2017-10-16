@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias CellIdentifiable = Identifiable
+
 open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	
 	open var isHidden: Bool {

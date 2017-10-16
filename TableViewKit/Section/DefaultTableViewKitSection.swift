@@ -22,7 +22,7 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 		}
 	}
 	
-	public override init<T: RawRepresentable>(title: T? = nil, footer: T? = nil, delegate: TableViewKitSectionDelegate) where T.RawValue == String {
+	public override init(title: SectionIdentifable? = nil, footer: SectionIdentifable? = nil, delegate: TableViewKitSectionDelegate) {
 		super.init(title: title, footer: footer, delegate: delegate)
 		commonInit()
 	}
@@ -148,7 +148,7 @@ open class DefaultTableViewKitSection: AnyTableViewKitSection {
 	
 	open override func tableViewRow(
 		_ row: TableViewKitRow,
-		performSegueWithIdentifier identifier: String,
+		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		delegate.tableViewSection(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
