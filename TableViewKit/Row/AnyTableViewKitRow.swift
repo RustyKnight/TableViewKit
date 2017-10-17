@@ -56,5 +56,11 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
   public func didEndDisplaying(_ cell: UITableViewCell) {
   }
 
+	open func updateIfChanged() {
+		guard desiredState != actualState else {
+			return
+		}
+		delegate.stateDidChange(for: self)
+	}
 	
 }

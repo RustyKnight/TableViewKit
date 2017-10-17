@@ -67,6 +67,13 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
 	
+	open func updateIfChanged() {
+		guard desiredState != actualState else {
+			return
+		}
+		delegate.stateDidChange(for: self)
+	}
+
 	open func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}

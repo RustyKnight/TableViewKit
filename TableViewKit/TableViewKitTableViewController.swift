@@ -55,13 +55,13 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).title
-		log(debug: "titleForHeaderInSection = \(String(describing: title))")
+//		log(debug: "titleForHeaderInSection = \(String(describing: title))")
 		return title
 	}
 	
 	open override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		let footer = model.section(at: section).footer
-		log(debug: "titleForFooterInSection = \(String(describing: title))")
+//		log(debug: "titleForFooterInSection = \(String(describing: title))")
 		return footer
 	}
 	
@@ -74,7 +74,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 	
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		log(debug: "numberOfRowsInSection = \(section)")
+		log(debug: "numberOfRowsInSection(\(section)) = \(model.section(at: section).rowCount)")
 		return model.section(at: section).rowCount
 	}
 
