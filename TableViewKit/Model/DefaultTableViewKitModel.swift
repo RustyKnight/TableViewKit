@@ -222,14 +222,18 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	}
 	
 	public func willBecomeActive() {
-		for index in 0..<sectionCount {
-			section(at: index).willBecomeActive()
+		// It's important to notify ALL sections, as some
+		// may be hidden, but will need to know when the model
+		// becomes active so that they monitor for state
+		// changes which might make them visible
+		for section in allSections.values {
+			section.willBecomeActive()
 		}
 	}
 	
 	public func didBecomeInactive() {
-		for index in 0..<sectionCount {
-			section(at: index).didBecomeInactive()
+		for section in allSections.values {
+			section.didBecomeInactive()
 		}
 	}
 	

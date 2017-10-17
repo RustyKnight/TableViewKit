@@ -51,14 +51,14 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	}
 	
 	open override func willBecomeActive() {
-		for identifier in activeRows {
-			row(withIdentifier: identifier).willBecomeActive()
+		for row in allRows.values {
+			row.willBecomeActive()
 		}
 	}
 	
 	open override func didBecomeInactive() {
-		for identifier in activeRows {
-			row(withIdentifier: identifier).didBecomeInactive()
+		for row in allRows.values {
+			row.didBecomeInactive()
 		}
 	}
 	

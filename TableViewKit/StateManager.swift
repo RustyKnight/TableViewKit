@@ -32,6 +32,13 @@ public enum State {
 	}
 }
 
+public extension State {
+	// If hidden, show, otherwise reload
+	func showOrReload() -> State {
+		return self == .hide ? .show : .reload
+	}
+}
+
 public protocol Stateful {
 	var actualState: State {get}
 	var desiredState: State {get}
