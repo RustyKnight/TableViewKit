@@ -113,7 +113,11 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		// Typically, this will use reusable cell with identifer, but I'll leave that up
 		// to the implementor
 	}
-	
+
+	open func cell(withIdentifier: CellIdentifiable) -> UITableViewCell? {
+		fatalError("Not yet implemented")
+	}
+
 	public func stateDidChange(for model: TableViewKitModel) {
 		performUpdate()
 	}

@@ -66,7 +66,11 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
-	
+
+	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell? {
+		return delegate.cell(withIdentifier: identifier)
+	}
+
 	open func updateIfChanged() {
 		guard desiredState != actualState else {
 			return

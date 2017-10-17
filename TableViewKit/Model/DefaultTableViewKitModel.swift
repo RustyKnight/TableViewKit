@@ -131,7 +131,11 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier, at: indexPath)
 	}
-	
+
+	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell? {
+		return delegate.cell(withIdentifier: identifier)
+	}
+
 	public func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
 		let aSection = section(at: indexPath.section)
 		return aSection.cell(forRowAt: indexPath)
