@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import LogWrapperKit
 
 open class TableViewKitTableViewController: UITableViewController, TableViewKitModelDelegate {
 
@@ -42,7 +43,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 
 	open override func numberOfSections(in tableView: UITableView) -> Int {
-		print("numberOfSections = \(model.sectionCount)")
+		log(debug: "numberOfSections = \(model.sectionCount)")
 		return model.sectionCount
 	}
 
@@ -54,13 +55,13 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).title
-		print("titleForHeaderInSection = \(String(describing: title))")
+		log(debug: "titleForHeaderInSection = \(String(describing: title))")
 		return title
 	}
 	
 	open override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		let footer = model.section(at: section).footer
-		print("titleForFooterInSection = \(String(describing: title))")
+		log(debug: "titleForFooterInSection = \(String(describing: title))")
 		return footer
 	}
 	
@@ -73,7 +74,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 	
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		print("numberOfRowsInSection = \(section)")
+		log(debug: "numberOfRowsInSection = \(section)")
 		return model.section(at: section).rowCount
 	}
 
@@ -156,7 +157,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		
-		print("performSegue with \(identifier)")
+		log(debug: "performSegue with \(identifier)")
 		segueController = controller
     
     guard shouldPerformSegue(withIdentifier: identifier, sender: self) else {
@@ -209,7 +210,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	}
 
 	open func shouldPerformSegue(withIdentifier identifier: SegueIdentifiable, sender: Any?) -> Bool {
-		print("shouldPerformSegue with \(identifier)")
+		log(debug: "shouldPerformSegue with \(identifier)")
 		guard let controller = segueController else {
 			return false
 		}
@@ -221,7 +222,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		guard segue.identifier != nil else {
 			return
 		}
-		print("prepare with \(segue.identifier!)")
+		log(debug: "prepare with \(segue.identifier!)")
 
 		if let preparer = sender as? TableViewKitSegueController {
 			segueController = preparer

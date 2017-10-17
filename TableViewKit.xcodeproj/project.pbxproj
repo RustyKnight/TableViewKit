@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12B565241F95D73500A57459 /* LogWrapperKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12B565231F95D73500A57459 /* LogWrapperKit.framework */; };
 		12F3AD181DFDF94300381A23 /* TableViewKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 12F3AD161DFDF94300381A23 /* TableViewKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3ED4A027B8D37508D2ECB7D4 /* TableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */; };
 		3ED4A2192194933272989339 /* TableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		12B565231F95D73500A57459 /* LogWrapperKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LogWrapperKit.framework; path = Carthage/Build/iOS/LogWrapperKit.framework; sourceTree = "<group>"; };
 		12F3AD131DFDF94300381A23 /* TableViewKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TableViewKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F3AD161DFDF94300381A23 /* TableViewKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewKit.h; sourceTree = "<group>"; };
 		12F3AD171DFDF94300381A23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B565241F95D73500A57459 /* LogWrapperKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,12 +80,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		12B565221F95D73500A57459 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				12B565231F95D73500A57459 /* LogWrapperKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		12F3AD091DFDF94300381A23 = {
 			isa = PBXGroup;
 			children = (
 				12F3AD151DFDF94300381A23 /* TableViewKit */,
 				706E527F1F81A82200CA75A2 /* TableViewKitTests */,
 				12F3AD141DFDF94300381A23 /* Products */,
+				12B565221F95D73500A57459 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -418,6 +430,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = TableViewKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -438,6 +454,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = TableViewKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
