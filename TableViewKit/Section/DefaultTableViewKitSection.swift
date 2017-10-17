@@ -22,7 +22,7 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 		}
 	}
 	
-	public override init(identifier: SectionIdentifiable, title: String? = nil, footer: String? = nil, delegate: TableViewKitSectionDelegate) {
+	public init(identifier: Identifier, title: String? = nil, footer: String? = nil, delegate: TableViewKitSectionDelegate) {
 		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
 		commonInit()
 	}
