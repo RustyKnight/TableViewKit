@@ -48,6 +48,9 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			log(debug: "\(sec) row count = \(sec.rowCount)")
 		}
 		
+		var sectionsBeforeUpdate: [AnyHashable] = []
+		sectionsBeforeUpdate.append(contentsOf: activeSections)
+		
 		// This is done here because it could effect the desired state
 		// of a section
 		var sectionOperations: [AnyHashable: [Operation:[Int]]] = [:]
@@ -69,25 +72,6 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		let sectionsToBeInserted = operations.insert
 		let sectionsToBeRemoved = operations.delete
 		let sectionsToBeReloaded = operations.update
-		
-		var deletePaths: [IndexPath] = []
-		var updatePaths: [IndexPath] = []
-		var insertPaths: [IndexPath] = []
-		
-		for target in operations.operations(for: .update) {
-			let section = self.section(withIdentifier: target.identifier)
-			guard let operations = sectionOperations[target.identifier] else {
-				fatalError("Can not find section operations for section with identifier \(target.identifier)")
-			}
-			guard let sectionIndex = index(of: section) else {
-				// What happended here?
-				continue
-			}
-			
-			deletePaths.append(contentsOf: operations[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
-			insertPaths.append(contentsOf: operations[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
-			updatePaths.append(contentsOf: operations[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
-		}
 
 		// Remove all sections which might have been removed
 		for property in operations.operations(for: .delete) {
@@ -98,7 +82,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			}
 			unmodifiedSections.remove(at: index)
 		}
-		
+
 		// Update the state of the rows in all the
 		// sections that were inserted to ensure that the
 		// rows are at their desired states
@@ -108,23 +92,27 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			_ = section.applyDesiredState()
 		}
 		
-//		for sectionIndex in 0..<unmodifiedSections.count {
-//			let identifier: AnyHashable = unmodifiedSections[sectionIndex]
-//			let section = self.section(withIdentifier: identifier)
-////			let sectionOperations = section.applyDesiredState()
-//			guard let operations = sectionOperations[identifier] else {
-//				fatalError("Can not find section operations for section with identifier \(identifier)")
-//			}
-//			guard let sectionIndex = originalIndex(of: section) else {
-//				// What happended here?
-//				continue
-//			}
-//
-//			deletePaths.append(contentsOf: operations[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
-//			insertPaths.append(contentsOf: operations[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
-//			updatePaths.append(contentsOf: operations[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
-//		}
-		
+		var deletePaths: [IndexPath] = []
+		var updatePaths: [IndexPath] = []
+		var insertPaths: [IndexPath] = []
+
+		for identifier in unmodifiedSections {
+			guard sectionsBeforeUpdate.contains(identifier) else {
+				continue
+			}
+			let section = self.section(withIdentifier: identifier)			
+			guard let sectionIndex = index(of: section, in: sectionsBeforeUpdate) else {
+				// What happended here?
+				continue
+			}
+			
+			let operaton = section.applyDesiredState()
+			
+			deletePaths.append(contentsOf: operaton[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
+			insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+			updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
+		}
+
 		var rowOperations: [Operation: [IndexPath]] = [:]
 		rowOperations[.delete] = deletePaths
 		rowOperations[.insert] = insertPaths
