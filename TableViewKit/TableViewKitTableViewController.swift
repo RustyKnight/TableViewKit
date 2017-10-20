@@ -110,17 +110,15 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	// MARK: Section index mapping
 	
 	open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		let sectionIndex = model.convertViewSectionIndexToModelIndex(indexPath.section)
-		let path = IndexPath(row: indexPath.row, section: sectionIndex)
-		log(debug: "viewIndex = \(indexPath.section); modelIndex = \(sectionIndex)")
-		return super.tableView(tableView, heightForRowAt: path)
+    let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
+    log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
+		return super.tableView(tableView, heightForRowAt: modelIndexPath)
 	}
 	
 	open override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-		let sectionIndex = model.convertViewSectionIndexToModelIndex(indexPath.section)
-		let path = IndexPath(row: indexPath.row, section: sectionIndex)
-		log(debug: "viewIndex = \(indexPath.section); modelIndex = \(sectionIndex)")
-		return super.tableView(tableView, indentationLevelForRowAt: path)
+    let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
+		log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
+		return super.tableView(tableView, indentationLevelForRowAt: modelIndexPath)
 	}
 
 	// MARK: TVKModel

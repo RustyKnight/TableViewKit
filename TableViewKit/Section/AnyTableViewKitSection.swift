@@ -45,7 +45,11 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		self.footer = footer
 		self.delegate = delegate
 	}
-	
+
+  public func toModelIndex(fromViewIndex: Int) -> Int {
+    fatalError("Not yet implemented")
+  }
+
 	public func rowIndex(for: TableViewKitRow) -> Int? {
 		fatalError("Not yet implemented")
 	}

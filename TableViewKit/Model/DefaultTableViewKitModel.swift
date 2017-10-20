@@ -13,8 +13,8 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	
 	public var sharedContext: [AnyHashable: Any] = [:]
 	
-	public var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
-	public var preferredSectionOrder: [AnyHashable] = []
+	internal var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
+	internal var preferredSectionOrder: [AnyHashable] = []
 	internal var activeSections: [AnyHashable] = []
 	// This is used to map the active section index to the
 	// position of the section in the story board
@@ -31,13 +31,18 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		self.preferredSectionOrder = preferredOrder
 		self.viewToModelMapping = viewToModelMapping
 	}
-
-	open func convertViewSectionIndexToModelIndex(_ sectionIndex: Int) -> Int {
-		let id = identifierForActiveSection(at: sectionIndex)
-		guard let index = viewToModelMapping.index(of: id) else {
+  
+  open func toModelIndexPath(fromViewIndexPath path: IndexPath) -> IndexPath {
+		let id = identifierForActiveSection(at: path.section)
+    guard let section = allSections[id] else {
+      fatalError("Section [\(id)] not exist")
+    }
+		guard let sectionIndex = viewToModelMapping.index(of: id) else {
 			fatalError("Section [\(id)] does not have a matching index")
 		}
-		return index
+    let rowIndex = section.toModelIndex(fromViewIndex: path.row)
+    let modelPath = IndexPath(row: rowIndex, section: sectionIndex)
+		return modelPath
 	}
 
 	public func applyDesiredState() -> TableViewKitModelOperation {

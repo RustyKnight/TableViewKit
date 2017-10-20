@@ -10,9 +10,10 @@ import Foundation
 
 open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTableViewKitSection {
 	
-	public var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
-	public var preferredRowOrder: [AnyHashable] = []
-	public var activeRows: [AnyHashable] = []
+	internal var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
+	internal var preferredRowOrder: [AnyHashable] = []
+	internal var activeRows: [AnyHashable] = []
+  internal var viewToModelMapping: [AnyHashable] = []
 	
 	public override var rowCount: Int {
 		set {}
@@ -26,10 +27,30 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
 		commonInit()
 	}
-	
+
+  public func prepare(allRows: [AnyHashable: AnyTableViewKitRow],
+                      preferredOrder: [AnyHashable],
+                      viewToModelMapping: [AnyHashable]) {
+    self.allRows = allRows
+    self.preferredRowOrder = preferredOrder
+    self.viewToModelMapping = viewToModelMapping
+  }
+
 	open func commonInit() {
 	}
-	
+
+  override public func toModelIndex(fromViewIndex index: Int) -> Int {
+    let id = identifierForActiveRow(at: index)
+    guard let rowIndex = viewToModelMapping.index(of: id) else {
+      fatalError("Row [\(id)] does not have a matching index")
+    }
+    return rowIndex
+  }
+  
+  public func identifierForActiveRow(at: Int) -> AnyHashable {
+    return activeRows[at]
+  }
+
 	public override func rowIndex(for row: TableViewKitRow) -> Int? {
 		guard let identifier = identifier(for: row) else {
 			return nil

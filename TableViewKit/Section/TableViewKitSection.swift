@@ -78,6 +78,8 @@ public protocol TableViewKitSection: class, Stateful, Contextual {
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	
 	func applyDesiredState() -> [Operation:[Int]]
+  
+  func toModelIndex(fromViewIndex: Int) -> Int
 }
 
 public func ==(lhs: TableViewKitSection, rhs: TableViewKitSection) -> Bool {

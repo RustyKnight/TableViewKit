@@ -28,8 +28,6 @@ public protocol TableViewKitModel: Contextual {
 	var sectionCount: Int { get }
 
 	func section(at: Int) -> TableViewKitSection
-	
-	func convertViewSectionIndexToModelIndex(_ sectionIndex: Int) -> Int
 
 	func didSelectRow(at path: IndexPath) -> Bool
 
@@ -42,6 +40,8 @@ public protocol TableViewKitModel: Contextual {
 	func applyDesiredState() -> TableViewKitModelOperation
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
+  
+  func toModelIndexPath(fromViewIndexPath: IndexPath) -> IndexPath
 }
 
 // A set of operations which need to be carried out
