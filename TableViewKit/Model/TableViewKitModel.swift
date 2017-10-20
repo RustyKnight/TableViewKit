@@ -28,6 +28,8 @@ public protocol TableViewKitModel: Contextual {
 	var sectionCount: Int { get }
 
 	func section(at: Int) -> TableViewKitSection
+	
+	func convertViewSectionIndexToModelIndex(_ sectionIndex: Int) -> Int
 
 	func didSelectRow(at path: IndexPath) -> Bool
 
@@ -80,9 +82,6 @@ public protocol TableViewKitModelDelegate {
 			title: String?,
 			message: String?,
 			actions: [UIAlertAction])
-
-	func tableViewModel(_ model: TableViewKitModel, sectionsDidStartLoading: [Int])
-	func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int])
 
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility

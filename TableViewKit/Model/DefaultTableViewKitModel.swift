@@ -16,14 +16,37 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	public var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
 	public var preferredSectionOrder: [AnyHashable] = []
 	internal var activeSections: [AnyHashable] = []
-	
+	// This is used to map the active section index to the
+	// position of the section in the story board
+	internal var viewToModelMapping: [AnyHashable] = []
+
 	public var delegate: TableViewKitModelDelegate
 	
 	public init(delegate: TableViewKitModelDelegate) {
 		self.delegate = delegate
 	}
 	
+	public func prepare(allSections: [AnyHashable: AnyTableViewKitSection], preferredOrder: [AnyHashable], viewToModelMapping: [AnyHashable]) {
+		self.allSections = allSections
+		self.preferredSectionOrder = preferredOrder
+		self.viewToModelMapping = viewToModelMapping
+	}
+
+	open func convertViewSectionIndexToModelIndex(_ sectionIndex: Int) -> Int {
+		let id = identifierForActiveSection(at: sectionIndex)
+		guard let index = viewToModelMapping.index(of: id) else {
+			fatalError("Section [\(id)] does not have a matching index")
+		}
+		return index
+	}
+
 	public func applyDesiredState() -> TableViewKitModelOperation {
+		
+		log(debug: "Sections before update: \(activeSections.count)")
+		for id in activeSections {
+			let sec = section(withIdentifier: id)
+			log(debug: "\(sec) row count = \(sec.rowCount)")
+		}
 		
 		// This is done here because it could effect the desired state
 		// of a section
@@ -120,6 +143,12 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
 		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
 
+		log(debug: "Sections after update: \(activeSections.count)")
+		for id in activeSections {
+			let sec = section(withIdentifier: id)
+			log(debug: "\(sec) row count = \(sec.rowCount)")
+		}
+
 		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
 		                                         rows: rowOperations)
 	}
@@ -147,6 +176,10 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	
 	public func section(at: Int) -> TableViewKitSection {
 		return allSections[activeSections[at]]!
+	}
+	
+	public func identifierForActiveSection(at: Int) -> AnyHashable {
+		return activeSections[at]
 	}
 	
 	public func didSelectRow(at path: IndexPath) -> Bool {

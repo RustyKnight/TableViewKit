@@ -50,18 +50,17 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 	// MARK: UITableViewDataSource
 	
 	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		log(debug: "indexPath = \(indexPath)")
 		return model.cell(forRowAt: indexPath)
 	}
 
 	open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		let title = model.section(at: section).title
-//		log(debug: "titleForHeaderInSection = \(String(describing: title))")
 		return title
 	}
 	
 	open override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		let footer = model.section(at: section).footer
-//		log(debug: "titleForFooterInSection = \(String(describing: title))")
 		return footer
 	}
 	
@@ -96,6 +95,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 			_ tableView: UITableView,
 			willDisplay cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
+		log(debug: "...")
 		model.section(at: indexPath.section).willDisplay(cell, forRowAt: indexPath.row)
 	}
 
@@ -103,7 +103,24 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
+		log(debug: "...")
+//		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
+	}
+	
+	// MARK: Section index mapping
+	
+	open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		let sectionIndex = model.convertViewSectionIndexToModelIndex(indexPath.section)
+		let path = IndexPath(row: indexPath.row, section: sectionIndex)
+		log(debug: "viewIndex = \(indexPath.section); modelIndex = \(sectionIndex)")
+		return super.tableView(tableView, heightForRowAt: path)
+	}
+	
+	open override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
+		let sectionIndex = model.convertViewSectionIndexToModelIndex(indexPath.section)
+		let path = IndexPath(row: indexPath.row, section: sectionIndex)
+		log(debug: "viewIndex = \(indexPath.section); modelIndex = \(sectionIndex)")
+		return super.tableView(tableView, indentationLevelForRowAt: path)
 	}
 
 	// MARK: TVKModel
@@ -149,12 +166,6 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 				animated: true,
 				completion: nil)
 	}
-
-	open func tableViewModel(_ model: TableViewKitModel, sectionsDidStartLoading: [Int]) {
-	}
-
-	open func tableViewModel(_ model: TableViewKitModel, sectionsDidCompleteLoading: [Int]) {
-	}
 	
 	open func tableViewModel(
 		_ model: TableViewKitModel,
@@ -167,7 +178,7 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
     guard shouldPerformSegue(withIdentifier: identifier, sender: self) else {
       return
     }
-    self.performSegue(withIdentifier: identifier.value, sender: self)
+    self.performSegue(withIdentifier: identifier.value, sender: segueController)
 	}
 	
 	open func tableViewModel(
@@ -201,16 +212,17 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		tableView.beginUpdates()
 		
 		tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
-		tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
 		tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)
-		
+		tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
+
 		tableView.deleteRows(at: operation.rows[.delete]!, with: deleteRowAnimation)
-		tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
 		tableView.reloadRows(at: operation.rows[.update]!, with: reloadRowAnimation)
-		
+		tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
+
 		tableView.endUpdates()
-		
+
 		tableView.reloadData()
+		tableView.layoutIfNeeded()
 	}
 
 	open func shouldPerformSegue(withIdentifier identifier: SegueIdentifiable, sender: Any?) -> Bool {

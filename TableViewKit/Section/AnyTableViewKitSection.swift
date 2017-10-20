@@ -71,7 +71,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		return delegate.cell(withIdentifier: identifier)
 	}
 
-	open func updateIfChanged() {
+	open func notifyIfStateChanged() {
 		guard desiredState != actualState else {
 			return
 		}

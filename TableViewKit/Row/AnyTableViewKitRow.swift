@@ -26,9 +26,21 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	}
 	
 	public func updateToDesiredState() {
-		actualState = actualState.newStateBasedOn(desiredState: desiredState)
+		let newState = actualState.newStateBasedOn(desiredState: desiredState)
+		actualState = newState
+		switch newState {
+		case .show: rowWillShow()
+		case .hide: rowWillHide()
+		default: break
+		}
 	}
 	
+	open func rowWillHide() {
+	}
+	
+	open func rowWillShow() {
+	}
+
 	open func didSelect() -> Bool {
     return false
 	}
