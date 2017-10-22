@@ -86,14 +86,15 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			guard sectionsBeforeUpdate.contains(identifier) else {
 				continue
 			}
-			let section = self.section(withIdentifier: identifier)			
+			guard let operaton = sectionOperations[identifier] else {
+				continue
+			}
+			let section = self.section(withIdentifier: identifier)
 			guard let sectionIndex = index(of: section, in: sectionsBeforeUpdate) else {
 				// What happended here?
 				continue
 			}
-			
-			let operaton = section.applyDesiredState()
-			
+
 			deletePaths.append(contentsOf: operaton[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
 			insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
 			updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })

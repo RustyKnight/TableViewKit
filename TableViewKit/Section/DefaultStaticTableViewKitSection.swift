@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class DefaultStaticTableViewKitSection<Identifier: SectionIdentifiable>: DefaultTableViewKitSection<Identifier> {
+open class DefaultStaticTableViewKitSection<Identifier: SectionIdentifiable>: DefaultTableViewKitSection<Identifier>, StaticTableViewKitSection {
 
 	internal var viewToModelMapping: [AnyHashable] = []
 	
