@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		12B565241F95D73500A57459 /* LogWrapperKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12B565231F95D73500A57459 /* LogWrapperKit.framework */; };
 		12F3AD181DFDF94300381A23 /* TableViewKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 12F3AD161DFDF94300381A23 /* TableViewKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		12FB2B961F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */; };
+		12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */; };
+		12FB2B9A1F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B991F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift */; };
 		3ED4A027B8D37508D2ECB7D4 /* TableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */; };
 		3ED4A2192194933272989339 /* TableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */; };
 		3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */; };
@@ -41,6 +44,9 @@
 		12F3AD131DFDF94300381A23 /* TableViewKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TableViewKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F3AD161DFDF94300381A23 /* TableViewKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewKit.h; sourceTree = "<group>"; };
 		12F3AD171DFDF94300381A23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewKitTableViewController.swift; sourceTree = "<group>"; };
+		12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStaticTableViewKitModel.swift; sourceTree = "<group>"; };
+		12FB2B991F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStaticTableViewKitSection.swift; sourceTree = "<group>"; };
 		3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitTableViewController.swift; sourceTree = "<group>"; };
 		3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitModel.swift; sourceTree = "<group>"; };
 		3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewKitSection.swift; sourceTree = "<group>"; };
@@ -118,6 +124,7 @@
 				3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
 				3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */,
+				12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -125,9 +132,10 @@
 		7019EC3C1F806608008EBFD0 /* Section */ = {
 			isa = PBXGroup;
 			children = (
-				3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */,
 				7019EC3D1F80662B008EBFD0 /* AnyTableViewKitSection.swift */,
+				12FB2B991F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift */,
 				7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */,
+				3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */,
 			);
 			path = Section;
 			sourceTree = "<group>";
@@ -146,6 +154,7 @@
 		705A2BB91F80DA6500F3DCA4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */,
 				705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */,
 				3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */,
 			);
@@ -281,10 +290,13 @@
 				3ED4AD77B3772A0BB70CDF10 /* StateManager.swift in Sources */,
 				7019EC3E1F80662B008EBFD0 /* AnyTableViewKitSection.swift in Sources */,
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
+				12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
 				3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */,
+				12FB2B961F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift in Sources */,
 				705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */,
 				7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */,
+				12FB2B9A1F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift in Sources */,
 				7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,10 +46,6 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		self.delegate = delegate
 	}
 
-  public func toModelIndex(fromViewIndex: Int) -> Int {
-    fatalError("Not yet implemented")
-  }
-
 	public func rowIndex(for: TableViewKitRow) -> Int? {
 		fatalError("Not yet implemented")
 	}
@@ -66,12 +62,12 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		//		return stateManager.applyDesiredState(basedOn: activeItems)
 		fatalError("Not yet implemeted")
 	}
-	
-	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
-		return delegate.cell(withIdentifier: identifier, at: indexPath)
-	}
+//	
+//	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
+//		return delegate.cell(withIdentifier: identifier, at: indexPath)
+//	}
 
-	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell? {
+	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier)
 	}
 

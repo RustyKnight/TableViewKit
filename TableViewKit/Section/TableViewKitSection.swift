@@ -39,12 +39,12 @@ public protocol TableViewKitSectionDelegate {
 	// This returns the cell with the specified identifier. Because it's possible for the UITableView
 	// to manage the cells in different ways, this provides a simply delegation of responsibility
 	// back up the call chain to all the UITableView implementation to decide how it should respond
-	func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell
+//	func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell
 
 	// This is a compromise.  It's not unforseeable that a API will need to get a reference
 	// to a cell to perform some pre/post conditions on it.  The implementation is capable
 	// of retruning nil if the it's implementation can't support this kind of interaction
-	func cell(withIdentifier: CellIdentifiable) -> UITableViewCell?
+	func cell(withIdentifier: CellIdentifiable) -> UITableViewCell
 }
 
 public protocol TableViewKitSection: class, Stateful, Contextual {
@@ -78,8 +78,10 @@ public protocol TableViewKitSection: class, Stateful, Contextual {
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	
 	func applyDesiredState() -> [Operation:[Int]]
-  
-  func toModelIndex(fromViewIndex: Int) -> Int
+}
+
+public protocol StaticTableViewKitSection: TableViewKitSection {
+	func toModelIndex(fromViewIndex: Int) -> Int
 }
 
 public func ==(lhs: TableViewKitSection, rhs: TableViewKitSection) -> Bool {

@@ -10,39 +10,20 @@ import Foundation
 import LogWrapperKit
 
 open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDelegate {
-	
+
 	public var sharedContext: [AnyHashable: Any] = [:]
 	
 	internal var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
 	internal var preferredSectionOrder: [AnyHashable] = []
 	internal var activeSections: [AnyHashable] = []
-	// This is used to map the active section index to the
-	// position of the section in the story board
-	internal var viewToModelMapping: [AnyHashable] = []
 
 	public var delegate: TableViewKitModelDelegate
 	
-	public init(delegate: TableViewKitModelDelegate) {
+	public init(delegate: TableViewKitModelDelegate,
+							allSections: [AnyHashable: AnyTableViewKitSection], preferredOrder: [AnyHashable]) {
 		self.delegate = delegate
-	}
-	
-	public func prepare(allSections: [AnyHashable: AnyTableViewKitSection], preferredOrder: [AnyHashable], viewToModelMapping: [AnyHashable]) {
 		self.allSections = allSections
 		self.preferredSectionOrder = preferredOrder
-		self.viewToModelMapping = viewToModelMapping
-	}
-  
-  open func toModelIndexPath(fromViewIndexPath path: IndexPath) -> IndexPath {
-		let id = identifierForActiveSection(at: path.section)
-    guard let section = allSections[id] else {
-      fatalError("Section [\(id)] not exist")
-    }
-		guard let sectionIndex = viewToModelMapping.index(of: id) else {
-			fatalError("Section [\(id)] does not have a matching index")
-		}
-    let rowIndex = section.toModelIndex(fromViewIndex: path.row)
-    let modelPath = IndexPath(row: rowIndex, section: sectionIndex)
-		return modelPath
 	}
 
 	public func applyDesiredState() -> TableViewKitModelOperation {
@@ -149,12 +130,12 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	func section(withIdentifier identifier: AnyHashable) -> TableViewKitSection {
 		return allSections[identifier]!
 	}
-	
-	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
-		return delegate.cell(withIdentifier: identifier, at: indexPath)
-	}
+//
+//	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
+//		return delegate.cell(withIdentifier: identifier, at: indexPath)
+//	}
 
-	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell? {
+	public func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell {
 		return delegate.cell(withIdentifier: identifier)
 	}
 

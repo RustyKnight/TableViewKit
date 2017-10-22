@@ -18,7 +18,7 @@ open class DefaultIdentifiableTableViewKitRow<Identifer: CellIdentifiable>: AnyT
 	}
 	
 	open override func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = delegate.cell(withIdentifier: cellIdentifier, at: indexPath)
+		let cell = delegate.cell(withIdentifier: cellIdentifier)
 		configure(cell)
 		return cell
 	}

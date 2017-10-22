@@ -6,9 +6,9 @@
 import Foundation
 import LogWrapperKit
 
-open class TableViewKitTableViewController: UITableViewController, TableViewKitModelDelegate {
+open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableViewController, TableViewKitModelDelegate {
 
-	public var model: TableViewKitModel!
+	public var model: Model!
 
 	public var segueController: TableViewKitSegueController?
 
@@ -106,30 +106,16 @@ open class TableViewKitTableViewController: UITableViewController, TableViewKitM
 		log(debug: "...")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
-	
-	// MARK: Section index mapping
-	
-	open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-    log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
-		return super.tableView(tableView, heightForRowAt: modelIndexPath)
-	}
-	
-	open override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-    let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-		log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
-		return super.tableView(tableView, indentationLevelForRowAt: modelIndexPath)
-	}
 
 	// MARK: TVKModel
 
-	open func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
-		fatalError("Not yet implemented")
-		// Typically, this will use reusable cell with identifer, but I'll leave that up
-		// to the implementor
-	}
+//	open func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
+//		fatalError("Not yet implemented")
+//		// Typically, this will use reusable cell with identifer, but I'll leave that up
+//		// to the implementor
+//	}
 
-	open func cell(withIdentifier: CellIdentifiable) -> UITableViewCell? {
+	open func cell(withIdentifier: CellIdentifiable) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
 
