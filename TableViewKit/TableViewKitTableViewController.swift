@@ -194,6 +194,16 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	open func applyDesiredState() {
 		let operation = model.applyDesiredState()
 		tableView.beginUpdates()
+    
+    for path in operation.rows[.delete]! {
+      if let cell = tableView.cellForRow(at: path) {
+        cell.layer.zPosition = -2
+      }
+      
+      if let header = tableView.headerView(forSection: path.section) {
+        header.layer.zPosition = -1
+      }
+    }
 		
 		tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
 		tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)

@@ -27,7 +27,7 @@ open class DefaultIdentifiableTableViewKitRow<Identifer: CellIdentifiable>: AnyT
 		fatalError("Not yet implemented")
 	}
 	
-	open func cellForRow() -> UITableViewCell? {
+	open func cellForRow() -> UITableViewCell {
 		return delegate.cell(withIdentifier: cellIdentifier)
 	}
 	
