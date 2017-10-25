@@ -29,6 +29,7 @@ public protocol TableViewKitModel: Contextual {
 
 	func section(at: Int) -> TableViewKitSection
 
+	func shouldSelectRow(at path: IndexPath) -> Bool
 	func didSelectRow(at path: IndexPath) -> Bool
 
 	func willBecomeActive()

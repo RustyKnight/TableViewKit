@@ -49,6 +49,10 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 
 	// MARK: UITableViewDataSource
 	
+	open override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		return model.shouldSelectRow(at: indexPath)
+	}
+	
 	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		log(debug: "indexPath = \(indexPath)")
 		return model.cell(forRowAt: indexPath)
@@ -86,6 +90,10 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	}
 
 	open override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard model.shouldSelectRow(at: indexPath) else {
+			tableView.deselectRow(at: indexPath, animated: true)
+			return
+		}
 		if !model.didSelectRow(at: indexPath) {
 			tableView.deselectRow(at: indexPath, animated: true)
 		}

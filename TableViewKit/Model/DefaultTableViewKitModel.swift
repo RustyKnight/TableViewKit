@@ -157,6 +157,11 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return activeSections[at]
 	}
 	
+	public func shouldSelectRow(at path: IndexPath) -> Bool {
+		let section = self.section(at: path.section)
+		return section.shouldSelectRow(at: path)
+	}
+	
 	public func didSelectRow(at path: IndexPath) -> Bool {
 		let section = self.section(at: path.section)
 		return section.didSelectRow(at: path)
