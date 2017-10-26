@@ -11,6 +11,14 @@ public protocol Identifiable {
 	var value: String {get}
 }
 
+public func ==(lhs: Identifiable, rhs: Identifiable) -> Bool {
+	return lhs.value == rhs.value
+}
+
+public func !=(lhs: Identifiable, rhs: Identifiable) -> Bool {
+	return !(lhs.value == rhs.value)
+}
+
 public enum Operation {
 	case insert
 	case delete

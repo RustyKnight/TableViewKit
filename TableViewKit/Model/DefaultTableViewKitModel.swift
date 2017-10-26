@@ -90,14 +90,15 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 				continue
 			}
 			let section = self.section(withIdentifier: identifier)
-			guard let sectionIndex = index(of: section, in: sectionsBeforeUpdate) else {
-				// What happended here?
-				continue
+			var sectionIndex = index(of: section, in: sectionsBeforeUpdate)
+			if let sectionIndex = sectionIndex {
+				deletePaths.append(contentsOf: operaton[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
+				updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
 			}
-
-			deletePaths.append(contentsOf: operaton[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
-			insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
-			updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
+			sectionIndex = index(of: section, in: unmodifiedSections)
+			if let sectionIndex = sectionIndex {
+				insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+			}
 		}
 
 		var rowOperations: [Operation: [IndexPath]] = [:]

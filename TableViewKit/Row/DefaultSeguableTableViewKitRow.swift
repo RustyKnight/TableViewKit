@@ -7,13 +7,15 @@
 //
 
 import Foundation
+import LogWrapperKit
 
 public typealias SegueIdentifiable = Identifiable
 
 open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, CellIdentifier: CellIdentifiable>: DefaultIdentifiableTableViewKitRow<CellIdentifier>, TableViewKitSegueController {
 	
-	public let segueIdentifier: SegueIdentifier
-	
+//	open private(set) var segueIdentifier: SegueIdentifier
+	open var segueIdentifier: SegueIdentifier
+
 	public init(segueIdentifier: SegueIdentifier,
 	            cellIdentifier: CellIdentifier,
 	            delegate: TableViewKitRowDelegate) {
@@ -28,6 +30,8 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, Cel
 	}
 	
 	override open func didSelect() -> Bool {
+		let identifier = segueIdentifier
+		log(debug: "identifier = \(identifier)")
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
     return false
 	}
