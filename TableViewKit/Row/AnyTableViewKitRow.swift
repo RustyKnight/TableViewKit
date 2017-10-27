@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import LogWrapperKit
 
 public typealias CellIdentifiable = Identifiable
 
@@ -17,7 +18,7 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	}
 	
 	open var desiredState: State = .show
-	public private (set) var actualState: State = .show
+	public private (set) var actualState: State = .undefined
 	
 	public var delegate: TableViewKitRowDelegate
 	
@@ -25,9 +26,15 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 		self.delegate = delegate
 	}
 	
-	public func updateToDesiredState() {
-		let newState = actualState.newStateBasedOn(desiredState: desiredState)
+	open func updateToDesiredState() {
+		let previous = actualState
+		let desired = desiredState
+		let newState = previous.newStateBasedOn(desiredState: desired)
+		log(debug: "desiredState = \(desiredState); actualState = \(actualState); newState = \(newState)")
 		actualState = newState
+		guard previous != newState else {
+			return
+		}
 		switch newState {
 		case .show: rowWillShow()
 		case .hide: rowWillHide()
