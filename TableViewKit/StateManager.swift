@@ -168,7 +168,7 @@ public class StateManager<ItemType: Stateful> {
 		let toDelete = hideItems(in: items)
 		for entry in toDelete {
 			guard let index = items.index(of: entry.identifier) else {
-				log(debug: "!! Could not find index of item with identifier = \(entry.identifier)")
+				//log(debug: "!! Could not find index of item with identifier = \(entry.identifier)")
 				continue
 			}
 			items.remove(at: index)
@@ -177,7 +177,7 @@ public class StateManager<ItemType: Stateful> {
 		// Items to be inserted
 		let toInsert = showItems(in: items).sorted(by: { $0.index < $1.index })
 		for entry in toInsert {
-			//			log(debug: "\(entry)")
+			//			//log(debug: "\(entry)")
 			items.insert(entry.identifier, at: entry.index)
 		}
 
@@ -196,7 +196,7 @@ public class StateManager<ItemType: Stateful> {
 	func updateItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let items = activeItems.filter { wantsToBeReloaded($0) }
 		let rowIndicies = indices(of: items, in: activeItems)
-//    log(debug: "Reload \(items)")
+//    //log(debug: "Reload \(items)")
 
 		for identifier in items {
       item(forIdentifier: identifier).updateToDesiredState()
@@ -261,7 +261,7 @@ public class StateManager<ItemType: Stateful> {
 
 	internal func hideItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let itemsToBeRemoved = activeItems.filter {	return wantsToBeHidden($0) }
-//    log(debug: "To be removed = \(itemsToBeRemoved)")
+//    //log(debug: "To be removed = \(itemsToBeRemoved)")
 		let rowIndicies = indices(of: itemsToBeRemoved, in: activeItems)
 		
 		for identifier in itemsToBeRemoved {
@@ -414,7 +414,7 @@ public class StateManager<ItemType: Stateful> {
       item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
-//    log(debug: "To be added = \(itemsToBeAdded)")
+//    //log(debug: "To be added = \(itemsToBeAdded)")
 		return map(Array(itemsToBeAdded), with: indicies)
 	}
 	

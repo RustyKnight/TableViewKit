@@ -54,13 +54,13 @@ class TestStateManager: XCTestCase {
 		
 		let insert = operations.insert
 		for op in insert {
-			log(debug: op.identifier)
+			//log(debug: op.identifier)
 			allItems[op.identifier]
 			guard let id = op.identifier as? RowIdentifier else {
 				XCTFail("Could not convert Operation Identifier to RowIdentifier")
 				return
 			}
-			log(debug: id)
+			//log(debug: id)
 		}
 	}
 
@@ -229,7 +229,7 @@ class TestStateManager: XCTestCase {
     
     assert(operations.delete.count == 0, "Expecting 0 deleted items")
     assert(operations.update.count == 0, "Expecting 0 update items")
-    log(debug: "toInsert = \(operations.insert.count)")
+    //log(debug: "toInsert = \(operations.insert.count)")
     assert(operations.insert.count == 2, "Expecting 2 insert items")
     
     assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
@@ -266,7 +266,7 @@ class TestStateManager: XCTestCase {
     
     assert(operations.delete.count == 0, "Expecting 0 deleted items")
     assert(operations.update.count == 0, "Expecting 0 update items")
-    log(debug: "toInsert = \(operations.insert.count)")
+    //log(debug: "toInsert = \(operations.insert.count)")
     assert(operations.insert.count == 0, "Expecting 0 insert items")
     
 //    assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
@@ -303,7 +303,7 @@ class TestStateManager: XCTestCase {
     
     assert(operations.delete.count == 0, "Expecting 0 deleted items")
     assert(operations.update.count == 0, "Expecting 0 update items")
-    log(debug: "toInsert = \(operations.insert.count)")
+    //log(debug: "toInsert = \(operations.insert.count)")
     assert(operations.insert.count == 1, "Expecting 1 insert items")
     
     assert(operations.insert.contains(where: { $0.identifier.hashValue == "Row 03".hashValue}), "Expecting Row 03 to be inserted")
@@ -408,7 +408,7 @@ class TestStateManager: XCTestCase {
     //    func applyDesiredState(basedOn activeItems: [AnyHashable]) -> [Operation: [OperationTarget]] {
     let operations = stateManager.operationsForDesiredState(basedOn: items)
     
-    log(debug: operations.update)
+    //log(debug: operations.update)
     
     assert(operations.delete.count == 0, "Expecting 0 deleted items")
     assert(operations.insert.count == 1, "Expecting 1 insert items")

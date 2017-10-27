@@ -43,7 +43,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	}
 
 	open override func numberOfSections(in tableView: UITableView) -> Int {
-		log(debug: "numberOfSections = \(model.sectionCount)")
+		//log(debug: "numberOfSections = \(model.sectionCount)")
 		return model.sectionCount
 	}
 
@@ -54,7 +54,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	}
 	
 	open override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		log(debug: "indexPath = \(indexPath)")
+		//log(debug: "indexPath = \(indexPath)")
 		return model.cell(forRowAt: indexPath)
 	}
 
@@ -77,7 +77,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	}
 	
 	open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		log(debug: "numberOfRowsInSection(\(section)) = \(model.section(at: section).rowCount)")
+		//log(debug: "numberOfRowsInSection(\(section)) = \(model.section(at: section).rowCount)")
 		return model.section(at: section).rowCount
 	}
 
@@ -103,7 +103,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			willDisplay cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		log(debug: "...indexPath = \(indexPath)")
+		//log(debug: "...indexPath = \(indexPath)")
 		model.section(at: indexPath.section).willDisplay(cell, forRowAt: indexPath.row)
 	}
 
@@ -111,7 +111,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		log(debug: "...indexPath = \(indexPath)")
+		//log(debug: "...indexPath = \(indexPath)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
 
@@ -164,7 +164,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 		performSegueWithIdentifier identifier: SegueIdentifiable,
 		controller: TableViewKitSegueController) {
 		
-		log(debug: "performSegue with \(identifier)")
+		//log(debug: "performSegue with \(identifier)")
 		segueController = controller
     
     guard shouldPerformSegue(withIdentifier: identifier, sender: self) else {
@@ -228,7 +228,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	}
 
 	open func shouldPerformSegue(withIdentifier identifier: SegueIdentifiable, sender: Any?) -> Bool {
-		log(debug: "shouldPerformSegue with \(identifier)")
+		//log(debug: "shouldPerformSegue with \(identifier)")
 		guard let controller = segueController else {
 			return false
 		}
@@ -240,7 +240,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 		guard segue.identifier != nil else {
 			return
 		}
-		log(debug: "prepare with \(segue.identifier!)")
+		//log(debug: "prepare with \(segue.identifier!)")
 
 		if let preparer = sender as? TableViewKitSegueController {
 			segueController = preparer

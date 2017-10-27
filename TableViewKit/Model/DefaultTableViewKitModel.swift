@@ -28,10 +28,10 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 
 	public func applyDesiredState() -> TableViewKitModelOperation {
 		
-		log(debug: "Sections before update: \(activeSections.count)")
+		//log(debug: "Sections before update: \(activeSections.count)")
 		for id in activeSections {
 			let sec = section(withIdentifier: id)
-			log(debug: "\(sec) row count = \(sec.rowCount)")
+			//log(debug: "\(sec) row count = \(sec.rowCount)")
 		}
 		
 		var sectionsBeforeUpdate: [AnyHashable] = []
@@ -106,23 +106,23 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		rowOperations[.insert] = insertPaths
 		rowOperations[.update] = updatePaths
 
-		log(debug: "rows delete: \(deletePaths)")
-		log(debug: "rows insert: \(insertPaths)")
-		log(debug: "rows update: \(updatePaths)")
+		//log(debug: "rows delete: \(deletePaths)")
+		//log(debug: "rows insert: \(insertPaths)")
+		//log(debug: "rows update: \(updatePaths)")
 
-		log(debug: "sections delete: \(sectionsToBeRemoved)")
-		log(debug: "sections insert: \(sectionsToBeInserted)")
-		log(debug: "sections update: \(sectionsToBeReloaded)")
+		//log(debug: "sections delete: \(sectionsToBeRemoved)")
+		//log(debug: "sections insert: \(sectionsToBeInserted)")
+		//log(debug: "sections update: \(sectionsToBeReloaded)")
 
 		var finalSectionOperations: [Operation: IndexSet] = [:]
 		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
 		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
 		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
 
-		log(debug: "Sections after update: \(activeSections.count)")
+		//log(debug: "Sections after update: \(activeSections.count)")
 		for id in activeSections {
 			let sec = section(withIdentifier: id)
-			log(debug: "\(sec) row count = \(sec.rowCount)")
+			//log(debug: "\(sec) row count = \(sec.rowCount)")
 		}
 
 		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,

@@ -15,13 +15,13 @@ open class StaticTableViewKitTableViewController<Model: StaticTableViewKitModel>
 	
 	open override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-		log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
+		//log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
 		return super.tableView(tableView, heightForRowAt: modelIndexPath)
 	}
 	
 	open override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
 		let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-		log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
+		//log(debug: "viewIndex = \(indexPath); modelIndex = \(modelIndexPath)")
 		return super.tableView(tableView, indentationLevelForRowAt: modelIndexPath)
 	}
 	
@@ -29,7 +29,7 @@ open class StaticTableViewKitTableViewController<Model: StaticTableViewKitModel>
 															 didEndDisplaying cell: UITableViewCell,
 															 forRowAt indexPath: IndexPath) {
 //		let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-		log(debug: "...indexPath = \(indexPath); cell = \(cell)")
+		//log(debug: "...indexPath = \(indexPath); cell = \(cell)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
 

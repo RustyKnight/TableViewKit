@@ -30,7 +30,7 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 		let previous = actualState
 		let desired = desiredState
 		let newState = previous.newStateBasedOn(desiredState: desired)
-		log(debug: "desiredState = \(desiredState); actualState = \(actualState); newState = \(newState)")
+		//log(debug: "desiredState = \(desiredState); actualState = \(actualState); newState = \(newState)")
 		actualState = newState
 		guard previous != newState else {
 			return

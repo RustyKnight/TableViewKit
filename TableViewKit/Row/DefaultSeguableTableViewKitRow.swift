@@ -31,7 +31,7 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, Cel
 	
 	override open func didSelect() -> Bool {
 		let identifier = segueIdentifier
-		log(debug: "identifier = \(identifier)")
+		//log(debug: "identifier = \(identifier)")
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
     return false
 	}
