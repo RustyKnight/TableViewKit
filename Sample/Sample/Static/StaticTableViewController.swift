@@ -9,7 +9,7 @@
 import UIKit
 import TableViewKit
 
-class StaticTableViewController: TableViewKitTableViewController {
+class StaticTableViewController: StaticTableViewKitTableViewController<StaticModel> {
 	
 	enum SegueIdenitifer: String, Identifiable {
 		case hello = "Hello"
@@ -54,7 +54,7 @@ class StaticTableViewController: TableViewKitTableViewController {
 		super.viewDidLoad()
 	}
 	
-	override func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
+	override func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell {
 		let id = identifier.value
 		return cells[id]!
 	}

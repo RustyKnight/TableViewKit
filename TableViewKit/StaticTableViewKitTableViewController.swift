@@ -29,7 +29,7 @@ open class StaticTableViewKitTableViewController<Model: StaticTableViewKitModel>
 															 didEndDisplaying cell: UITableViewCell,
 															 forRowAt indexPath: IndexPath) {
 //		let modelIndexPath = model.toModelIndexPath(fromViewIndexPath: indexPath)
-		//log(debug: "...indexPath = \(indexPath); cell = \(cell)")
+		log(debug: "...indexPath = \(indexPath); cell = \(cell)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
 

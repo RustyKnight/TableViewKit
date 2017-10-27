@@ -201,6 +201,9 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 	
 	open func applyDesiredState() {
 		let operation = model.applyDesiredState()
+		guard !operation.isEmpty else {
+			return
+		}
 		tableView.beginUpdates()
     
     for path in operation.rows[.delete]! {
@@ -223,7 +226,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 
 		tableView.endUpdates()
 
-		tableView.reloadData()
+//		tableView.reloadData()
 		tableView.layoutIfNeeded()
 	}
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70BCBF221FA34CEC00693B6A /* LogWrapperKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70BCBF211FA34CEC00693B6A /* LogWrapperKit.framework */; };
+		70BCBF231FA34CEC00693B6A /* LogWrapperKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70BCBF211FA34CEC00693B6A /* LogWrapperKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		70C434481F8876B30048B9D1 /* StaticSection02.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C434471F8876B30048B9D1 /* StaticSection02.swift */; };
 		70FE77091F80D5F600C287F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE77081F80D5F600C287F6 /* AppDelegate.swift */; };
 		70FE770B1F80D5F600C287F6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FE770A1F80D5F600C287F6 /* ViewController.swift */; };
@@ -38,6 +40,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				70BCBF231FA34CEC00693B6A /* LogWrapperKit.framework in Embed Frameworks */,
 				70FE772A1F80D63000C287F6 /* TableViewKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -46,6 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70BCBF211FA34CEC00693B6A /* LogWrapperKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LogWrapperKit.framework; path = ../Carthage/Build/iOS/LogWrapperKit.framework; sourceTree = "<group>"; };
 		70C434471F8876B30048B9D1 /* StaticSection02.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticSection02.swift; sourceTree = "<group>"; };
 		70FE77051F80D5F600C287F6 /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70FE77081F80D5F600C287F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70BCBF221FA34CEC00693B6A /* LogWrapperKit.framework in Frameworks */,
 				70FE77291F80D63000C287F6 /* TableViewKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,6 +90,7 @@
 		70FE76FC1F80D5F600C287F6 = {
 			isa = PBXGroup;
 			children = (
+				70BCBF211FA34CEC00693B6A /* LogWrapperKit.framework */,
 				70FE77281F80D63000C287F6 /* TableViewKit.framework */,
 				70FE77071F80D5F600C287F6 /* Sample */,
 				70FE771C1F80D5F600C287F6 /* SampleUITests */,
@@ -399,6 +405,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YWXH886EY3;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				INFOPLIST_FILE = Sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.kaizen.Sample;
@@ -414,6 +421,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YWXH886EY3;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../Carthage/Build/iOS";
 				INFOPLIST_FILE = Sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.kaizen.Sample;

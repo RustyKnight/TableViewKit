@@ -60,11 +60,22 @@ public protocol StaticTableViewKitModel: TableViewKitModel {
 public protocol TableViewKitModelOperation {
 	var sections: [Operation: IndexSet] {get}
 	var rows: [Operation: [IndexPath]] {get}
+	
+	var isEmpty: Bool {get}
 }
 
 struct DefaultTableViewKitModelOperation: TableViewKitModelOperation {
   let sections: [Operation : IndexSet]
   let rows: [Operation : [IndexPath]]
+	
+	var isEmpty: Bool {
+		return sections[.delete]?.count == 0 &&
+		sections[.insert]?.count == 0 &&
+		sections[.update]?.count == 0 &&
+		rows[.delete]?.count == 0 &&
+		rows[.insert]?.count == 0 &&
+		rows[.update]?.count == 0
+	}
 }
 
 public protocol TableViewKitModelDelegate {

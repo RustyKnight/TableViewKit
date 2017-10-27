@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		12B565241F95D73500A57459 /* LogWrapperKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12B565231F95D73500A57459 /* LogWrapperKit.framework */; };
 		12F3AD181DFDF94300381A23 /* TableViewKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 12F3AD161DFDF94300381A23 /* TableViewKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12FB2B961F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */; };
 		12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */; };
@@ -27,6 +26,7 @@
 		706E52831F81A82200CA75A2 /* TableViewKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F3AD131DFDF94300381A23 /* TableViewKit.framework */; };
 		706E528A1F81A83C00CA75A2 /* TestStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E52891F81A83C00CA75A2 /* TestStateManager.swift */; };
 		706E528C1F81A96800CA75A2 /* SimpleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E528B1F81A96800CA75A2 /* SimpleState.swift */; };
+		70BCBF241FA34F3200693B6A /* LogWrapperKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12B565231F95D73500A57459 /* LogWrapperKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12B565241F95D73500A57459 /* LogWrapperKit.framework in Frameworks */,
+				70BCBF241FA34F3200693B6A /* LogWrapperKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

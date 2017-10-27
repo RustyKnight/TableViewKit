@@ -10,9 +10,9 @@ import Foundation
 
 open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTableViewKitSection {
 	
-	internal var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
-	internal var preferredRowOrder: [AnyHashable] = []
-	internal var activeRows: [AnyHashable] = []
+	public var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
+	public var preferredRowOrder: [AnyHashable] = []
+	public var activeRows: [AnyHashable] = []
 	
 	public override var rowCount: Int {
 		set {}

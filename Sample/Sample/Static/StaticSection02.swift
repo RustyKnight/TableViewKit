@@ -14,32 +14,33 @@ extension Notification.Name {
 	static let changeCellState = Notification.Name(rawValue: "ChangeCellState")
 }
 
-class StaticSection02: DefaultTableViewKitSection<StaticModel.Sections> {
+class StaticSection02: DefaultStaticTableViewKitSection<StaticModel.Sections> {
 	
 	init(identifier: StaticModel.Sections, delegate: TableViewKitSectionDelegate) {
-		super.init(identifier: identifier, title: "Section 02", delegate: delegate)
-	}
-	
-	override func commonInit() {
-		super.commonInit()
-		
-		allRows = [
-			StaticModel.Sections.Section2.cell1: Section2StaticRow(cellIdentifier: .cell1, delegate: self),
-			StaticModel.Sections.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
-			StaticModel.Sections.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
-			StaticModel.Sections.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
-			StaticModel.Sections.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
-			StaticModel.Sections.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)
-		]
-		
-		preferredRowOrder = [
-			StaticModel.Sections.Section2.cell1,
-			StaticModel.Sections.Section2.cell2,
-			StaticModel.Sections.Section2.cell3,
-			StaticModel.Sections.Section2.cell4,
-			StaticModel.Sections.Section2.cell5,
-			StaticModel.Sections.Section2.cell6
-		]
+		super.init(identifier: identifier,
+		           title: "Section 02",
+		           delegate: delegate,
+		           allRows: [
+								StaticModel.Sections.Section2.cell1: Section2StaticRow(cellIdentifier: .cell1, delegate: self),
+								StaticModel.Sections.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
+								StaticModel.Sections.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
+								StaticModel.Sections.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
+								StaticModel.Sections.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
+								StaticModel.Sections.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)],
+		           preferredOrder: [
+								StaticModel.Sections.Section2.cell1,
+								StaticModel.Sections.Section2.cell2,
+								StaticModel.Sections.Section2.cell3,
+								StaticModel.Sections.Section2.cell4,
+								StaticModel.Sections.Section2.cell5,
+								StaticModel.Sections.Section2.cell6],
+		           viewToModelMapping:[
+								StaticModel.Sections.Section2.cell1,
+								StaticModel.Sections.Section2.cell2,
+								StaticModel.Sections.Section2.cell3,
+								StaticModel.Sections.Section2.cell4,
+								StaticModel.Sections.Section2.cell5,
+								StaticModel.Sections.Section2.cell6])
 	}
 	
 }

@@ -28,7 +28,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 
 	public func applyDesiredState() -> TableViewKitModelOperation {
 		
-		//log(debug: "Sections before update: \(activeSections.count)")
+		////log(debug: "Sections before update: \(activeSections.count)")
 		for id in activeSections {
 			let sec = section(withIdentifier: id)
 			//log(debug: "\(sec) row count = \(sec.rowCount)")

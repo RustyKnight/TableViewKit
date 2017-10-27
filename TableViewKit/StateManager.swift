@@ -120,7 +120,7 @@ public class StateManager<ItemType: Stateful> {
 	
 	func wantsToBeShown(_ identifier: AnyHashable) -> Bool {
     let value = item(forIdentifier: identifier)
-		return value.desiredState == .show && value.actualState == .hide
+		return value.desiredState == .show && value.actualState != .show
 	}
 
   func wantsToBeReloaded(_ identifier: AnyHashable) -> Bool {

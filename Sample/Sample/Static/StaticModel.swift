@@ -9,7 +9,7 @@
 import Foundation
 import TableViewKit
 
-class StaticModel: DefaultTableViewKitModel {
+class StaticModel: DefaultStaticTableViewKitModel {
 
 	enum Sections: String, SectionIdentifiable {
 		case section1 = "section1"
@@ -43,18 +43,17 @@ class StaticModel: DefaultTableViewKitModel {
 		}
 	}
 	
-	override init(delegate: TableViewKitModelDelegate) {
-		super.init(delegate: delegate)
-		
-		allSections = [
-			Sections.section1: StaticSection01(identifier: Sections.section1, delegate: self),
-			Sections.section2: StaticSection02(identifier: Sections.section2, delegate: self)
-		]
-		
-		preferredSectionOrder = [
-			Sections.section1,
-			Sections.section2
-		]
+	init(delegate: TableViewKitModelDelegate) {
+		super.init(delegate: delegate,
+		           allSections: [
+								Sections.section1: StaticSection01(identifier: Sections.section1, delegate: self),
+								Sections.section2: StaticSection02(identifier: Sections.section2, delegate: self)],
+		           preferredOrder: [
+								Sections.section1,
+								Sections.section2],
+		           viewToModelMapping: [
+								Sections.section1,
+								Sections.section2])
 	}
 	
 }
