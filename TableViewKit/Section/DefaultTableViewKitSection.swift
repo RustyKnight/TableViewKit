@@ -48,7 +48,11 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	func row(withIdentifier identifier: AnyHashable) -> TableViewKitRow {
 		return allRows[identifier]!
 	}
-  
+
+	func row(at index: Int) -> TableViewKitRow {
+		return row(withIdentifier: identifier(forRowAt: index))
+	}
+
   func activeRow(at index: Int) -> TableViewKitRow {
     return row(withIdentifier: identifier(forActiveRowAt: index))
   }
@@ -56,7 +60,11 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	func identifier(forActiveRowAt index: Int) -> AnyHashable {
 		return activeRows[index]
 	}
-	
+
+	func identifier(forRowAt index: Int) -> AnyHashable {
+		return preferredRowOrder[index]
+	}
+
 	open override func willBecomeActive() {
 		for row in allRows.values {
 			row.willBecomeActive()
@@ -74,7 +82,8 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	}
 	
 	open override func didEndDisplaying(_ cell: UITableViewCell, forRowAt rowIndex: Int) {
-		activeRow(at: rowIndex).didEndDisplaying(cell)
+		row(at: rowIndex).didEndDisplaying(cell)
+//		activeRow(at: rowIndex).didEndDisplaying(cell)
 	}
 	
 	open override func applyDesiredState() -> [Operation : [Int]] {

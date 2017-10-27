@@ -103,7 +103,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			willDisplay cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		log(debug: "...")
+		log(debug: "...indexPath = \(indexPath)")
 		model.section(at: indexPath.section).willDisplay(cell, forRowAt: indexPath.row)
 	}
 
@@ -111,7 +111,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		log(debug: "...")
+		log(debug: "...indexPath = \(indexPath)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
 
