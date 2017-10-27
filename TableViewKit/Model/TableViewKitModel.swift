@@ -49,6 +49,8 @@ public protocol TableViewKitModel: Contextual {
 	func applyDesiredState() -> TableViewKitModelOperation
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
+
+	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable)
 }
 
 public protocol StaticTableViewKitModel: TableViewKitModel {

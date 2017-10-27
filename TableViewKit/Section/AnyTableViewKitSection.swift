@@ -146,7 +146,7 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemented")
 	}
 	
-	open func didEndDisplaying(_ cell: UITableViewCell, forRowAt: Int) {
+	open func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable) {
 		fatalError("Not yet implemented")
 	}
 	

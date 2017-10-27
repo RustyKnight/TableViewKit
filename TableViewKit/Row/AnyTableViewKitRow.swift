@@ -69,10 +69,10 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	open func sharedContext(`for` key: AnyHashable, didChangeTo value: Any?) {
 	}
   
-  public func willDisplay(_ cell: UITableViewCell) {
+  open func willDisplay(_ cell: UITableViewCell) {
   }
   
-  public func didEndDisplaying(_ cell: UITableViewCell) {
+  open func didEndDisplaying(_ cell: UITableViewCell) {
   }
 
 	open func updateIfChanged() {

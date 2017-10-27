@@ -80,10 +80,15 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	open override func willDisplay(_ cell: UITableViewCell, forRowAt rowIndex: Int) {
     activeRow(at: rowIndex).willDisplay(cell)
 	}
-	
-	open override func didEndDisplaying(_ cell: UITableViewCell, forRowAt rowIndex: Int) {
-		row(at: rowIndex).didEndDisplaying(cell)
-//		activeRow(at: rowIndex).didEndDisplaying(cell)
+
+	open override func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable) {
+		guard let id = identifier as? AnyHashable else {
+			return
+		}
+		guard let row = allRows[id] else {
+			return
+		}
+		row.didEndDisplaying(cell)
 	}
 	
 	open override func applyDesiredState() -> [Operation : [Int]] {

@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import TableViewKit
+import LogWrapperKit
 
 class StaticSection01: DefaultStaticTableViewKitSection<StaticModel.Sections> {
 	
@@ -17,23 +18,23 @@ class StaticSection01: DefaultStaticTableViewKitSection<StaticModel.Sections> {
 		           title: "Section 02",
 		           delegate: delegate,
 		           allRows: [
-								StaticModel.Sections.Section1.cell1: Section1StaticRow(cellIdentifier: .cell1, delegate: self),
-								StaticModel.Sections.Section1.cell2: Section1StaticRow(cellIdentifier: .cell2, delegate: self),
-								StaticModel.Sections.Section1.cell3: Section1StaticRow(cellIdentifier: .cell3, delegate: self),
-								StaticModel.Sections.Section1.cell4: Section1StaticRow(cellIdentifier: .cell4, delegate: self),
-								StaticModel.Sections.Section1.cell5: Section1StaticRow(cellIdentifier: .cell5, delegate: self)],		           
+								StaticModel.CellIdentifiers.section1Cell1: Section1StaticRow(cellIdentifier: .section1Cell1, delegate: self),
+								StaticModel.CellIdentifiers.section1Cell2: Section1StaticRow(cellIdentifier: .section1Cell2, delegate: self),
+								StaticModel.CellIdentifiers.section1Cell3: Section1StaticRow(cellIdentifier: .section1Cell3, delegate: self),
+								StaticModel.CellIdentifiers.section1Cell4: Section1StaticRow(cellIdentifier: .section1Cell4, delegate: self),
+								StaticModel.CellIdentifiers.section1Cell5: Section1StaticRow(cellIdentifier: .section1Cell5, delegate: self)],
 		           preferredOrder: [
-								StaticModel.Sections.Section1.cell1,
-								StaticModel.Sections.Section1.cell2,
-								StaticModel.Sections.Section1.cell3,
-								StaticModel.Sections.Section1.cell4,
-								StaticModel.Sections.Section1.cell5],
+								StaticModel.CellIdentifiers.section1Cell1,
+								StaticModel.CellIdentifiers.section1Cell2,
+								StaticModel.CellIdentifiers.section1Cell3,
+								StaticModel.CellIdentifiers.section1Cell4,
+								StaticModel.CellIdentifiers.section1Cell5],
 		           viewToModelMapping: [
-								StaticModel.Sections.Section1.cell1,
-								StaticModel.Sections.Section1.cell2,
-								StaticModel.Sections.Section1.cell3,
-								StaticModel.Sections.Section1.cell4,
-								StaticModel.Sections.Section1.cell5])
+								StaticModel.CellIdentifiers.section1Cell1,
+								StaticModel.CellIdentifiers.section1Cell2,
+								StaticModel.CellIdentifiers.section1Cell3,
+								StaticModel.CellIdentifiers.section1Cell4,
+								StaticModel.CellIdentifiers.section1Cell5])
 	}
 	
 	override func willBecomeActive() {
@@ -72,10 +73,14 @@ class StaticSection01: DefaultStaticTableViewKitSection<StaticModel.Sections> {
 	
 }
 
-class Section1StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Sections.Section1> {
+class Section1StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.CellIdentifiers> {
 	
 	override func configure(_ cell: UITableViewCell) {
 		cell.detailTextLabel?.text = "Check"
+	}
+	
+	override func didEndDisplaying(_ cell: UITableViewCell) {
+		log(debug: "\(cellIdentifier)")
 	}
 
 }

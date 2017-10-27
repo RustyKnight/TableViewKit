@@ -21,31 +21,31 @@ class StaticSection02: DefaultStaticTableViewKitSection<StaticModel.Sections> {
 		           title: "Section 02",
 		           delegate: delegate,
 		           allRows: [
-								StaticModel.Sections.Section2.cell1: Section2StaticRow(cellIdentifier: .cell1, delegate: self),
-								StaticModel.Sections.Section2.cell2: Section2StaticRow(cellIdentifier: .cell2, delegate: self),
-								StaticModel.Sections.Section2.cell3: Section2StaticRow(cellIdentifier: .cell3, delegate: self),
-								StaticModel.Sections.Section2.cell4: Section2StaticRow(cellIdentifier: .cell4, delegate: self),
-								StaticModel.Sections.Section2.cell5: Section2StaticRow(cellIdentifier: .cell5, delegate: self),
-								StaticModel.Sections.Section2.cell6: SegueRow(cellIdentifier: .cell6, delegate: self)],
+								StaticModel.CellIdentifiers.section2Cell1: Section2StaticRow(cellIdentifier: .section2Cell1, delegate: self),
+								StaticModel.CellIdentifiers.section2Cell2: Section2StaticRow(cellIdentifier: .section2Cell2, delegate: self),
+								StaticModel.CellIdentifiers.section2Cell3: Section2StaticRow(cellIdentifier: .section2Cell3, delegate: self),
+								StaticModel.CellIdentifiers.section2Cell4: Section2StaticRow(cellIdentifier: .section2Cell4, delegate: self),
+								StaticModel.CellIdentifiers.section2Cell5: Section2StaticRow(cellIdentifier: .section2Cell5, delegate: self),
+								StaticModel.CellIdentifiers.section2Cell6: SegueRow(cellIdentifier: .section2Cell6, delegate: self)],
 		           preferredOrder: [
-								StaticModel.Sections.Section2.cell1,
-								StaticModel.Sections.Section2.cell2,
-								StaticModel.Sections.Section2.cell3,
-								StaticModel.Sections.Section2.cell4,
-								StaticModel.Sections.Section2.cell5,
-								StaticModel.Sections.Section2.cell6],
+								StaticModel.CellIdentifiers.section2Cell1,
+								StaticModel.CellIdentifiers.section2Cell2,
+								StaticModel.CellIdentifiers.section2Cell3,
+								StaticModel.CellIdentifiers.section2Cell4,
+								StaticModel.CellIdentifiers.section2Cell5,
+								StaticModel.CellIdentifiers.section2Cell6],
 		           viewToModelMapping:[
-								StaticModel.Sections.Section2.cell1,
-								StaticModel.Sections.Section2.cell2,
-								StaticModel.Sections.Section2.cell3,
-								StaticModel.Sections.Section2.cell4,
-								StaticModel.Sections.Section2.cell5,
-								StaticModel.Sections.Section2.cell6])
+								StaticModel.CellIdentifiers.section2Cell1,
+								StaticModel.CellIdentifiers.section2Cell2,
+								StaticModel.CellIdentifiers.section2Cell3,
+								StaticModel.CellIdentifiers.section2Cell4,
+								StaticModel.CellIdentifiers.section2Cell5,
+								StaticModel.CellIdentifiers.section2Cell6])
 	}
 	
 }
 
-class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Sections.Section2> {
+class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.CellIdentifiers> {
 	
 	override func configure(_ cell: UITableViewCell) {
 		cell.detailTextLabel?.text = "Check"
@@ -63,8 +63,8 @@ class Section2StaticRow: DefaultIdentifiableTableViewKitRow<StaticModel.Sections
 	
 }
 
-class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueIdenitifer, StaticModel.Sections.Section2> {
-	init(cellIdentifier: StaticModel.Sections.Section2,
+class SegueRow: DefaultSeguableTableViewKitRow<StaticTableViewController.SegueIdenitifer, StaticModel.CellIdentifiers> {
+	init(cellIdentifier: StaticModel.CellIdentifiers,
 	     delegate: TableViewKitRowDelegate) {
 		super.init(segueIdentifier: StaticTableViewController.SegueIdenitifer.hello,
 		           cellIdentifier: cellIdentifier,

@@ -16,31 +16,25 @@ class StaticModel: DefaultStaticTableViewKitModel {
 		case section2 = "section2"
 
 		var value: String { return self.rawValue }
+	}
+	
+	enum CellIdentifiers: String, CellIdentifiable, CustomStringConvertible {
+		case section1Cell1 = "1001"
+		case section1Cell2 = "1002"
+		case section1Cell3 = "1003"
+		case section1Cell4 = "1004"
+		case section1Cell5 = "1005"
+
+		case section2Cell1 = "2001"
+		case section2Cell2 = "2002"
+		case section2Cell3 = "2003"
+		case section2Cell4 = "2004"
+		case section2Cell5 = "2005"
+		case section2Cell6 = "2006"
+
+		var description: String { return self.rawValue }
 		
-		enum Section1: String, CellIdentifiable, CustomStringConvertible {
-			case cell1 = "1001"
-			case cell2 = "1002"
-			case cell3 = "1003"
-			case cell4 = "1004"
-			case cell5 = "1005"
-			
-			var description: String { return self.rawValue }
-			
-			var value: String { return self.rawValue }
-		}
-		
-		enum Section2: String, CellIdentifiable, CustomStringConvertible {
-			case cell1 = "2001"
-			case cell2 = "2002"
-			case cell3 = "2003"
-			case cell4 = "2004"
-			case cell5 = "2005"
-			case cell6 = "2006"
-			
-			var description: String { return self.rawValue }
-			
-			var value: String { return self.rawValue }
-		}
+		var value: String { return self.rawValue }
 	}
 	
 	init(delegate: TableViewKitModelDelegate) {

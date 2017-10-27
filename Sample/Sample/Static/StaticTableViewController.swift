@@ -30,23 +30,23 @@ class StaticTableViewController: StaticTableViewKitTableViewController<StaticMod
 	@IBOutlet weak var section02Cell05: UITableViewCell!
 	@IBOutlet weak var section02Cell06: UITableViewCell!
 
-	var cells: [String: UITableViewCell]!
+	var cells: [StaticModel.CellIdentifiers: UITableViewCell]!
 
 	override func viewDidLoad() {
 		
 		cells = [
-			StaticModel.Sections.Section1.cell1.rawValue: cell1,
-			StaticModel.Sections.Section1.cell2.rawValue: cell2,
-			StaticModel.Sections.Section1.cell3.rawValue: cell3,
-			StaticModel.Sections.Section1.cell4.rawValue: cell4,
-			StaticModel.Sections.Section1.cell5.rawValue: cell5,
+			.section1Cell1: cell1,
+			.section1Cell2: cell2,
+			.section1Cell3: cell3,
+			.section1Cell4: cell4,
+			.section1Cell5: cell5,
 			
-			StaticModel.Sections.Section2.cell1.rawValue: section02Cell01,
-			StaticModel.Sections.Section2.cell2.rawValue: section02Cell02,
-			StaticModel.Sections.Section2.cell3.rawValue: section02Cell03,
-			StaticModel.Sections.Section2.cell4.rawValue: section02Cell04,
-			StaticModel.Sections.Section2.cell5.rawValue: section02Cell05,
-			StaticModel.Sections.Section2.cell6.rawValue: section02Cell06,
+			.section2Cell1: section02Cell01,
+			.section2Cell2: section02Cell02,
+			.section2Cell3: section02Cell03,
+			.section2Cell4: section02Cell04,
+			.section2Cell5: section02Cell05,
+			.section2Cell6: section02Cell06,
 		]
 		
 		model = StaticModel(delegate: self)
@@ -54,9 +54,20 @@ class StaticTableViewController: StaticTableViewKitTableViewController<StaticMod
 		super.viewDidLoad()
 	}
 	
+	override func identifier(forCell cell: UITableViewCell) -> CellIdentifiable? {
+		for (key, value) in cells {
+			if value == cell {
+				return key
+			}
+		}
+		return nil
+	}
+
 	override func cell(withIdentifier identifier: CellIdentifiable) -> UITableViewCell {
-		let id = identifier.value
-		return cells[id]!
+		guard let id = identifier as? StaticModel.CellIdentifiers else {
+			fatalError("Invalid identifier [\(identifier)]")
+		}
+		return cells[id]!		
 	}
 	
 	override func performUpdate() {

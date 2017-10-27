@@ -111,11 +111,22 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
+		
+		guard let identifier = identifier(forCell: cell) else {
+			return
+		}
+		
+		model.didEndDisplaying(cell: cell, withIdentifier: identifier)
+		
 		//log(debug: "...indexPath = \(indexPath)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
 	}
 
 	// MARK: TVKModel
+	
+	open func identifier(forCell cell: UITableViewCell) -> CellIdentifiable? {
+		return nil
+	}
 
 //	open func cell(withIdentifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 //		fatalError("Not yet implemented")
