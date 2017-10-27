@@ -73,7 +73,7 @@ public protocol TableViewKitSection: class, Stateful, Contextual {
 	func shouldSelectRow(at path: IndexPath) -> Bool
 
 	func willDisplay(_ cell: UITableViewCell, forRowAt: Int)
-	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable)
+	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath)
 
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	

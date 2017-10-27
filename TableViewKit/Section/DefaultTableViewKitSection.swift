@@ -81,7 +81,7 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
     activeRow(at: rowIndex).willDisplay(cell)
 	}
 
-	open override func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable) {
+	open override func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) {
 		guard let id = identifier as? AnyHashable else {
 			return
 		}

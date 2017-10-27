@@ -50,7 +50,7 @@ public protocol TableViewKitModel: Contextual {
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 
-	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable)
+	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath)
 }
 
 public protocol StaticTableViewKitModel: TableViewKitModel {

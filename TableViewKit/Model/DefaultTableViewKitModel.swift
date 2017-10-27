@@ -280,9 +280,9 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		}
 	}
 	
-	public func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable) {
+	public func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) {
 		for (key, section) in allSections {
-			section.didEndDisplaying(cell: cell, withIdentifier: identifier)
+			section.didEndDisplaying(cell: cell, withIdentifier: identifier, at: indexPath)
 		}
 	}
 	

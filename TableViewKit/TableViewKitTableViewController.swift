@@ -116,7 +116,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			return
 		}
 		
-		model.didEndDisplaying(cell: cell, withIdentifier: identifier)
+		model.didEndDisplaying(cell: cell, withIdentifier: identifier, at: indexPath)
 		
 		//log(debug: "...indexPath = \(indexPath)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
