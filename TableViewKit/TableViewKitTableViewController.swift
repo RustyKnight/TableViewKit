@@ -113,6 +113,7 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			forRowAt indexPath: IndexPath) {
 		
 		guard let identifier = identifier(forCell: cell) else {
+			log(warning: "Could not find identifier for cell \(cell)")
 			return
 		}
 		
@@ -227,17 +228,29 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
       }
     }
 		
-		tableView.deleteSections(operation.sections[.delete]!, with: deleteSectionAnimation)
-		tableView.reloadSections(operation.sections[.update]!, with: reloadSectionAnimation)
-		tableView.insertSections(operation.sections[.insert]!, with: insertSectionAnimation)
+		if let ops = operation.sections[.delete], ops.count > 0 {
+			tableView.deleteSections(ops, with: deleteSectionAnimation)
+		}
+		if let ops = operation.sections[.update], ops.count > 0 {
+			tableView.reloadSections(ops, with: reloadSectionAnimation)
+		}
+		if let ops = operation.sections[.insert], ops.count > 0 {
+			tableView.insertSections(ops, with: insertSectionAnimation)
+		}
 
-		tableView.deleteRows(at: operation.rows[.delete]!, with: deleteRowAnimation)
-		tableView.reloadRows(at: operation.rows[.update]!, with: reloadRowAnimation)
-		tableView.insertRows(at: operation.rows[.insert]!, with: insertRowAnimation)
+		if let ops = operation.rows[.delete], ops.count > 0 {
+			tableView.deleteRows(at: ops, with: deleteRowAnimation)
+		}
+		if let ops = operation.rows[.update], ops.count > 0 {
+			tableView.reloadRows(at: ops, with: reloadRowAnimation)
+		}
+		if let ops = operation.rows[.insert], ops.count > 0 {
+			tableView.insertRows(at: ops, with: insertRowAnimation)
+		}
 
 		tableView.endUpdates()
 
-//		tableView.reloadData()
+		tableView.reloadData()
 		tableView.layoutIfNeeded()
 	}
 

@@ -281,6 +281,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	}
 	
 	public func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) {
+//		log(debug: "identifier = \(identifier)")
 		for (key, section) in allSections {
 			section.didEndDisplaying(cell: cell, withIdentifier: identifier, at: indexPath)
 		}

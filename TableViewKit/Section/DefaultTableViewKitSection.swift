@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import LogWrapperKit
 
 open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTableViewKitSection {
 	
@@ -83,6 +84,7 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 
 	open override func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) {
 		guard let id = identifier as? AnyHashable else {
+			log(warning: "identifier is not hashable")
 			return
 		}
 		guard let row = allRows[id] else {
