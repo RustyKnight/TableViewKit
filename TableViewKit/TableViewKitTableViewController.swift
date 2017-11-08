@@ -217,7 +217,46 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			return
 		}
 		tableView.beginUpdates()
-    
+		
+		var areUpdatesVisible = false
+		if let visibleRows: [IndexPath] = tableView.indexPathsForVisibleRows {
+			
+			for indexPath in visibleRows {
+				log(debug: "VisibleRow = \(indexPath.section).\(indexPath.row)")
+			}
+			
+			for sections in operation.sections.values {
+				for section in sections {
+					log(debug: "sections to update = \(section)")
+				}
+			}
+			for paths in operation.rows.values {
+				for path in paths {
+					log(debug: "Rows to be updated = \(path.section).\(path.row)")
+				}
+			}
+
+			areUpdatesVisible = operation.sections.values.filter({ (indexSet) -> Bool in
+				return indexSet.filter({ (index) -> Bool in
+					return visibleRows.contains { $0.section == index }
+				}).count > 0
+			}).count > 0
+
+			if !areUpdatesVisible {
+				areUpdatesVisible = operation.rows.values.filter({ (indexPaths) -> Bool in
+					return indexPaths.filter { visibleRows.contains($0) }.count > 0
+				}).count > 0
+			}
+		}
+		
+		log(debug: "areUpdatesVisible = \(areUpdatesVisible)")
+		if !areUpdatesVisible {
+			defer {
+				UIView.setAnimationsEnabled(true)
+			}
+			UIView.setAnimationsEnabled(false)
+		}
+		
     for path in operation.rows[.delete]! {
       if let cell = tableView.cellForRow(at: path) {
         cell.layer.zPosition = -2
