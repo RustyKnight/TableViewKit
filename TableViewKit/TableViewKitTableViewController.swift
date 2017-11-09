@@ -19,6 +19,14 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
   public var deleteSectionAnimation: UITableViewRowAnimation = .automatic
   public var insertSectionAnimation: UITableViewRowAnimation = .automatic
   public var reloadSectionAnimation: UITableViewRowAnimation = .automatic
+	
+	internal var estimatedCellRowHeight: [IndexPath: CGFloat] = [:]
+	internal var estimatedSectionHeaderHeight: [Int: CGFloat] = [:]
+	internal var estimatedSectionFooterHeight: [Int: CGFloat] = [:]
+	
+	public var preferredCellRowHeight: CGFloat = 22
+	public var preferredSectionHeaderHeight: CGFloat = 18
+	public var preferredSectionFooterHeight: CGFloat = 18
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
@@ -103,7 +111,10 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			willDisplay cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		//log(debug: "...indexPath = \(indexPath)")
+		
+		let height = cell.frame.size.height
+		estimatedCellRowHeight[indexPath] = height
+		
 		model.section(at: indexPath.section).willDisplay(cell, forRowAt: indexPath.row)
 	}
 
@@ -111,7 +122,10 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 			_ tableView: UITableView,
 			didEndDisplaying cell: UITableViewCell,
 			forRowAt indexPath: IndexPath) {
-		
+
+		let height = cell.frame.size.height
+		estimatedCellRowHeight[indexPath] = height
+
 		guard let identifier = identifier(forCell: cell) else {
 			log(warning: "Could not find identifier for cell \(cell)")
 			return
@@ -121,6 +135,44 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 		
 		//log(debug: "...indexPath = \(indexPath)")
 //		model.section(at: indexPath.section).didEndDisplaying(cell, forRowAt: indexPath.row)
+	}
+	
+	open override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+		guard let height = estimatedCellRowHeight[indexPath] else {
+			return preferredCellRowHeight
+		}
+		log(debug: "Estimated height = \(height)")
+		return height
+	}
+	
+	open override func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+		guard let height = estimatedSectionHeaderHeight[section] else {
+			return preferredSectionHeaderHeight
+		}
+		log(debug: "Estimated section header height = \(height)")
+		return height
+	}
+	
+	open override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+		guard let height = estimatedSectionFooterHeight[section] else {
+			return preferredSectionFooterHeight
+		}
+		log(debug: "Estimated section fotter height = \(height)")
+		return height
+	}
+	
+//	open override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//
+//	}
+	
+	open override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		let height = view.frame.size.height
+		estimatedSectionHeaderHeight[section] = height
+	}
+	
+	open override func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+		let height = view.frame.size.height
+		estimatedSectionFooterHeight[section] = height
 	}
 
 	// MARK: TVKModel
@@ -291,6 +343,12 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
 		}
 		if let ops = operation.rows[.insert], ops.count > 0 {
 			tableView.insertRows(at: ops, with: insertRowAnimation)
+		}
+		
+		for (_, values) in operation.rows {
+			for indexPath in values {
+				estimatedCellRowHeight[indexPath] = nil
+			}
 		}
 
 		tableView.endUpdates()
