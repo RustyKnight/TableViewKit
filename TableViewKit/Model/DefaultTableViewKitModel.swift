@@ -68,6 +68,10 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			}
 			unmodifiedSections.remove(at: index)
 		}
+    
+    var deletePaths: [IndexPath] = []
+    var updatePaths: [IndexPath] = []
+    var insertPaths: [IndexPath] = []
 
 		// Update the state of the rows in all the
 		// sections that were inserted to ensure that the
@@ -76,11 +80,19 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			let identifier = op.identifier
 			let section = self.section(withIdentifier: identifier)
 			_ = section.applyDesiredState()
+      
+      guard let target = operationTarget(sectionsToBeRemoved, at: op.index) else {
+        continue
+      }
+      let removedSection = self.section(withIdentifier: target.identifier)
+      for row in 0..<removedSection.rowCount {
+        deletePaths.append(IndexPath(row: row, section: target.index))
+      }
+
+      for row in 0..<section.rowCount {
+        insertPaths.append(IndexPath(row: row, section: op.index))
+      }
 		}
-		
-		var deletePaths: [IndexPath] = []
-		var updatePaths: [IndexPath] = []
-		var insertPaths: [IndexPath] = []
 
 		for identifier in unmodifiedSections {
 			guard sectionsBeforeUpdate.contains(identifier) else {
@@ -128,6 +140,12 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
 		                                         rows: rowOperations)
 	}
+  
+  func operationTarget(_ sections: [OperationTarget], at index: Int) -> OperationTarget? {
+    return sections.first(where: { (target) -> Bool in
+      target.index == index
+    })
+  }
 	
 	func section(withIdentifier identifier: AnyHashable) -> TableViewKitSection {
 		return allSections[identifier]!
