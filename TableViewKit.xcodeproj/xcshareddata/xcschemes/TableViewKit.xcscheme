@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "12F3AD121DFDF94300381A23"
-               BuildableName = "TableViewKit.framework"
+               BuildableName = "TableViewKit"
                BlueprintName = "TableViewKit"
                ReferencedContainer = "container:TableViewKit.xcodeproj">
             </BuildableReference>
