@@ -22,6 +22,15 @@ open class DefaultStaticTableViewKitModel: DefaultTableViewKitModel, StaticTable
 		super.init(delegate: delegate, allSections: allSections, preferredOrder: preferredOrder)
 	}
 
+	override public init(delegate: TableViewKitModelDelegate) {
+		super.init(delegate: delegate)
+	}
+	
+	public func set(sections: [AnyHashable : AnyTableViewKitSection], preferredOrder: [AnyHashable], viewToModelMapping: [AnyHashable]) {
+		self.viewToModelMapping = viewToModelMapping
+		super.set(sections: sections, preferredOrder: preferredOrder)
+	}
+
 	open func toModelIndexPath(fromViewIndexPath path: IndexPath) -> IndexPath {
 		let id = identifierForActiveSection(at: path.section)
 		guard let section = allSections[id] as? StaticTableViewKitSection else {

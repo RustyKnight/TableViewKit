@@ -14,7 +14,22 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	public var allRows: [AnyHashable: AnyTableViewKitRow] = [:]
 	public var preferredRowOrder: [AnyHashable] = []
 	public var activeRows: [AnyHashable] = []
+
+	public override var activeGroup: AnyGroupManager<TableViewKitRow> {
+		set {}
+		get {
+			return ProxyGroupManager<TableViewKitRow>(identifiers: activeRows, items: allRows)
+		}
+	}
 	
+	public override var configuredGroup: AnyGroupManager<TableViewKitRow> {
+		set {}
+		get {
+			let keys: [AnyHashable] = allRows.keys.map { return $0 }
+			return ProxyGroupManager<TableViewKitRow>(identifiers: keys, items: allRows)
+		}
+	}
+
 	public override var rowCount: Int {
 		set {}
 		
@@ -26,12 +41,25 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 	public init(identifier: Identifier,
 							title: String? = nil,
 							footer: String? = nil,
+							delegate: TableViewKitSectionDelegate) {
+		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
+	}
+
+	public init(identifier: Identifier,
+							title: String? = nil,
+							footer: String? = nil,
 							delegate: TableViewKitSectionDelegate,
 							allRows: [AnyHashable: AnyTableViewKitRow],
 							preferredOrder: [AnyHashable]) {
 		self.allRows = allRows
 		self.preferredRowOrder = preferredOrder
 		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
+	}
+	
+	public func set(rows: [AnyHashable: AnyTableViewKitRow], preferredOrder: [AnyHashable]) {
+		self.allRows = rows
+		self.preferredRowOrder = preferredOrder
+		self.activeRows = []
 	}
   
   public func identifierForActiveRow(at: Int) -> AnyHashable {
@@ -46,12 +74,16 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 		return activeRows.index(where: { $0 == identifier })
 	}
 	
-	func row(withIdentifier identifier: AnyHashable) -> TableViewKitRow {
+	public func row(withIdentifier identifier: AnyHashable) -> TableViewKitRow {
 		return allRows[identifier]!
 	}
 
-	func row(at index: Int) -> TableViewKitRow {
+	public func avaliableRow(at index: Int) -> TableViewKitRow {
 		return row(withIdentifier: identifier(forRowAt: index))
+	}
+	
+	open override func row(at: Int) -> TableViewKitRow {
+		return activeRow(at: at)
 	}
 
   func activeRow(at index: Int) -> TableViewKitRow {
@@ -93,20 +125,47 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 		row.didEndDisplaying(cell)
 	}
 	
-	open override func applyDesiredState() -> [Operation : [Int]] {
+	override public func applyModificationStates() -> [Operation : [Int]] {
 		let stateManager = StateManager(allItems: allRows,
-		                                preferredOrder: preferredRowOrder)
-    
-    let operations = stateManager.operationsForDesiredState(basedOn: activeRows)
-		activeRows = stateManager.apply(operations: operations, to: activeRows, sortBy: preferredRowOrder)
+																		preferredOrder: preferredRowOrder)
 		
+		let operations = stateManager.modifyOperations(basedOn: activeRows)
+		activeRows = stateManager.apply(operations: operations, to: activeRows, sortBy: preferredRowOrder)
+
 		var operationPaths: [Operation: [Int]] = [:]
-		operationPaths[.insert] = operations.insert.map { $0.index }
 		operationPaths[.update] = operations.update.map { $0.index }
 		operationPaths[.delete] = operations.delete.map { $0.index }
 		
 		return operationPaths
 	}
+	
+	override public func applyInsertStates() -> [Operation : [Int]] {
+		let stateManager = StateManager(allItems: allRows,
+																		preferredOrder: preferredRowOrder)
+
+		let operations = stateManager.insertOperations(basedOn: activeRows)
+		activeRows = stateManager.apply(operations: operations, to: activeRows, sortBy: preferredRowOrder)
+
+		var operationPaths: [Operation: [Int]] = [:]
+		operationPaths[.insert] = operations.insert.map { $0.index }
+		
+		return operationPaths
+	}
+	
+//	open override func applyDesiredState() -> [Operation : [Int]] {
+//		let stateManager = StateManager(allItems: allRows,
+//		                                preferredOrder: preferredRowOrder)
+//
+//    let operations = stateManager.operationsForDesiredState(basedOn: activeRows)
+//		activeRows = stateManager.apply(operations: operations, to: activeRows, sortBy: preferredRowOrder)
+//
+//		var operationPaths: [Operation: [Int]] = [:]
+//		operationPaths[.insert] = operations.insert.map { $0.index }
+//		operationPaths[.update] = operations.update.map { $0.index }
+//		operationPaths[.delete] = operations.delete.map { $0.index }
+//
+//		return operationPaths
+//	}
 	
 	open override func updateToDesiredState() {
     actualState = desiredState == .reload ? .show : actualState
@@ -126,6 +185,12 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
     return activeRow(at: path.row).didSelect()
 	}
 	
+//	override open func cellSelection(didChangeTo path: IndexPath) {
+//		for entry in allRows {
+//			entry.value.cellSelection(didChangeTo: path)
+//		}
+//	}
+
 	override open func shouldSelectRow(at path: IndexPath) -> Bool {
     return activeRow(at: path.row).shouldSelectRow()
 	}
@@ -151,11 +216,17 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 		delegate.tableViewSection(self, didFailWith: error)
 	}
 	
+	open override func perform(_ row: TableViewKitRow, action: Any, value: Any?) {
+		guard let index = index(of: row) else {
+			return
+		}
+		delegate.perform(self, action: action, value: value, row: index)
+	}
+	
 	override open func tableViewRow(
 		_ row: TableViewKitRow,
 		showAlertTitled title: String?,
 		message: String?,
-		preferredStyle: UIAlertControllerStyle,
 		actions: [UIAlertAction]) {
 		guard let index = index(of: row) else {
 			return
@@ -165,7 +236,6 @@ open class DefaultTableViewKitSection<Identifier: SectionIdentifiable>: AnyTable
 			showAlertAtRow: index,
 			titled: title,
 			message: message,
-			preferredStyle: preferredStyle,
 			actions: actions)
 	}
 	

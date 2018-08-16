@@ -31,7 +31,8 @@ public protocol Contextual {
 }
 
 public protocol TableViewKitModel: Contextual {
-	
+	func perform(_ tableViewSection: TableViewKitSection, action: Any, value: Any?, row: Int)
+
 	var delegate: TableViewKitModelDelegate { get set }
 	var sectionCount: Int { get }
 
@@ -39,6 +40,7 @@ public protocol TableViewKitModel: Contextual {
 
 	func shouldSelectRow(at path: IndexPath) -> Bool
 	func didSelectRow(at path: IndexPath) -> Bool
+//	func cellSelection(didChangeTo path: IndexPath)
 
 	func willBecomeActive()
 	func didBecomeInactive()
@@ -46,11 +48,28 @@ public protocol TableViewKitModel: Contextual {
 	// This is responsible for applying the changes which have been made
 	// since the last update pass, so that the "view" mode matches the
 	// "desired" state of the model
-	func applyDesiredState() -> TableViewKitModelOperation
+//	func applyDesiredState() -> TableViewKitModelOperation
+	
+	// Update and delete operations
+	func applyModificationStates() -> TableViewKitModelOperation
+	// Insert operations
+	func applyInsertStates() -> TableViewKitModelOperation
 	
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 
 	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath)
+
+	/**
+	The currently active rows
+	*/
+	var activeGroup: AnyGroupManager<TableViewKitSection>  { get }
+	/**
+	All the configured rows for this section
+	*/
+	var configuredGroup: AnyGroupManager<TableViewKitSection>  { get }
+	
+	var sectionIndexTitles: [String]? { get }
+	func section(forIndexTitle title: String, at index: Int) -> Int
 }
 
 public protocol StaticTableViewKitModel: TableViewKitModel {
@@ -82,6 +101,8 @@ struct DefaultTableViewKitModelOperation: TableViewKitModelOperation {
 
 public protocol TableViewKitModelDelegate {
 
+	func perform(action: Any, value: Any?, section: Int, row: Int)
+
 	func stateDidChange(for model: TableViewKitModel)
 
 	func tableViewModel(_ model: TableViewKitModel, section: TableViewKitSection, didFailWith: Error)
@@ -91,7 +112,6 @@ public protocol TableViewKitModelDelegate {
 			row: Int,
 			titled title: String?,
 			message: String?,
-			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction])
 
 	func tableViewModel(

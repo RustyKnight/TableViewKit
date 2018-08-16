@@ -10,13 +10,14 @@ public protocol TableViewKitSectionDelegate {
 	// The section itself was hidden/shown
 	func stateDidChange(for section: TableViewKitSection)
 
+	func perform(_ section: TableViewKitSection, action: Any, value: Any?, row: Int)
+
 	func tableViewSection(_ section: TableViewKitSection, didFailWith: Error)
 	func tableViewSection(
 			_ section: TableViewKitSection,
 			showAlertAtRow: Int,
 			titled title: String?,
 			message: String?,
-			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction])
 
 //	func tableViewSectionDidStartLoading(_ section: TableViewKitSection)
@@ -72,12 +73,26 @@ public protocol TableViewKitSection: class, Stateful, Contextual {
 	func didSelectRow(at path: IndexPath) -> Bool
 	func shouldSelectRow(at path: IndexPath) -> Bool
 
+//	func cellSelection(didChangeTo path: IndexPath)
+
 	func willDisplay(_ cell: UITableViewCell, forRowAt: Int)
 	func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath)
 
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
+	func row(at: Int) -> TableViewKitRow
 	
-	func applyDesiredState() -> [Operation:[Int]]
+//	func applyDesiredState() -> [Operation:[Int]]
+	func applyModificationStates() -> [Operation: [Int]]
+	func applyInsertStates() -> [Operation: [Int]]
+
+	/**
+	The currently active rows
+	*/
+	var activeGroup: AnyGroupManager<TableViewKitRow>  { get }
+	/**
+	All the configured rows for this section
+	*/
+	var configuredGroup: AnyGroupManager<TableViewKitRow>  { get }
 }
 
 public protocol StaticTableViewKitSection: TableViewKitSection {

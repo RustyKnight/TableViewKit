@@ -26,6 +26,9 @@ public enum State {
 	// This is used to force a rows state to be updated when it's first loaded
 	case undefined
 	
+	// Physically delete the row
+	case delete
+	
 	public func newStateBasedOn(desiredState: State) -> State {
 		guard desiredState != .reload else {
 			return self;
@@ -38,7 +41,7 @@ public enum State {
 public extension State {
 	// If hidden, show, otherwise reload
 	func showOrReload() -> State {
-		return self == .hide ? .show : .reload
+		return (self == .hide || self == .undefined) ? .show : .reload
 	}
 }
 
@@ -113,9 +116,11 @@ public class StateManager<ItemType: Stateful> {
     return allItems[identifier]!
   }
 	
+	// This includes those items which want to be deleted!
 	func wantsToBeHidden(_ identifier: AnyHashable) -> Bool {
     let value = item(forIdentifier: identifier)
-		return value.desiredState == .hide && value.actualState != .hide
+		return (value.desiredState == .hide && value.actualState != .hide)
+			|| (value.desiredState == .delete && value.actualState != .delete)
 	}
 	
 	func wantsToBeShown(_ identifier: AnyHashable) -> Bool {
@@ -157,46 +162,97 @@ public class StateManager<ItemType: Stateful> {
 		}
 		return sort(items, byPreferredOrder: preferredSortOrder)
 	}
-
-	func operationsForDesiredState(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
+	
+	func modifyOperations(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
 		var items: [AnyHashable] = []
 		items.append(contentsOf: activeItems)
-
+		
 		let toUpdate = updateItems(in: items)
-
+		
 		// Items to be removed
 		let toDelete = hideItems(in: items)
 		for entry in toDelete {
 			guard let index = items.index(of: entry.identifier) else {
-				//log(debug: "!! Could not find index of item with identifier = \(entry.identifier)")
+				////log(debug: "!! Could not find index of item with identifier = \(entry.identifier)")
 				continue
 			}
 			items.remove(at: index)
 		}
-
-		// Items to be inserted
-		let toInsert = showItems(in: items).sorted(by: { $0.index < $1.index })
-		for entry in toInsert {
-			//			//log(debug: "\(entry)")
-			items.insert(entry.identifier, at: entry.index)
+		
+		let operations = DefaultStatefulOperations(insert: [], update: toUpdate, delete: toDelete)
+		
+		for item in toDelete {
+			allItems[item.identifier]?.updateToDesiredState()
 		}
-
-		let operations = DefaultStatefulOperations(insert: toInsert, update: toUpdate, delete: toDelete)
-
-    // Move all items to their desired state, this ensures
-    // that any items not handled by the hide/show/update
-    // functions are updated
-    for item in allItems {
-      item.value.updateToDesiredState()
-    }
+		for item in toUpdate {
+			allItems[item.identifier]?.updateToDesiredState()
+		}
 
 		return operations
 	}
 	
+	func insertOperations(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
+		var items: [AnyHashable] = []
+		items.append(contentsOf: activeItems)
+		
+		// Items to be inserted
+		let toInsert = showItems(in: items).sorted(by: { $0.index < $1.index })
+		for entry in toInsert {
+			items.insert(entry.identifier, at: entry.index)
+		}
+		
+		let operations = DefaultStatefulOperations(insert: toInsert, update: [], delete: [])
+		
+		// Move all items to their desired state, this ensures
+		// that any items not handled by the hide/show/update
+		// functions are updated
+		for item in toInsert {
+			allItems[item.identifier]?.updateToDesiredState()
+		}
+		
+		return operations
+	}
+
+	
+//	func operationsForDesiredState(basedOn activeItems: [AnyHashable]) -> StatefulOperations {
+//		var items: [AnyHashable] = []
+//		items.append(contentsOf: activeItems)
+//
+//		let toUpdate = updateItems(in: items)
+//
+//		// Items to be removed
+//		let toDelete = hideItems(in: items)
+//		for entry in toDelete {
+//			guard let index = items.index(of: entry.identifier) else {
+//				////log(debug: "!! Could not find index of item with identifier = \(entry.identifier)")
+//				continue
+//			}
+//			items.remove(at: index)
+//		}
+//
+//		// Items to be inserted
+//		let toInsert = showItems(in: items).sorted(by: { $0.index < $1.index })
+//		for entry in toInsert {
+//			//			////log(debug: "\(entry)")
+//			items.insert(entry.identifier, at: entry.index)
+//		}
+//
+//		let operations = DefaultStatefulOperations(insert: toInsert, update: toUpdate, delete: toDelete)
+//
+//    // Move all items to their desired state, this ensures
+//    // that any items not handled by the hide/show/update
+//    // functions are updated
+//    for item in allItems {
+//      item.value.updateToDesiredState()
+//    }
+//
+//		return operations
+//	}
+	
 	func updateItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let items = activeItems.filter { wantsToBeReloaded($0) }
 		let rowIndicies = indices(of: items, in: activeItems)
-//    //log(debug: "Reload \(items)")
+//    ////log(debug: "Reload \(items)")
 
 		for identifier in items {
       item(forIdentifier: identifier).updateToDesiredState()
@@ -261,7 +317,6 @@ public class StateManager<ItemType: Stateful> {
 
 	internal func hideItems(in activeItems: [AnyHashable]) -> [OperationTarget] {
 		let itemsToBeRemoved = activeItems.filter {	return wantsToBeHidden($0) }
-//    //log(debug: "To be removed = \(itemsToBeRemoved)")
 		let rowIndicies = indices(of: itemsToBeRemoved, in: activeItems)
 		
 		for identifier in itemsToBeRemoved {
@@ -414,7 +469,7 @@ public class StateManager<ItemType: Stateful> {
       item(forIdentifier: identifier).updateToDesiredState()
 		}
 		
-//    //log(debug: "To be added = \(itemsToBeAdded)")
+//    ////log(debug: "To be added = \(itemsToBeAdded)")
 		return map(Array(itemsToBeAdded), with: indicies)
 	}
 	

@@ -14,12 +14,14 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	
 	public var rowCount: Int = 0
 	
-	public var title: String?
-	public var footer: String?
+	open var title: String?
+	open var footer: String?
 
 	public var isHidden: Bool {
 		return actualState == .hide
 	}
+	
+	public var isHiddenWhenEmpty: Bool = true
 	
 	var preferredDesiredState: State = .show
 	open var desiredState: State {
@@ -28,6 +30,9 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		}
 		
 		get {
+			guard isHiddenWhenEmpty else {
+				return preferredDesiredState
+			}
 			return rowCount == 0 ? .hide : preferredDesiredState
 		}
 	}
@@ -38,7 +43,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	internal var stateManager: StateManager<AnyTableViewKitRow>!
 	
 	public let identifier: SectionIdentifiable
-	
+
+	public var activeGroup: AnyGroupManager<TableViewKitRow> = AnyGroupManager<TableViewKitRow>()
+	public var configuredGroup: AnyGroupManager<TableViewKitRow> = AnyGroupManager<TableViewKitRow>()
+
 	public init(identifier: SectionIdentifiable, title: String? = nil, footer: String?, delegate: TableViewKitSectionDelegate) {
 		self.identifier = identifier
 		self.title = title
@@ -58,10 +66,18 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		actualState = actualState.newStateBasedOn(desiredState: desiredState)
 	}
 	
-	public func applyDesiredState() -> [Operation:[Int]] {
-		//		return stateManager.applyDesiredState(basedOn: activeItems)
+	public func applyInsertStates() -> [Operation : [Int]] {
 		fatalError("Not yet implemeted")
 	}
+	
+	public func applyModificationStates() -> [Operation : [Int]] {
+		fatalError("Not yet implemeted")
+	}
+	
+//	public func applyDesiredState() -> [Operation:[Int]] {
+//		//		return stateManager.applyDesiredState(basedOn: activeItems)
+//		fatalError("Not yet implemeted")
+//	}
 //	
 //	public func cell(withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) -> UITableViewCell {
 //		return delegate.cell(withIdentifier: identifier, at: indexPath)
@@ -78,6 +94,10 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		delegate.stateDidChange(for: self)
 	}
 
+	open func row(at: Int) -> TableViewKitRow {
+		fatalError("Not yet implemented")
+	}
+	
 	open func cell(forRowAt indexPath: IndexPath) -> UITableViewCell {
 		fatalError("Not yet implemented")
 	}
@@ -97,7 +117,11 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 	open func didSelectRow(at path: IndexPath) -> Bool {
 		fatalError("Not yet implemented")
 	}
-	
+
+//	open func cellSelection(didChangeTo path: IndexPath) {
+//		fatalError("Not yet implemented")
+//	}
+
 	open func shouldSelectRow(at path: IndexPath) -> Bool {
 		fatalError("Not yet implemented")
 	}
@@ -118,11 +142,15 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		fatalError("Not yet implemented")
 	}
 	
+	open func perform(_ row: TableViewKitRow, action: Any, value: Any?) {
+		fatalError("Not yet implemented")
+//		delegate.perform(action: action, value: value)
+	}
+
 	open func tableViewRow(
 		_ row: TableViewKitRow,
 		showAlertTitled title: String?,
 		message: String?,
-		preferredStyle: UIAlertControllerStyle,
 		actions: [UIAlertAction]) {
 		fatalError("Not yet implemented")
 	}
@@ -155,7 +183,6 @@ open class AnyTableViewKitSection: TableViewKitSection, TableViewKitRowDelegate 
 		showAlertAtRow: Int,
 		titled title: String?,
 		message: String?,
-		preferredStyle: UIAlertControllerStyle,
 		actions: [UIAlertAction]) {
 		fatalError("Not yet implemented")
 	}

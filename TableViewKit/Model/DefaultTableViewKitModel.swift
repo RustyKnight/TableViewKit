@@ -13,11 +13,44 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 
 	public var sharedContext: [AnyHashable: Any] = [:]
 	
+	// This is a list of all the avaliable sections the model
+	// is expected to manage
 	internal var allSections: [AnyHashable: AnyTableViewKitSection] = [:]
+	// This is a list of the preferred order of the sections
 	internal var preferredSectionOrder: [AnyHashable] = []
+	// This is a list of the currently visible sections
 	internal var activeSections: [AnyHashable] = []
+	
+	// Section index titles
+	public var sectionIndexTitles: [String]? {
+		guard let activeSectionIndicies = activeSectionIndicies else {
+			return nil
+		}
+		return activeSectionIndicies.map { $0.1 }
+	}
+	
+	// The preferred order of the index titles, associated with a section identifier
+	internal var sectionIndicies: [(AnyHashable, String)]?
+	// The currently "active" index titles
+	internal var activeSectionIndicies: [(AnyHashable, String)]?
+	
+	// Include UITableViewIndexSearch in section index titles
+	var includeIndexSearch: Bool = true
+	
+	public var activeGroup: AnyGroupManager<TableViewKitSection> {
+		return ProxyGroupManager<TableViewKitSection>(identifiers: activeSections, items: allSections)
+	}
+	
+	public var configuredGroup: AnyGroupManager<TableViewKitSection> {
+		let keys: [AnyHashable] = allSections.keys.map { return $0 }
+		return ProxyGroupManager<TableViewKitSection>(identifiers: keys, items: allSections)
+	}
 
 	public var delegate: TableViewKitModelDelegate
+	
+	public init(delegate: TableViewKitModelDelegate) {
+		self.delegate = delegate
+	}
 	
 	public init(delegate: TableViewKitModelDelegate,
 							allSections: [AnyHashable: AnyTableViewKitSection], preferredOrder: [AnyHashable]) {
@@ -25,14 +58,20 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		self.allSections = allSections
 		self.preferredSectionOrder = preferredOrder
 	}
-
-	public func applyDesiredState() -> TableViewKitModelOperation {
-		
-		////log(debug: "Sections before update: \(activeSections.count)")
-		for id in activeSections {
-			let sec = section(withIdentifier: id)
-			//log(debug: "\(sec) row count = \(sec.rowCount)")
-		}
+	
+	public func set(sections: [AnyHashable: AnyTableViewKitSection], preferredOrder: [AnyHashable]) {
+		self.allSections = sections
+		self.preferredSectionOrder = preferredOrder
+		self.activeSections = []
+		updateSectionIndicies()
+	}
+	
+	public func applyModificationStates() -> TableViewKitModelOperation {
+		//log(debug: "Sections before update: \(activeSections.count)")
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
 		
 		var sectionsBeforeUpdate: [AnyHashable] = []
 		sectionsBeforeUpdate.append(contentsOf: activeSections)
@@ -41,24 +80,24 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		// of a section
 		var sectionOperations: [AnyHashable: [Operation:[Int]]] = [:]
 		for entry in allSections {
-			sectionOperations[entry.key] = entry.value.applyDesiredState()
+			sectionOperations[entry.key] = entry.value.applyModificationStates()
 		}
 		
 		var unmodifiedSections: [AnyHashable] = []
 		unmodifiedSections.append(contentsOf: activeSections)
 		
 		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
-		let operations = stateManager.operationsForDesiredState(basedOn: activeSections)
+		let operations = stateManager.modifyOperations(basedOn: activeSections)
 		activeSections = stateManager.apply(operations: operations, to: activeSections, sortBy: preferredSectionOrder)
 		
 		// Sections which have been removed, we don't care about
 		// Sections which have been inserted, we don't care about - will initialise their default state
 		// Sections which have been updated, we don't care about - they will update their entire contents
 		
-		let sectionsToBeInserted = operations.insert
+//		let sectionsToBeInserted = operations.insert
 		let sectionsToBeRemoved = operations.delete
 		let sectionsToBeReloaded = operations.update
-
+		
 		// Remove all sections which might have been removed
 		for property in operations.operations(for: .delete) {
 			let id = property.identifier
@@ -68,32 +107,32 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			}
 			unmodifiedSections.remove(at: index)
 		}
-    
-    var deletePaths: [IndexPath] = []
-    var updatePaths: [IndexPath] = []
-    var insertPaths: [IndexPath] = []
-
+		
+		var deletePaths: [IndexPath] = []
+		var updatePaths: [IndexPath] = []
+//		var insertPaths: [IndexPath] = []
+		
 		// Update the state of the rows in all the
 		// sections that were inserted to ensure that the
 		// rows are at their desired states
 		for op in operations.operations(for: .insert) {
 			let identifier = op.identifier
 			let section = self.section(withIdentifier: identifier)
-			_ = section.applyDesiredState()
-      
-      guard let target = operationTarget(sectionsToBeRemoved, at: op.index) else {
-        continue
-      }
-      let removedSection = self.section(withIdentifier: target.identifier)
-      for row in 0..<removedSection.rowCount {
-        deletePaths.append(IndexPath(row: row, section: target.index))
-      }
-
-      for row in 0..<section.rowCount {
-        insertPaths.append(IndexPath(row: row, section: op.index))
-      }
+			_ = section.applyModificationStates()
+			
+			guard let target = operationTarget(sectionsToBeRemoved, at: op.index) else {
+				continue
+			}
+			let removedSection = self.section(withIdentifier: target.identifier)
+			for row in 0..<removedSection.rowCount {
+				deletePaths.append(IndexPath(row: row, section: target.index))
+			}
+			
+//			for row in 0..<section.rowCount {
+//				insertPaths.append(IndexPath(row: row, section: op.index))
+//			}
 		}
-
+		
 		for identifier in unmodifiedSections {
 			guard sectionsBeforeUpdate.contains(identifier) else {
 				continue
@@ -108,46 +147,255 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 				updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
 			}
 			sectionIndex = index(of: section, in: unmodifiedSections)
+//			if let sectionIndex = sectionIndex {
+//				insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+//			}
+		}
+		
+		var rowOperations: [Operation: [IndexPath]] = [:]
+		rowOperations[.delete] = deletePaths
+//		rowOperations[.insert] = insertPaths
+		rowOperations[.update] = updatePaths
+		
+		//log(debug: "rows delete: \(deletePaths)")
+//		//log(debug: "rows insert: \(insertPaths)")
+		//log(debug: "rows update: \(updatePaths)")
+		
+		//log(debug: "sections delete: \(sectionsToBeRemoved)")
+//		//log(debug: "sections insert: \(sectionsToBeInserted)")
+		//log(debug: "sections update: \(sectionsToBeReloaded)")
+		
+		var finalSectionOperations: [Operation: IndexSet] = [:]
+		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
+//		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
+		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
+		
+		//log(debug: "Sections after update: \(activeSections.count)")
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
+		
+		updateSectionIndicies()
+		
+		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
+																						 rows: rowOperations)
+	}
+	
+	public func applyInsertStates() -> TableViewKitModelOperation {
+		//log(debug: "Sections before update: \(activeSections.count)")
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
+		
+		var sectionsBeforeUpdate: [AnyHashable] = []
+		sectionsBeforeUpdate.append(contentsOf: activeSections)
+		
+		// This is done here because it could effect the desired state
+		// of a section
+		var sectionOperations: [AnyHashable: [Operation:[Int]]] = [:]
+		for entry in allSections {
+			sectionOperations[entry.key] = entry.value.applyInsertStates()
+		}
+		
+		var unmodifiedSections: [AnyHashable] = []
+		unmodifiedSections.append(contentsOf: activeSections)
+		
+		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
+		let operations = stateManager.insertOperations(basedOn: activeSections)
+		activeSections = stateManager.apply(operations: operations, to: activeSections, sortBy: preferredSectionOrder)
+		
+		// Sections which have been removed, we don't care about
+		// Sections which have been inserted, we don't care about - will initialise their default state
+		// Sections which have been updated, we don't care about - they will update their entire contents
+		
+		let sectionsToBeInserted = operations.insert
+		
+		var insertPaths: [IndexPath] = []
+		
+		// Update the state of the rows in all the
+		// sections that were inserted to ensure that the
+		// rows are at their desired states
+		for op in operations.operations(for: .insert) {
+			let identifier = op.identifier
+			let section = self.section(withIdentifier: identifier)
+			_ = section.applyModificationStates()
+			
+			for row in 0..<section.rowCount {
+				insertPaths.append(IndexPath(row: row, section: op.index))
+			}
+		}
+		
+		for identifier in unmodifiedSections {
+			guard sectionsBeforeUpdate.contains(identifier) else {
+				continue
+			}
+			guard let operaton = sectionOperations[identifier] else {
+				continue
+			}
+			let section = self.section(withIdentifier: identifier)
+//			let sectionIndex = index(of: section, in: unmodifiedSections)
+			let sectionIndex = index(of: section, in: activeSections)
 			if let sectionIndex = sectionIndex {
 				insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
 			}
 		}
-
+		
 		var rowOperations: [Operation: [IndexPath]] = [:]
-		rowOperations[.delete] = deletePaths
+//		rowOperations[.delete] = deletePaths
 		rowOperations[.insert] = insertPaths
-		rowOperations[.update] = updatePaths
-
-		//log(debug: "rows delete: \(deletePaths)")
+//		rowOperations[.update] = updatePaths
+		
+//		//log(debug: "rows delete: \(deletePaths)")
 		//log(debug: "rows insert: \(insertPaths)")
-		//log(debug: "rows update: \(updatePaths)")
-
-		//log(debug: "sections delete: \(sectionsToBeRemoved)")
+//		//log(debug: "rows update: \(updatePaths)")
+		
+//		//log(debug: "sections delete: \(sectionsToBeRemoved)")
 		//log(debug: "sections insert: \(sectionsToBeInserted)")
-		//log(debug: "sections update: \(sectionsToBeReloaded)")
-
+//		//log(debug: "sections update: \(sectionsToBeReloaded)")
+		
 		var finalSectionOperations: [Operation: IndexSet] = [:]
-		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
+//		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
 		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
-		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
-
+//		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
+		
 		//log(debug: "Sections after update: \(activeSections.count)")
-		for id in activeSections {
-			let sec = section(withIdentifier: id)
-			//log(debug: "\(sec) row count = \(sec.rowCount)")
-		}
-
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
+		
+		updateSectionIndicies()
+		
 		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
-		                                         rows: rowOperations)
+																						 rows: rowOperations)
 	}
-  
+
+//	public func applyDesiredState() -> TableViewKitModelOperation {
+//
+//		//log(debug: "Sections before update: \(activeSections.count)")
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
+//
+//		var sectionsBeforeUpdate: [AnyHashable] = []
+//		sectionsBeforeUpdate.append(contentsOf: activeSections)
+//
+//		// This is done here because it could effect the desired state
+//		// of a section
+//		var sectionOperations: [AnyHashable: [Operation:[Int]]] = [:]
+//		for entry in allSections {
+//			sectionOperations[entry.key] = entry.value.applyDesiredState()
+//		}
+//
+//		var unmodifiedSections: [AnyHashable] = []
+//		unmodifiedSections.append(contentsOf: activeSections)
+//
+//		let stateManager = StateManager(allItems: allSections, preferredOrder: preferredSectionOrder)
+//		let operations = stateManager.operationsForDesiredState(basedOn: activeSections)
+//		activeSections = stateManager.apply(operations: operations, to: activeSections, sortBy: preferredSectionOrder)
+//
+//		// Sections which have been removed, we don't care about
+//		// Sections which have been inserted, we don't care about - will initialise their default state
+//		// Sections which have been updated, we don't care about - they will update their entire contents
+//
+//		let sectionsToBeInserted = operations.insert
+//		let sectionsToBeRemoved = operations.delete
+//		let sectionsToBeReloaded = operations.update
+//
+//		// Remove all sections which might have been removed
+//		for property in operations.operations(for: .delete) {
+//			let id = property.identifier
+//			guard let index = unmodifiedSections.index(of: id) else {
+//				// What happended here??
+//				continue
+//			}
+//			unmodifiedSections.remove(at: index)
+//		}
+//
+//    var deletePaths: [IndexPath] = []
+//    var updatePaths: [IndexPath] = []
+//    var insertPaths: [IndexPath] = []
+//
+//		// Update the state of the rows in all the
+//		// sections that were inserted to ensure that the
+//		// rows are at their desired states
+//		for op in operations.operations(for: .insert) {
+//			let identifier = op.identifier
+//			let section = self.section(withIdentifier: identifier)
+//			_ = section.applyDesiredState()
+//
+//      guard let target = operationTarget(sectionsToBeRemoved, at: op.index) else {
+//        continue
+//      }
+//      let removedSection = self.section(withIdentifier: target.identifier)
+//      for row in 0..<removedSection.rowCount {
+//        deletePaths.append(IndexPath(row: row, section: target.index))
+//      }
+//
+//      for row in 0..<section.rowCount {
+//        insertPaths.append(IndexPath(row: row, section: op.index))
+//      }
+//		}
+//
+//		for identifier in unmodifiedSections {
+//			guard sectionsBeforeUpdate.contains(identifier) else {
+//				continue
+//			}
+//			guard let operaton = sectionOperations[identifier] else {
+//				continue
+//			}
+//			let section = self.section(withIdentifier: identifier)
+//			var sectionIndex = index(of: section, in: sectionsBeforeUpdate)
+//			if let sectionIndex = sectionIndex {
+//				deletePaths.append(contentsOf: operaton[.delete]!.map { IndexPath(row: $0, section: sectionIndex) })
+//				updatePaths.append(contentsOf: operaton[.update]!.map { IndexPath(row: $0, section: sectionIndex) })
+//			}
+//			sectionIndex = index(of: section, in: unmodifiedSections)
+//			if let sectionIndex = sectionIndex {
+//				insertPaths.append(contentsOf: operaton[.insert]!.map { IndexPath(row: $0, section: sectionIndex) })
+//			}
+//		}
+//
+//		var rowOperations: [Operation: [IndexPath]] = [:]
+//		rowOperations[.delete] = deletePaths
+//		rowOperations[.insert] = insertPaths
+//		rowOperations[.update] = updatePaths
+//
+//		//log(debug: "rows delete: \(deletePaths)")
+//		//log(debug: "rows insert: \(insertPaths)")
+//		//log(debug: "rows update: \(updatePaths)")
+//
+//		//log(debug: "sections delete: \(sectionsToBeRemoved)")
+//		//log(debug: "sections insert: \(sectionsToBeInserted)")
+//		//log(debug: "sections update: \(sectionsToBeReloaded)")
+//
+//		var finalSectionOperations: [Operation: IndexSet] = [:]
+//		finalSectionOperations[.delete] = IndexSet(sectionsToBeRemoved.map { $0.index })
+//		finalSectionOperations[.insert] = IndexSet(sectionsToBeInserted.map { $0.index })
+//		finalSectionOperations[.update] = IndexSet(sectionsToBeReloaded.map { $0.index })
+//
+//		//log(debug: "Sections after update: \(activeSections.count)")
+//		for id in activeSections {
+//			let sec = section(withIdentifier: id)
+//			//log(debug: "\(sec) row count = \(sec.rowCount)")
+//		}
+//
+//		updateSectionIndicies()
+//
+//		return DefaultTableViewKitModelOperation(sections: finalSectionOperations,
+//		                                         rows: rowOperations)
+//	}
+	
   func operationTarget(_ sections: [OperationTarget], at index: Int) -> OperationTarget? {
     return sections.first(where: { (target) -> Bool in
       target.index == index
     })
   }
 	
-	func section(withIdentifier identifier: AnyHashable) -> TableViewKitSection {
+	public func section(withIdentifier identifier: AnyHashable) -> TableViewKitSection {
 		return allSections[identifier]!
 	}
 //
@@ -168,6 +416,17 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return activeSections.count
 	}
 	
+	public func indexOfActiveSection(withIdentifier identifer: AnyHashable) -> Int? {
+		return activeSections.index(of: identifer)
+	}
+	
+	public func activeSection(withIdentifier identifer: AnyHashable) -> TableViewKitSection? {
+		guard let index = indexOfActiveSection(withIdentifier: identifer) else {
+			return nil
+		}
+		return section(at: index)
+	}
+	
 	public func section(at: Int) -> TableViewKitSection {
 		return allSections[activeSections[at]]!
 	}
@@ -185,7 +444,13 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		let section = self.section(at: path.section)
 		return section.didSelectRow(at: path)
 	}
-	
+//
+//	public func cellSelection(didChangeTo path: IndexPath) {
+//		for entry in allSections {
+//			entry.value.cellSelection(didChangeTo: path)
+//		}
+//	}
+
 	public func setContext(`for` key: AnyHashable, to value: Any?) {
 		sharedContext[key] = value
 		
@@ -198,7 +463,7 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		return sharedContext[key]
 	}
 	
-	func index(of section: TableViewKitSection) -> Int? {
+	public func index(of section: TableViewKitSection) -> Int? {
 		return index(of: section, in: activeSections)
 	}
 
@@ -241,6 +506,13 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		delegate.tableViewModel(self, performSegueWithIdentifier: identifier, controller: controller)
 	}
 	
+	public func perform(_ tableViewSection: TableViewKitSection, action: Any, value: Any?, row: Int) {
+		guard let sectionIndex = index(of: tableViewSection) else {
+			return
+		}
+		delegate.perform(action: action, value: value, section: sectionIndex, row: row)
+	}
+
 	public func tableViewSection(
 		_ tableViewSection: TableViewKitSection,
 		presentActionSheetAtRow row: Int,
@@ -267,7 +539,6 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 		showAlertAtRow row: Int,
 		titled title: String?,
 		message: String?,
-		preferredStyle: UIAlertControllerStyle,
 		actions: [UIAlertAction]) {
 		guard let index = index(of: section) else {
 			return
@@ -278,7 +549,6 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 			row: row,
 			titled: title,
 			message: message,
-			preferredStyle: preferredStyle,
 			actions: actions)
 	}
 	
@@ -299,10 +569,46 @@ open class DefaultTableViewKitModel: TableViewKitModel, TableViewKitSectionDeleg
 	}
 	
 	public func didEndDisplaying(cell: UITableViewCell, withIdentifier identifier: CellIdentifiable, at indexPath: IndexPath) {
-//		log(debug: "identifier = \(identifier)")
-		for (key, section) in allSections {
+//		//log(debug: "identifier = \(identifier)")
+		for (_, section) in allSections {
 			section.didEndDisplaying(cell: cell, withIdentifier: identifier, at: indexPath)
 		}
+	}
+	
+	// This could be done dynmaically, but the cost in time and performance
+	// may not be worth it
+	internal func updateSectionIndicies() {
+		guard let sectionIndicies = sectionIndicies else {
+			activeSectionIndicies = nil
+			return
+		}
+		
+		var active: [(AnyHashable, String)] = []
+		if includeIndexSearch {
+			active.append(("UITableView.indexSearch", UITableViewIndexSearch))
+		}
+		for indicie in sectionIndicies {
+			guard activeSections.contains(indicie.0) else {
+				continue
+			}
+			active.append(indicie)
+		}
+		
+		activeSectionIndicies = active
+	}
+	
+	public func set(sectionIndicies: [(AnyHashable, String)]?, includeIndexSearch: Bool = true) {
+		self.sectionIndicies = sectionIndicies
+		self.includeIndexSearch = true
+		updateSectionIndicies()
+	}
+	
+	public func section(forIndexTitle title: String, at index: Int) -> Int {
+		guard let activeSectionIndicies = activeSectionIndicies else {
+			return 0
+		}
+		let identifier = activeSectionIndicies[index].0
+		return indexOfActiveSection(withIdentifier: identifier) ?? 0
 	}
 	
 }

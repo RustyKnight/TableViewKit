@@ -7,6 +7,7 @@ import Foundation
 
 public protocol TableViewKitSegueController {
 	func shouldPerformSegue(withIdentifier: SegueIdentifiable, sender: Any?) -> Bool
+	func segueRejectedReason(forIdentifier: SegueIdentifiable, sender: Any?) -> String?
 	func prepare(for segue: UIStoryboardSegue)
 	func unwound(from segue: UIStoryboardSegue)
 }
@@ -14,15 +15,17 @@ public protocol TableViewKitSegueController {
 public protocol TableViewKitRowDelegate {
 
 	func stateDidChange(for row: TableViewKitRow)
-
-//	func remove(row: TableViewRow)
+	
+	// This is a "command" or "action" chain which allows a row
+	// to request that the UITableViewController perform some
+	// operation
+	func perform(_ row: TableViewKitRow, action: Any, value: Any?)
 
 	func tableViewRow(_ row: TableViewKitRow, didFailWith error: Error)
 	func tableViewRow(
 			_ row: TableViewKitRow,
 			showAlertTitled title: String?,
 			message: String?,
-			preferredStyle: UIAlertControllerStyle,
 			actions: [UIAlertAction])
 
 	func tableViewRow(_ row: TableViewKitRow, performSegueWithIdentifier identifier: SegueIdentifiable, controller: TableViewKitSegueController)
@@ -70,6 +73,11 @@ public protocol TableViewKitRow: Stateful {
 
 	func didSelect() -> Bool
 	func shouldSelectRow() -> Bool
+
+	// This was a hack around a problem which was not particularly pleasent and required the row
+	// to become coupled with the implmentation and draw assumptions about the the configuration
+	// it shouldn't need or have to
+//	func cellSelection(didChangeTo path: IndexPath)
 
 	func cell(forRowAt indexPath: IndexPath) -> UITableViewCell
 	func willBecomeActive()

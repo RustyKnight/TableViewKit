@@ -30,8 +30,8 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, Cel
 	}
 	
 	override open func didSelect() -> Bool {
-		let identifier = segueIdentifier
-		//log(debug: "identifier = \(identifier)")
+//		let identifier = segueIdentifier
+		////log(debug: "identifier = \(identifier)")
 		delegate.tableViewRow(self, performSegueWithIdentifier: segueIdentifier, controller: self)
     return false
 	}
@@ -39,7 +39,11 @@ open class DefaultSeguableTableViewKitRow<SegueIdentifier:SegueIdentifiable, Cel
 	open func shouldPerformSegue(withIdentifier: SegueIdentifiable, sender: Any?) -> Bool {
 		return true
 	}
-	
+
+	open func segueRejectedReason(forIdentifier: SegueIdentifiable, sender: Any?) -> String? {
+		return nil
+	}
+
 	open func prepare(for segue: UIStoryboardSegue) {
 	}
 	

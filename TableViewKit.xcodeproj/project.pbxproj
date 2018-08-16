@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		123DAE9020169B6C00A831A7 /* GroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123DAE8F20169B6C00A831A7 /* GroupManager.swift */; };
+		12A16A33204612240033FFD9 /* MutableTabeViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A16A32204612240033FFD9 /* MutableTabeViewKitSection.swift */; };
+		12A16A35204613300033FFD9 /* MutableTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A16A34204613300033FFD9 /* MutableTableViewKitRow.swift */; };
+		12A16A40204624E60033FFD9 /* MutableTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A16A3F204624E60033FFD9 /* MutableTableViewKitModel.swift */; };
 		12F3AD181DFDF94300381A23 /* TableViewKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 12F3AD161DFDF94300381A23 /* TableViewKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12FB2B961F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */; };
 		12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */; };
@@ -40,6 +44,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		123DAE8F20169B6C00A831A7 /* GroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupManager.swift; sourceTree = "<group>"; };
+		12A16A32204612240033FFD9 /* MutableTabeViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableTabeViewKitSection.swift; sourceTree = "<group>"; };
+		12A16A34204613300033FFD9 /* MutableTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableTableViewKitRow.swift; sourceTree = "<group>"; };
+		12A16A3F204624E60033FFD9 /* MutableTableViewKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableTableViewKitModel.swift; sourceTree = "<group>"; };
 		12B565231F95D73500A57459 /* LogWrapperKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LogWrapperKit.framework; path = Carthage/Build/iOS/LogWrapperKit.framework; sourceTree = "<group>"; };
 		12F3AD131DFDF94300381A23 /* TableViewKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TableViewKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12F3AD161DFDF94300381A23 /* TableViewKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TableViewKit.h; sourceTree = "<group>"; };
@@ -116,15 +124,16 @@
 		12F3AD151DFDF94300381A23 /* TableViewKit */ = {
 			isa = PBXGroup;
 			children = (
+				123DAE8F20169B6C00A831A7 /* GroupManager.swift */,
+				12F3AD171DFDF94300381A23 /* Info.plist */,
 				705A2BB91F80DA6500F3DCA4 /* Model */,
+				70B029C31F7F6F2E006DEC21 /* README.md */,
 				7019EC411F8066CA008EBFD0 /* Row */,
 				7019EC3C1F806608008EBFD0 /* Section */,
-				12F3AD171DFDF94300381A23 /* Info.plist */,
-				70B029C31F7F6F2E006DEC21 /* README.md */,
 				3ED4AF7D18EF6B73794DFCC1 /* StateManager.swift */,
+				12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
 				3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */,
-				12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -136,6 +145,7 @@
 				12FB2B991F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift */,
 				7019EC3F1F80663A008EBFD0 /* DefaultTableViewKitSection.swift */,
 				3ED4A94B5007036AB6415867 /* TableViewKitSection.swift */,
+				12A16A32204612240033FFD9 /* MutableTabeViewKitSection.swift */,
 			);
 			path = Section;
 			sourceTree = "<group>";
@@ -147,6 +157,7 @@
 				7019EC471F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift */,
 				7019EC4A1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift */,
 				3ED4AD38207A104A1BADAC26 /* TableViewKitRow.swift */,
+				12A16A34204613300033FFD9 /* MutableTableViewKitRow.swift */,
 			);
 			path = Row;
 			sourceTree = "<group>";
@@ -157,6 +168,7 @@
 				12FB2B971F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift */,
 				705A2BBA1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift */,
 				3ED4A637990BF2A80E027D0F /* TableViewKitModel.swift */,
+				12A16A3F204624E60033FFD9 /* MutableTableViewKitModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -229,12 +241,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Beam Communications";
 				TargetAttributes = {
 					12F3AD121DFDF94300381A23 = {
 						CreatedOnToolsVersion = 8.2;
-						DevelopmentTeam = YWXH886EY3;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
@@ -292,12 +303,16 @@
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
 				12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
+				12A16A35204613300033FFD9 /* MutableTableViewKitRow.swift in Sources */,
+				12A16A33204612240033FFD9 /* MutableTabeViewKitSection.swift in Sources */,
 				3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */,
 				12FB2B961F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift in Sources */,
 				705A2BBB1F80DB8500F3DCA4 /* DefaultTableViewKitModel.swift in Sources */,
+				12A16A40204624E60033FFD9 /* MutableTableViewKitModel.swift in Sources */,
 				7019EC481F80678E008EBFD0 /* DefaultIdentifableTableViewRowKit.swift in Sources */,
 				12FB2B9A1F9D3FA8002877FD /* DefaultStaticTableViewKitSection.swift in Sources */,
 				7019EC4B1F8067B4008EBFD0 /* DefaultSeguableTableViewKitRow.swift in Sources */,
+				123DAE9020169B6C00A831A7 /* GroupManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +350,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -342,6 +358,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -369,7 +386,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -394,6 +411,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -401,6 +419,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -422,7 +441,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -436,12 +455,14 @@
 		12F3AD1C1DFDF94300381A23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = YWXH886EY3;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -451,21 +472,25 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beamcommunications.TableViewKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
 		};
 		12F3AD1D1DFDF94300381A23 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = YWXH886EY3;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -475,9 +500,11 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beamcommunications.TableViewKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
 		};

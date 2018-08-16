@@ -17,20 +17,34 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 		return actualState == .hide
 	}
 	
-	open var desiredState: State = .show
-	public private (set) var actualState: State = .undefined
+  open var desiredState: State = .show {
+    didSet {
+      desiredStateDidChange()
+    }
+  }
+  public private (set) var actualState: State = .undefined {
+    didSet {
+      actualStateDidChange()
+    }
+  }
 	
 	public var delegate: TableViewKitRowDelegate
 	
 	public init(delegate: TableViewKitRowDelegate) {
 		self.delegate = delegate
 	}
-	
+  
+  open func desiredStateDidChange() {
+  }
+
+  open func actualStateDidChange() {
+  }
+
 	open func updateToDesiredState() {
 		let previous = actualState
 		let desired = desiredState
 		let newState = previous.newStateBasedOn(desiredState: desired)
-		//log(debug: "desiredState = \(desiredState); actualState = \(actualState); newState = \(newState)")
+		////log(debug: "desiredState = \(desiredState); actualState = \(actualState); newState = \(newState)")
 		actualState = newState
 		guard previous != newState else {
 			return
@@ -51,7 +65,10 @@ open class AnyTableViewKitRow: NSObject, TableViewKitRow {
 	open func didSelect() -> Bool {
     return false
 	}
-	
+
+//	open func cellSelection(didChangeTo path: IndexPath) {
+//	}
+
 	open func shouldSelectRow() -> Bool {
 		return true
 	}

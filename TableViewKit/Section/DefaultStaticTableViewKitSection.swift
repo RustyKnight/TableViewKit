@@ -23,6 +23,27 @@ open class DefaultStaticTableViewKitSection<Identifier: SectionIdentifiable>: De
 		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate, allRows: allRows, preferredOrder: preferredOrder)
 	}
 	
+	public init(identifier: Identifier,
+							title: String? = nil,
+							footer: String? = nil,
+							delegate: TableViewKitSectionDelegate,
+							viewToModelMapping: [AnyHashable]) {
+		self.viewToModelMapping = viewToModelMapping
+		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
+	}
+
+	override public init(identifier: Identifier,
+							title: String? = nil,
+							footer: String? = nil,
+							delegate: TableViewKitSectionDelegate) {
+		super.init(identifier: identifier, title: title, footer: footer, delegate: delegate)
+	}
+	
+	public func set(rows: [AnyHashable : AnyTableViewKitRow], preferredOrder: [AnyHashable], viewToModelMapping: [AnyHashable]) {
+		self.viewToModelMapping = viewToModelMapping
+		super.set(rows: rows, preferredOrder: preferredOrder)
+	}
+
 	//  public func prepare(allRows: [AnyHashable: AnyTableViewKitRow],
 	//                      preferredOrder: [AnyHashable],
 	//                      viewToModelMapping: [AnyHashable]) {
