@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		120030B721262B9400FB26F0 /* InvertedTableViewKitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120030B621262B9400FB26F0 /* InvertedTableViewKitTableViewController.swift */; };
 		123DAE9020169B6C00A831A7 /* GroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123DAE8F20169B6C00A831A7 /* GroupManager.swift */; };
 		12A16A33204612240033FFD9 /* MutableTabeViewKitSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A16A32204612240033FFD9 /* MutableTabeViewKitSection.swift */; };
 		12A16A35204613300033FFD9 /* MutableTableViewKitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A16A34204613300033FFD9 /* MutableTableViewKitRow.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		120030B621262B9400FB26F0 /* InvertedTableViewKitTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvertedTableViewKitTableViewController.swift; sourceTree = "<group>"; };
 		123DAE8F20169B6C00A831A7 /* GroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupManager.swift; sourceTree = "<group>"; };
 		12A16A32204612240033FFD9 /* MutableTabeViewKitSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableTabeViewKitSection.swift; sourceTree = "<group>"; };
 		12A16A34204613300033FFD9 /* MutableTableViewKitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutableTableViewKitRow.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				12FB2B951F9D3D6E002877FD /* StaticTableViewKitTableViewController.swift */,
 				12F3AD161DFDF94300381A23 /* TableViewKit.h */,
 				3ED4A46745A06CA9B0DDE2DB /* TableViewKitTableViewController.swift */,
+				120030B621262B9400FB26F0 /* InvertedTableViewKitTableViewController.swift */,
 			);
 			path = TableViewKit;
 			sourceTree = "<group>";
@@ -241,7 +244,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Beam Communications";
 				TargetAttributes = {
 					12F3AD121DFDF94300381A23 = {
@@ -303,6 +306,7 @@
 				3ED4A6DA6889737312B9B02D /* TableViewKitSection.swift in Sources */,
 				12FB2B981F9D3E5F002877FD /* DefaultStaticTableViewKitModel.swift in Sources */,
 				7019EC431F80672D008EBFD0 /* AnyTableViewKitRow.swift in Sources */,
+				120030B721262B9400FB26F0 /* InvertedTableViewKitTableViewController.swift in Sources */,
 				12A16A35204613300033FFD9 /* MutableTableViewKitRow.swift in Sources */,
 				12A16A33204612240033FFD9 /* MutableTabeViewKitSection.swift in Sources */,
 				3ED4A8C2551834C66D271AAE /* TableViewKitTableViewController.swift in Sources */,
@@ -455,7 +459,7 @@
 		12F3AD1C1DFDF94300381A23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -483,7 +487,7 @@
 		12F3AD1D1DFDF94300381A23 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";

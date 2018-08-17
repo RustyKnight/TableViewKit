@@ -6,6 +6,15 @@
 import Foundation
 import LogWrapperKit
 
+/*
+The API provides some additional scrolling support which can be used to perform operations AFTER
+the scrolling animation has completed, this is useful when adding new rows and wanting to make
+them visible, but all the animations get in the way
+
+The reason this is not an extenision comes down to the need to use scrollViewDidEndScrollingAnimation
+and the desire not to redirect the scrollview delegate away from the current table view implementation
+*/
+
 open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableViewController, TableViewKitModelDelegate, UITableViewDataSourcePrefetching {
   
   public var model: Model!
@@ -19,15 +28,22 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
   public var deleteSectionAnimation: UITableViewRowAnimation = .automatic
   public var insertSectionAnimation: UITableViewRowAnimation = .automatic
   public var reloadSectionAnimation: UITableViewRowAnimation = .automatic
-  
-  //	internal var estimatedCellRowHeight: [IndexPath: CGFloat] = [:]
-  //	internal var estimatedSectionHeaderHeight: [Int: CGFloat] = [:]
-  //	internal var estimatedSectionFooterHeight: [Int: CGFloat] = [:]
-  
-//  public var preferredCellRowHeight: CGFloat = 22
-//  public var preferredSectionHeaderHeight: CGFloat = 18
-//  public var preferredSectionFooterHeight: CGFloat = 18
-  
+	
+	public var isAtTop: Bool {
+		let yPos = tableView.contentOffset.y
+		return yPos == tableView.contentInset.top
+	}
+	
+	public var isAtBottom: Bool {
+		let height = tableView.frame.size.height
+		let yOffset = tableView.contentOffset.y
+		let distanceFromBottom = tableView.contentSize.height - yOffset
+		return distanceFromBottom < height
+	}
+	
+	public typealias AfterScrollAnimationCompleted = () -> Void
+	internal var afterScroll: AfterScrollAnimationCompleted?
+	
   open override func viewDidLoad() {
     super.viewDidLoad()
     if #available(iOS 10, *) {
@@ -479,5 +495,57 @@ open class TableViewKitTableViewController<Model: TableViewKitModel>: UITableVie
       _ = tableView(view, cellForRowAt: indexPath)
     }
   }
-  
+	
+	// MARK: Simplified scrolling support
+
+	public func scrollToTop(animated: Bool = true, then: AfterScrollAnimationCompleted? = nil) {
+		guard !isAtTop else {
+			guard let then = then else {
+				return
+			}
+			then()
+			return
+		}
+		afterScroll = then
+		tableView.setContentOffset(.zero, animated: animated)
+		guard !animated else {
+			return
+		}
+		afterScroll = nil
+		guard let then = then else {
+			return
+		}
+		then()
+	}
+	
+	public func scrollToBottom(animated: Bool = true, then: AfterScrollAnimationCompleted? = nil) {
+		guard !isAtBottom else {
+			guard let then = then else {
+				return
+			}
+			then()
+			return
+		}
+		afterScroll = then
+		
+		let bottomOffSet = CGPoint(x: 0, y: tableView.contentSize.height - tableView.bounds.size.height)
+		tableView.setContentOffset(bottomOffSet, animated: animated)
+		guard !animated else {
+			return
+		}
+		afterScroll = nil
+		guard let then = then else {
+			return
+		}
+		then()
+	}
+	
+	override open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+		guard let afterScroll = afterScroll else {
+			return
+		}
+		self.afterScroll = nil
+		afterScroll()
+	}
+
 }
